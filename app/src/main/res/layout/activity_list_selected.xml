@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".vistas.ListSelectedActivity">
+
+    <LinearLayout
+        android:background="@color/verdeClaro"
+        android:weightSum="100"
+        android:id="@+id/lnlToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_weight="100"
+            android:gravity="right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="Selecciona la raza"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="Suspicious0dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        app:layout_constraintBottom_toBottomOf="@+id/lnlToolbar"
+        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:weightSum="100"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--<TextView
+            android:id="@+id/txtSelected"
+            android:layout_weight="10"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>-->
+
+        <LinearLayout
+            android:id="@+id/lnlDynamically"
+            android:layout_weight="10"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="22dp"
+            android:orientation="horizontal" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_weight="80"
+            android:layout_margin="4dp"
+            android:orientation="vertical"
+            android:id="@+id/rcvList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            />
+
+        <Button
+            android:id="@+id/btnDone"
+            android:text="Hecho"
+            android:layout_weight="10"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
