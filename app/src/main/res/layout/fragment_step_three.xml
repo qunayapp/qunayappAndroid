@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginTop="22dp"
+                android:layout_marginStart="22dp"
+                android:layout_gravity="start"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/grisTitulo"
+                android:text="Fechas disponible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="22dp"
+                android:layout_gravity="start"
+                android:textSize="16sp"
+                android:textColor="@color/plomoq"
+                android:text="De lunes a domingo 8:00 am - 10:00pm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:justificationMode="inter_word"
+                android:layout_marginStart="22dp"
+                android:layout_marginEnd="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:textSize="15sp"
+                android:textColor="@color/grisTitulo"
+                android:text="En nuestro hogar, sabemos lo importante que es tu compañero peludo. Nuestro Dog Boarding ofrece un ambiente cálido y cómodo para tu mascota"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:layout_marginTop="22dp"
+                android:layout_marginStart="22dp"
+                android:layout_gravity="start"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/grisTitulo"
+                android:text="Acerca de los cuidados"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/check_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/verdepastelq" />
+
+                <TextView
+                    android:layout_marginStart="12dp"
+                    android:layout_gravity="start"
+                    android:textSize="18sp"
+                    android:textColor="@color/grisTitulo"
+                    android:text="Administración de medicinas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/check_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/verdepastelq" />
+
+                <TextView
+                    android:layout_marginStart="12dp"
+                    android:layout_gravity="start"
+                    android:textSize="18sp"
+                    android:textColor="@color/grisTitulo"
+                    android:text="Cuidado especial para perros mayores"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/check_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/verdepastelq" />
+
+                <TextView
+                    android:layout_marginStart="12dp"
+                    android:layout_gravity="start"
+                    android:textSize="18sp"
+                    android:textColor="@color/grisTitulo"
+                    android:text="Atención especial para cachorros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/check_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/verdepastelq" />
+
+                <TextView
+                    android:layout_marginStart="12dp"
+                    android:layout_gravity="start"
+                    android:textSize="18sp"
+                    android:textColor="@color/grisTitulo"
+                    android:text="Video vigilancia 24hrs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/check_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/verdepastelq" />
+
+                <TextView
+                    android:layout_marginStart="12dp"
+                    android:layout_gravity="start"
+                    android:textSize="18sp"
+                    android:textColor="@color/grisTitulo"
+                    android:text="Experiencia con mascotas con discapacidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="22dp"
+                android:layout_gravity="start"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/grisTitulo"
+                android:text="Se admiten únicamente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <LinearLayout
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_marginEnd="12dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:src="@drawable/perro"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"/>
+
+                    <TextView
+                        android:text="Perros"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginEnd="12dp"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:src="@drawable/gato"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp" />
+
+                    <TextView
+                        android:text="Gatos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:src="@drawable/hamster"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:text="Roedores"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="22dp"
+                android:layout_gravity="start"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="@color/grisTitulo"
+                android:text="Galería de fotos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

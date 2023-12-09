@@ -70,10 +70,10 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_carosuel_register)
 
-        usuario = intent!!.getSerializableExtra("OBJECT_USUARIO") as Usuario
+        //usuario = intent!!.getSerializableExtra("OBJECT_USUARIO") as Usuario
         presentador = PrincipalPresentador.VistaStart(this)
 
-        Utils.dump(usuario!!.email)
+        //Utils.dump(usuario!!.email)
 
         viewPStep = findViewById<ViewPager>(R.id.viewPStep)
         //tabLayout = findViewById<TabLayout>(R.id.tabLayout)
@@ -112,7 +112,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
                 if(position == 2){
 
                     btnSiguiente!!.setOnClickListener {
-                        val str1 = "INSERT INTO usuario(name, birthdate, email,pass, numPhone, img, sex ) VALUES\n"+
+                        /*val str1 = "INSERT INTO usuario(name, birthdate, email,pass, numPhone, img, sex ) VALUES\n"+
                                 "('"+ edtNombreOne +"','"+ edtFechaOne +"','"+ usuario!!.email +"','"+ usuario!!.pass +"','"+ usuario!!.numPhone +"','"+ imgOne +"','"+ radioGroupOne+"')"
                         val idUsuario = presentador.insertar(str1)
 
@@ -130,9 +130,11 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
                             putString(Constantes.SHARED_PREF_MESSAGE, "logeado")
                             putInt(Constantes.SHARED_ID_USUARIO, idUsuario)
                             commit()
-                        }
+                        }*/
 
-                        showDialog()
+                        //showDialog()
+
+                        finishStep()
                     }
                     btnVolver!!.setOnClickListener {
                         backStep()
@@ -174,7 +176,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
     private fun finishActivity(){
 
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, LoadingActivity::class.java)
         startActivity(intent)
 
         /*when(vista){

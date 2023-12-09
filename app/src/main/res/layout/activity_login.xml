@@ -17,21 +17,11 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:src="@drawable/mascotapp_icon"
+                android:src="@drawable/logo_verde"
                 android:layout_width="250dp"
                 android:layout_height="250dp"/>
 
         </LinearLayout>
-
-
-        <TextView
-            android:textColor="@color/black"
-            android:textSize="42sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edtEmail"

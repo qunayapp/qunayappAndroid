@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/patitas_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/patitas_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/patitas_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/patitas_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/patitas_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginEnd="22dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/verdepastelq"
+                    android:layout_marginStart="22dp"
+                    android:text="4.88 | 56 reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <TextView
+                    android:gravity="end"
+                    android:textSize="16sp"
+                    android:textColor="@color/grisTitulo"
+                    android:layout_marginStart="22dp"
+                    android:text="+agregar review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:weightSum="100"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="30"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="22dp"
+                        android:text="Puntualidad"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <ProgressBar
+                        android:layout_weight="60"
+                        android:id="@+id/progressPuntualidad"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        tools:progress="90"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginEnd="22dp"
+                        android:gravity="center"
+                        android:layout_weight="10"
+                        android:id="@+id/txtPuntaje"
+                        android:text="4.9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="12dp"
+                    android:weightSum="100"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="30"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="22dp"
+                        android:text="Amabilidad"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <ProgressBar
+                        android:layout_weight="60"
+                        android:id="@+id/progressPuntualidad2"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        tools:progress="85"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginEnd="22dp"
+                        android:gravity="center"
+                        android:layout_weight="10"
+                        android:id="@+id/txtPuntaje2"
+                        android:text="4.88"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="12dp"
+                    android:weightSum="100"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="30"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="22dp"
+                        android:text="Prepración"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <ProgressBar
+                        android:layout_weight="60"
+                        android:id="@+id/progressPuntualidad3"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        tools:progress="95"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginEnd="22dp"
+                        android:gravity="center"
+                        android:layout_weight="10"
+                        android:id="@+id/txtPuntaje3"
+                        android:text="4.95"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="12dp"
+                    android:weightSum="100"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="30"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="22dp"
+                        android:text="Limpieza"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <ProgressBar
+                        android:layout_weight="60"
+                        android:id="@+id/progressPuntualidad4"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        tools:progress="100"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginEnd="22dp"
+                        android:gravity="center"
+                        android:layout_weight="10"
+                        android:id="@+id/txtPuntaje4"
+                        android:text="5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@color/background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="22dp"
+                    android:layout_marginStart="22dp"
+                    android:id="@+id/rcvComentarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

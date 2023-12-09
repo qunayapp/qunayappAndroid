@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/logo_q_verde"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/tutorial_2"
+            android:layout_width="320dp"
+            android:layout_height="320dp"/>
+
+        <TextView
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            android:textColor="@color/verdeq"
+            android:text="Encuentra a tu Cuidador Perfecto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textAlignment="center"
+            android:padding="22dp"
+            android:layout_gravity="center"
+            android:textSize="22dp"
+            android:textColor="@color/verdepastelq"
+            android:text="Bienvenido a Qunay, tu compañero de confianza para el cuidado de tus mascotas. Comienza tu viaje encontrando el cuidador perfecto para tu peludo amigo. Explora una amplia gama de servicios para tu mascota."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

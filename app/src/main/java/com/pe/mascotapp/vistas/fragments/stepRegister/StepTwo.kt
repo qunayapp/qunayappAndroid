@@ -4,9 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.graphics.Paint.Align
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import android.widget.*
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.pe.mascotapp.R
@@ -21,8 +23,10 @@ import com.pe.mascotapp.interfaces.OnEditTextChanged
 import com.pe.mascotapp.modelos.Raza
 import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.ListSelectedActivity
-import com.pe.mascotapp.vistas.MainActivity
-import com.pe.mascotapp.vistas.fragments.CarosuelFragmentRegisterState
+import java.util.Calendar
+import java.util.Date
+import java.util.TimeZone
+
 
 class StepTwo:Fragment() {
 
@@ -39,6 +43,7 @@ class StepTwo:Fragment() {
     //var autoRaza:AutoCompleteTextView?= null
     var radioGroup: RadioGroup? = null
     var radioButton: RadioButton?= null
+    var edtFecha: TextInputEditText?= null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -55,15 +60,24 @@ class StepTwo:Fragment() {
         imgPet = view.findViewById<ImageView>(R.id.imgPet)
         txtAgregarFoto = view.findViewById<TextView>(R.id.txtAgregarFoto)
         //autoRaza = view.findViewById<AutoCompleteTextView>(R.id.autoRaza)
+        edtFecha = view.findViewById<TextInputEditText>(R.id.edtFecha)
         edtRaza = view.findViewById<TextInputLayout>(R.id.edtRaza)
         edtNombre = view.findViewById<TextInputLayout>(R.id.edtNombre)
         edtTextRaza = view.findViewById<TextInputEditText>(R.id.edtTextRaza)
         lnlDynamically = view.findViewById<LinearLayout>(R.id.lnlDynamically)
-
+        val datePicker =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Selecciona su fecha de nacimiento")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
+        edtFecha!!.setOnClickListener {
+            datePicker.show(requireActivity().supportFragmentManager,datePicker.toString())
+        }
         radioGroup = view.findViewById<RadioGroup>(R.id.radioGroup)
 
         radioGroup!!.setOnCheckedChangeListener { group, checkedId -> // checkedId is the RadioButton selected
             val rb = view.findViewById(checkedId) as RadioButton
+            //rb.setTextColor(context?.let { ContextCompat.getColorStateList(it, R.color.verdeq) })
             onEditTextChanged.onTextChanged(rb.text.toString(),2,"radioGroup")
         }
 
@@ -126,6 +140,38 @@ class StepTwo:Fragment() {
         edtNombre!!.editText!!.doOnTextChanged { text, start, before, count ->
             Utils.dump(text.toString())
             onEditTextChanged.onTextChanged(text.toString(),2,"edtNombre")
+        }
+
+        datePicker.addOnPositiveButtonClickListener {
+
+            Utils.dump(datePicker.headerText)
+
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            calendar.time = Date(it)
+            //textView.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
+            //        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
+
+            var mes = ""
+            if ((calendar.get(Calendar.MONTH)+1) < 10){
+                mes = "0" + (calendar.get(Calendar.MONTH) + 1)
+            }else{
+                mes = (calendar.get(Calendar.MONTH) + 1 ).toString()
+            }
+
+            var dia = "00";
+            if (calendar.get(Calendar.DAY_OF_MONTH) < 10){
+                dia = "0" + calendar.get(Calendar.DAY_OF_MONTH)
+            }else{
+                dia = calendar.get(Calendar.DAY_OF_MONTH).toString()
+            }
+
+            Utils.dump("" + dia + " - " + mes + " - " + calendar.get(Calendar.YEAR))
+            val txtFecha = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
+
+            edtFecha!!.setText(txtFecha)
+            //fechaNacimiento = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
+            onEditTextChanged.onTextChanged(txtFecha,3,"edtFecha")
+
         }
 
 

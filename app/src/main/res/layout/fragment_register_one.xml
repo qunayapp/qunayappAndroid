@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,16 +18,29 @@
 
             <TextView
                 android:textStyle="bold"
+                android:gravity="center"
                 android:layout_marginEnd="27dp"
                 android:layout_marginStart="27dp"
                 android:layout_marginTop="32dp"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                android:text="Cuéntanos sobre ti"
+                android:textSize="18sp"
+                android:textColor="@color/verdeq"
+                android:text="Paso 1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <TextView
+                android:gravity="center"
+                android:layout_marginEnd="27dp"
+                android:layout_marginStart="27dp"
+                android:textSize="18sp"
+                android:textColor="@color/verdeclaroq"
+                android:text="Completa tus datos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--borrar-->
             <LinearLayout
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
@@ -70,6 +82,12 @@
 
             </LinearLayout>
 
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/logo_verde"
+                android:layout_width="220dp"
+                android:layout_height="120dp"/>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edtNombre"
@@ -79,19 +97,141 @@
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="22dp"
-
-                android:hint="¿Cómo te llamas?">
+                android:hint="Nombre">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:drawableLeft="@drawable/nombre_usuario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
+                    android:textSize="14sp"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edtCorreo"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="22dp"
+                android:hint="Correo">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:drawableLeft="@drawable/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="14sp"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:weightSum="100"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edtTelefono"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_weight="50"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:hint="Teléfono">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:drawableLeft="@drawable/telefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:textSize="14sp"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_weight="50"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="22dp"
+
+                    android:hint="Cumpleaños">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:drawableLeft="@drawable/edad"
+                        android:id="@+id/edtFecha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:inputType="date"
+                        android:textSize="14sp"
+                        android:typeface="normal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:passwordToggleEnabled="true"
+                android:id="@+id/edtPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="8dp"
+
+                android:layout_marginEnd="22dp"
+                android:hint="Contraseña">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:drawableStart="@drawable/candado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:passwordToggleEnabled="true"
+                android:id="@+id/edtPassword2"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="8dp"
+
+                android:layout_marginEnd="22dp"
+
+                android:hint="Repetir contraseña">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:drawableStart="@drawable/candado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
                     android:textSize="14sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
+            <CheckBox
+                android:textColor="@color/verdeq"
+                android:text="Términos de uso y Política"
+                android:layout_marginStart="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <!--Borrar-->
             <LinearLayout
+                android:visibility="gone"
                 android:weightSum="100"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -122,8 +262,9 @@
                     android:layout_height="1dp"/>
 
             </LinearLayout>
-
+            <!--Borrar-->
             <TextView
+                android:visibility="gone"
                 android:layout_marginStart="22dp"
                 android:layout_marginEnd="22dp"
                 android:layout_marginTop="12dp"
@@ -133,8 +274,9 @@
                 android:text="¿Como te identificas?"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
+            <!--Borrar-->
             <LinearLayout
+                android:visibility="gone"
                 android:background="@drawable/border_linearlayout"
                 android:layout_marginStart="22dp"
                 android:layout_marginEnd="22dp"
@@ -177,30 +319,10 @@
 
                 </RadioGroup>
             </LinearLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="22dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="22dp"
-
-                android:hint="¿Cuándo naciste?">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtFecha"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:inputType="date"
-                    android:textSize="14sp"
-                    android:typeface="normal" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+            <!--Borrar-->
 
             <View
+                android:visibility="gone"
                 android:layout_marginTop="22dp"
                 android:layout_gravity="center"
                 android:background="@color/black"

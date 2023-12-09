@@ -2,13 +2,13 @@
     <!-- Base application theme. -->
     <style name="Theme.Mascotapp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/verdeClaro</item>
-        <item name="colorPrimaryVariant">@color/verdeClaro</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/verdeclaroq</item>
+        <item name="colorPrimaryVariant">@color/verdepastelq</item>
+        <item name="colorOnPrimary">@color/negroq</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/verdeq</item>
+        <item name="colorSecondaryVariant">@color/verdepastelq</item>
+        <item name="colorOnSecondary">@color/negroq</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->

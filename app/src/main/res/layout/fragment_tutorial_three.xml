@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/logo_q_verde"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/tutorial_3"
+            android:layout_width="320dp"
+            android:layout_height="320dp"/>
+
+        <TextView
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            android:textColor="@color/verdeq"
+            android:text="Reserva tus Citas en Segundos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textAlignment="center"
+            android:padding="22dp"
+            android:layout_gravity="center"
+            android:textSize="22sp"
+            android:textColor="@color/verdepastelq"
+            android:text="¿Necesitas programar una cita para tu mascota? Con Qunay, es rápido y sencillo. Tu mascota recibirá la atención que se merece, cuando se merece."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

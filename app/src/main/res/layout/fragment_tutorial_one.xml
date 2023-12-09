@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/logo_q_verde"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/tutorial_1"
+            android:layout_width="320dp"
+            android:layout_height="320dp"/>
+
+        <TextView
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="26sp"
+            android:textColor="@color/verdeq"
+            android:text="Disfruta de la Tranquilidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textAlignment="center"
+            android:padding="22dp"
+            android:layout_gravity="center"
+            android:textSize="22dp"
+            android:textColor="@color/verdepastelq"
+            android:text="Con Qunay, tu mascota está en buenas manos. Ya sea que necesites un paseador, un cuidador o simplemente quieras llevar un registro de la salud de tu mascota, estamos aquí para ti."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

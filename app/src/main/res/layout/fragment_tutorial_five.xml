@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/logo_q_verde"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/tutorial_5"
+            android:layout_width="320dp"
+            android:layout_height="320dp"/>
+
+        <TextView
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="@color/verdeq"
+            android:text="Explora Todo lo que Tenemos Para Ti!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:justificationMode="inter_word"
+            android:padding="22dp"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="@color/verdepastelq"
+            android:text="Únete a una comunidad de amantes de las mascotas como tú.\n¡Juntos, hacemos que el mundo sea un lugar mejor para nuestras queridas mascotas!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

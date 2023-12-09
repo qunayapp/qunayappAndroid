@@ -1,19 +1,26 @@
 package com.pe.mascotapp.vistas
 
+import android.R.attr.radius
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.pe.mascotapp.R
 import com.pe.mascotapp.interfaces.PrincipalPresentador
 import com.pe.mascotapp.modelos.Categorias
@@ -21,23 +28,100 @@ import com.pe.mascotapp.modelos.PromocionBanner
 import com.pe.mascotapp.utils.Constantes
 import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.adapters.HomeAdapter
-import java.io.ByteArrayOutputStream
-import android.view.View
+import com.pe.mascotapp.vistas.adapters.HomeListServiceAdapter
+import com.pe.mascotapp.vistas.adapters.HomeServiceAdapter
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileNotFoundException
 
 
 class HomeActivity : AppCompatActivity() {
 
     var menuHome: BottomNavigationView? = null
-
+    var toolbar: Toolbar?= null
+    var drawer_layout:DrawerLayout ?= null
     var rcvHome: RecyclerView?= null
+    var rcvHomeService:RecyclerView ?= null
     var homeAdapterType:HomeAdapter ?= null
+    var homeListServiceAdapterType: HomeListServiceAdapter?= null
+    var homeServiceAdapterType:HomeServiceAdapter ?= null
     var categoriasArray: ArrayList<Categorias> = ArrayList()
     var promocionBanner:PromocionBanner = PromocionBanner()
-    var imgUser:ImageView ?= null
+    //var imgUser:ImageView ?= null
     var imgBanner:ImageView ?= null
+    var navigationView: NavigationView? = null
+
+    private val onNavigationItemSelectedListener =
+        NavigationView.OnNavigationItemSelectedListener { item ->
+            var selectedFragment: Fragment? = null
+            Utils.dump("item: " + item.itemId)
+            when (item.itemId) {
+
+                /*R.id.nav_menu_principal -> {
+
+                    selectedFragment = HomeFragment.newInstance(moduloPrevencionArray)
+                    //title = R.string.menu_camera;
+                    supportFragmentManager
+                        .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                        .replace(R.id.fragmentContainer, selectedFragment)
+                        .commit()
+
+                    //setTitle(getString(title));
+                    drawer_layout!!.closeDrawer(GravityCompat.START)
+
+                }
+
+                R.id.nav_sobre_mimp -> {
+
+                    val browserIntent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse("https://www.gob.pe/mimp"))
+                    startActivity(browserIntent)
+
+                }
+
+                R.id.nav_programa_nacional_aurora -> {
+
+                    val browserIntent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse("https://www.gob.pe/aurora"))
+                    startActivity(browserIntent)
+
+                }*/
+
+                /*R.id.nav_perfil -> {
+                    selectedFragment = AccountFragment.newInstance()
+                    //title = R.string.menu_camera;
+                    supportFragmentManager
+                        .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                        .replace(R.id.fragmentContainer, selectedFragment)
+                        .commit()
+
+                    //setTitle(getString(title));
+                    drawer_layout!!.closeDrawer(GravityCompat.START)
+                }*/
+                /*R.id.nav_nosotros -> {
+                    selectedFragment = AboutUsFragment.newInstance()
+                    //title = R.string.menu_gallery;
+                    supportFragmentManager
+                        .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                        .replace(R.id.fragmentContainer, selectedFragment)
+                        .commit()
+
+                    //setTitle(getString(title));
+                    drawer_layout!!.closeDrawer(GravityCompat.START)
+                }*/
+
+                /*R.id.nav_prev_violencia -> {
+
+                    val intent = Intent(this, PrevencionViolenciaActivity::class.java)
+                    startActivity(intent)
+
+                }*/
+                /*R.id.nav_wp -> {
+                }*/
+                else -> throw IllegalArgumentException("menu option not implemented!!")
+            }
+            true
+        }
+
 
 
     private val mOnNavigationItemSelectedListener =
@@ -55,7 +139,7 @@ class HomeActivity : AppCompatActivity() {
 
 
                 }
-                R.id.nav_config -> {
+                R.id.nav_history -> {
 
                 }
 
@@ -63,14 +147,14 @@ class HomeActivity : AppCompatActivity() {
 
                 }
 
-                R.id.nav_perfil -> {
+                R.id.nav_pet -> {
 
                 }
             }
-            val transaction =
+            /*val transaction =
                 supportFragmentManager.beginTransaction()
             transaction.replace(R.id.fragmentContainer, selectedFragment!!)
-            transaction.commit()
+            transaction.commit()*/
             true
         }
 
@@ -81,13 +165,15 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         menuHome = findViewById<BottomNavigationView>(R.id.menuHome)
         rcvHome = findViewById<RecyclerView>(R.id.rcvHome)
-        imgUser = findViewById<ImageView>(R.id.imgUser)
+        rcvHomeService = findViewById<RecyclerView>(R.id.rcvHomeService)
+        //imgUser = findViewById<ImageView>(R.id.imgUser)
         imgBanner = findViewById<ImageView>(R.id.imgBanner)
         presentador = PrincipalPresentador.VistaStart(this)
 
 
         obtenerData()
         startRCVHome()
+        iniciarvista(savedInstanceState)
     }
     @SuppressLint("Range")
     fun obtenerData(){
@@ -114,7 +200,7 @@ class HomeActivity : AppCompatActivity() {
                 val f = File(img)
                 val b = BitmapFactory.decodeStream(FileInputStream(f))
 
-                imgUser!!.setImageBitmap(b)
+                //!!.setImageBitmap(b)
 
             }while (data.moveToNext())
         }
@@ -191,10 +277,45 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun startRCVHome(){
-        val mLayoutManager = GridLayoutManager(this,2)
+        /*val mLayoutManager = GridLayoutManager(this,2)
         rcvHome?.setLayoutManager(mLayoutManager)
-        homeAdapterType = HomeAdapter(categoriasArray,promocionBanner){ categorias ->
-            when(categorias.id){
+        rcvHomeService?.setLayoutManager(mLayoutManager)*/
+        rcvHome?.setLayoutManager(LinearLayoutManager(this))
+        rcvHomeService?.setLayoutManager(LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false))
+
+        homeListServiceAdapterType = HomeListServiceAdapter(categoriasArray,promocionBanner){ categorias ->
+
+            val intent = Intent(this, DetailServiceActivity::class.java)
+            startActivity(intent)
+            /*when(categorias.id){
+                0,2 -> {
+                    val intent = Intent(this, MarketPlaceActivity::class.java)
+                    startActivity(intent)
+                }
+                3 -> {
+                    val intent = Intent(this, JourneyTipoOneActivity::class.java)
+                    startActivity(intent)
+                }
+                8 -> {
+                    val pref = applicationContext.getSharedPreferences(
+                        Constantes.SHARED_PREF,
+                        MODE_PRIVATE
+                    )
+                    pref.edit().clear().commit()
+
+                    val intent = Intent(applicationContext, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                }
+                else -> {
+                    Toast.makeText(this,"Proximamente",Toast.LENGTH_LONG).show()
+                }
+            }*/
+
+        }
+
+        homeServiceAdapterType = HomeServiceAdapter(categoriasArray,promocionBanner){ categorias ->
+            /*when(categorias.id){
                 0,2 -> {
                     val intent = Intent(this, MarketPlaceActivity::class.java)
                     startActivity(intent)
@@ -217,14 +338,64 @@ class HomeActivity : AppCompatActivity() {
                 else -> {
                     Toast.makeText(this,"Proximamente",Toast.LENGTH_LONG).show()
                 }
-            }
+            }*/
+
+
 
         }
-        rcvHome?.setAdapter(homeAdapterType)
+        rcvHome?.setAdapter(homeListServiceAdapterType)
         rcvHome?.setItemAnimator(DefaultItemAnimator())
+
+        rcvHomeService?.setAdapter(homeServiceAdapterType)
+        rcvHomeService?.setItemAnimator(DefaultItemAnimator())
     }
 
     fun byteArrayToBitmap(data: ByteArray): Bitmap {
         return BitmapFactory.decodeByteArray(data, 0, data.size)
+    }
+
+    fun iniciarvista(savedInstanceState: Bundle?){
+        menuHome = findViewById<BottomNavigationView>(R.id.menuHome)
+        navigationView = findViewById<NavigationView>(R.id.navigationView)
+        drawer_layout = findViewById<DrawerLayout>(R.id.drawer_layout)
+        toolbar = findViewById<Toolbar>(R.id.toolbar)
+        menuHome!!.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        startMenu(savedInstanceState)
+
+        val navViewBackground = navigationView?.background as MaterialShapeDrawable
+        navViewBackground.shapeAppearanceModel = navViewBackground.shapeAppearanceModel
+            .toBuilder()
+            .setBottomRightCorner(CornerFamily.ROUNDED, 528f)
+            .build()
+
+        navigationView!!.setNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+        startMenu(savedInstanceState)
+
+        val toggle =
+            ActionBarDrawerToggle(
+                this,
+                drawer_layout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+            )
+
+        drawer_layout!!.addDrawerListener(toggle)
+        toggle.syncState()
+    }
+
+    fun startMenu(savedInstanceState: Bundle?) {
+
+        if (savedInstanceState == null) {
+            /*val transaction =
+                supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragmentContainer, HomeFragment.newInstance(moduloPrevencionArray))
+            transaction.commit()*/
+            //toolTitle!!.text = "Hola, " + "Usuario"
+            //menuHome!!.selectedItemId = R.id.nav_home
+            //navigationView!!.setCheckedItem(R.id.nav_menu_principal)
+        }
+
     }
 }

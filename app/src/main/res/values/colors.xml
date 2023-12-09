@@ -15,4 +15,19 @@
     <color name="red">#ff0000</color>
     <color name="verdeClaro">#178c5f</color>
 
+    <!-- paleta -->
+    <color name="negroq">#000900</color>
+    <color name="moradoq">#680042</color>
+    <color name="rosadoq">#d7266f</color>
+    <color name="naranjaq">#eb651c</color>
+    <color name="naranjaclaroq">#ed9e59</color>
+    <color name="verdeq">#195622</color>
+    <color name="verdepastelq">#ccd885</color>
+    <color name="verdeclaroq">#93b504</color>
+    <color name="blancoq">#fff4e9</color>
+    <color name="plomoq">#C7C7C7</color>
+    <color name="plomoRegular">#DDDDDD</color>
+    <color name="verdeMenu">#93B604</color>
+    <color name="grisTitulo">#767676</color>
+    <color name="background">#EEEEEE</color>
 </resources>

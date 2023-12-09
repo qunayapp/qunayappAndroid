@@ -23,7 +23,7 @@ class StartActivity : AppCompatActivity() {
 
     var servicios: Servicios?= null
     var imgLogoSplash:ImageView ?= null
-    val imagenesSplash = arrayOf(R.drawable.mascotapp_icon,R.drawable.mascota_app_logo_segundo)
+    val imagenesSplash = arrayOf(R.drawable.q_verde,R.drawable.logo_verde)
 
     private lateinit var presentador: PrincipalPresentador.VistaStart
     @RequiresApi(Build.VERSION_CODES.M)
