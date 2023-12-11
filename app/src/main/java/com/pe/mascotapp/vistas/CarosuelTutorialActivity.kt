@@ -100,7 +100,7 @@ class CarosuelTutorialActivity : AppCompatActivity() {
 
     private fun getItem(i:Int):Int{
         Utils.dump("posicion" + viewPStep?.currentItem)
-        if(viewPStep?.currentItem == 2) {
+        if(viewPStep?.currentItem == 4) {
             btnSiguiente!!.setOnClickListener {
                 finishStep()
             }

@@ -56,13 +56,14 @@
                 android:layout_marginBottom="24dp"
                 android:layout_weight="50">
 
-                <com.google.android.material.button.MaterialButton
+                <TextView
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:id="@+id/btnVolver"
-                    android:layout_width="220dp"
+                    android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:text="saltar"
                     android:textColor="@color/verdeq"
-                    android:backgroundTint="@color/white"
                     android:textSize="14sp"
                     app:cornerRadius="40dp" />
 

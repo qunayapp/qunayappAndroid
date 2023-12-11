@@ -97,7 +97,7 @@
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="22dp"
-                android:hint="Nombre">
+                android:hint=" Nombre">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:drawableLeft="@drawable/nombre_usuario"
@@ -116,7 +116,7 @@
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="22dp"
-                android:hint="Correo">
+                android:hint=" Correo">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:drawableLeft="@drawable/email"
@@ -142,7 +142,7 @@
                     android:layout_marginStart="22dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:hint="Teléfono">
+                    android:hint=" Teléfono">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:drawableLeft="@drawable/telefono"
@@ -161,7 +161,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="22dp"
 
-                    android:hint="Cumpleaños">
+                    android:hint=" Cumpleaños">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:drawableLeft="@drawable/edad"
@@ -187,7 +187,7 @@
                 android:layout_marginTop="8dp"
 
                 android:layout_marginEnd="22dp"
-                android:hint="Contraseña">
+                android:hint=" Contraseña">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:drawableStart="@drawable/candado"
@@ -209,7 +209,7 @@
 
                 android:layout_marginEnd="22dp"
 
-                android:hint="Repetir contraseña">
+                android:hint=" Repetir contraseña">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:drawableStart="@drawable/candado"

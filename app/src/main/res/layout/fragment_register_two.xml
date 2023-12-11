@@ -195,7 +195,7 @@
                             android:id="@+id/radio_button_1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Perro"
+                            android:text=" Perro"
                             tools:ignore="RtlSymmetry" />
 
                         <RadioButton
@@ -209,7 +209,7 @@
                             android:id="@+id/radio_button_2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Gato"
+                            android:text=" Gato"
                             tools:ignore="RtlSymmetry"
                             />
 
@@ -224,7 +224,7 @@
                             android:id="@+id/radio_button_3"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Otro"
+                            android:text=" Otro"
                             tools:ignore="RtlSymmetry"
                             />
 
@@ -240,7 +240,7 @@
                     android:layout_marginStart="22dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="22dp"
-                    android:hint="¿Cuál es la raza?">
+                    android:hint=" ¿Cuál es la raza?">
 
                     <!--<AutoCompleteTextView
                         android:id="@+id/autoRaza"
@@ -299,7 +299,7 @@
                             android:id="@+id/radio_button_4"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Macho"
+                            android:text=" Macho"
                             tools:ignore="RtlSymmetry" />
 
                         <RadioButton
@@ -314,7 +314,7 @@
                             android:id="@+id/radio_button_5"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Hembra"
+                            android:text=" Hembra"
                             tools:ignore="RtlSymmetry"
                             />
 
@@ -340,7 +340,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="Peso">
+                    android:hint=" Peso">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:drawableLeft="@drawable/peso"
@@ -358,7 +358,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="8dp"
-                    android:hint="Cumpleaños">
+                    android:hint=" Cumpleaños">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:drawableLeft="@drawable/edad"

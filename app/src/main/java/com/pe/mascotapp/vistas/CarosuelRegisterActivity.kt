@@ -29,6 +29,7 @@ import android.view.WindowManager
 import com.pe.mascotapp.utils.Constantes
 import android.graphics.Bitmap.CompressFormat
 import android.content.ContextWrapper
+import android.widget.TextView
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -38,7 +39,7 @@ import java.lang.Exception
 class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
     var viewPStep: ViewPager? = null
-    var btnVolver: MaterialButton? = null
+    var btnVolver: TextView? = null
     var btnSiguiente: MaterialButton? = null
     var usuario:Usuario ?= null
     var edtNombreOne = ""
@@ -77,7 +78,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
         viewPStep = findViewById<ViewPager>(R.id.viewPStep)
         //tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-        btnVolver = findViewById<MaterialButton>(R.id.btnVolver)
+        btnVolver = findViewById<TextView>(R.id.btnVolver)
         btnSiguiente = findViewById<MaterialButton>(R.id.btnSiguiente)
 
         viewPStep!!.adapter = CarosuelFragmentRegisterState(supportFragmentManager,this)
@@ -169,7 +170,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     }
 
     private fun onBackStep(){
-        val intent = Intent(this, RegistroActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }

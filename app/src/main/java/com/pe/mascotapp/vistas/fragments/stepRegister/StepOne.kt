@@ -57,9 +57,41 @@ class StepOne():Fragment() {
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Selecciona tu fecha de nacimiento")
-                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                //.setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build()
 
+        datePicker.addOnPositiveButtonClickListener {
+
+            Utils.dump(datePicker.headerText)
+
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+
+            calendar.time = Date(it)
+            //textView.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
+            //        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
+
+            var mes = ""
+            if ((calendar.get(Calendar.MONTH)+1) < 10){
+                mes = "0" + (calendar.get(Calendar.MONTH) + 1)
+            }else{
+                mes = (calendar.get(Calendar.MONTH) + 1 ).toString()
+            }
+
+            var dia = "00";
+            if (calendar.get(Calendar.DAY_OF_MONTH) < 10){
+                dia = "0" + calendar.get(Calendar.DAY_OF_MONTH)
+            }else{
+                dia = calendar.get(Calendar.DAY_OF_MONTH).toString()
+            }
+
+            Utils.dump("" + dia + " - " + mes + " - " + calendar.get(Calendar.YEAR))
+
+            val txtFecha = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
+            edtFecha!!.setText(txtFecha)
+            //fechaNacimiento = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
+            onEditTextChanged.onTextChanged(txtFecha,1,"edtFecha")
+
+        }
         edtFecha = view.findViewById<TextInputEditText>(R.id.edtFecha)
         imgPersona = view.findViewById<ImageView>(R.id.imgPersona)
         txtAgregarFoto = view.findViewById<View>(R.id.txtAgregarFoto) as TextView
@@ -103,37 +135,7 @@ class StepOne():Fragment() {
             onEditTextChanged.onTextChanged(text.toString(),1,"edtNombre")
         }
 
-        datePicker.addOnPositiveButtonClickListener {
 
-            Utils.dump(datePicker.headerText)
-
-            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-            calendar.time = Date(it)
-            //textView.text = "${calendar.get(Calendar.DAY_OF_MONTH)}- " +
-            //        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
-
-            var mes = ""
-            if ((calendar.get(Calendar.MONTH)+1) < 10){
-                mes = "0" + (calendar.get(Calendar.MONTH) + 1)
-            }else{
-                mes = (calendar.get(Calendar.MONTH) + 1 ).toString()
-            }
-
-            var dia = "00";
-            if (calendar.get(Calendar.DAY_OF_MONTH) < 10){
-                dia = "0" + calendar.get(Calendar.DAY_OF_MONTH)
-            }else{
-                dia = calendar.get(Calendar.DAY_OF_MONTH).toString()
-            }
-
-            Utils.dump("" + dia + " - " + mes + " - " + calendar.get(Calendar.YEAR))
-
-            val txtFecha = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
-            edtFecha!!.setText(txtFecha)
-            //fechaNacimiento = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
-            onEditTextChanged.onTextChanged(txtFecha,1,"edtFecha")
-
-        }
 
 
         return view;
