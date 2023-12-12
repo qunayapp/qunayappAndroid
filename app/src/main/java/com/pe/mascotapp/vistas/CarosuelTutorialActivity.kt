@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.OnTouchListener
+import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
 import com.pe.mascotapp.R
@@ -13,7 +14,7 @@ import com.pe.mascotapp.vistas.fragments.CarosuelFragmentTutorialState
 class CarosuelTutorialActivity : AppCompatActivity() {
 
     var viewPStep: ViewPager? = null
-    var btnVolver: MaterialButton? = null
+    var btnVolver: TextView? = null
     var btnSiguiente: MaterialButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +22,7 @@ class CarosuelTutorialActivity : AppCompatActivity() {
         setContentView(R.layout.activity_carosuel_tutorial)
 
         viewPStep = findViewById<ViewPager>(R.id.viewPStep)
-        btnVolver = findViewById<MaterialButton>(R.id.btnVolver)
+        btnVolver = findViewById<TextView>(R.id.btnVolver)
         btnSiguiente = findViewById<MaterialButton>(R.id.btnSiguiente)
         viewPStep!!.adapter = CarosuelFragmentTutorialState(supportFragmentManager,this)
 

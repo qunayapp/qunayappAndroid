@@ -13,11 +13,11 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:fontFamily="@font/worksans_black"
                 android:layout_marginTop="22dp"
                 android:layout_marginStart="22dp"
                 android:layout_gravity="start"
-                android:textStyle="bold"
-                android:textSize="22dp"
+                android:textSize="22sp"
                 android:textColor="@color/grisTitulo"
                 android:text="Sobre nosotros"
                 android:layout_width="wrap_content"
@@ -45,6 +45,7 @@
             </LinearLayout>
 
             <TextView
+                android:fontFamily="@font/worksans_regular"
                 android:justificationMode="inter_word"
                 android:layout_marginStart="22dp"
                 android:layout_marginEnd="22dp"
@@ -58,6 +59,7 @@
 
 
             <TextView
+                android:fontFamily="@font/worksans_black"
                 android:layout_marginTop="22dp"
                 android:layout_marginStart="22dp"
                 android:layout_gravity="start"
@@ -84,6 +86,7 @@
                     app:tint="@color/verdepastelq" />
 
                 <TextView
+                    android:fontFamily="@font/worksans_regular"
                     android:layout_marginStart="12dp"
                     android:layout_gravity="start"
                     android:textSize="18sp"
@@ -109,6 +112,7 @@
                     app:tint="@color/verdepastelq" />
 
                 <TextView
+                    android:fontFamily="@font/worksans_regular"
                     android:layout_marginStart="12dp"
                     android:layout_gravity="start"
                     android:textSize="18sp"
@@ -134,6 +138,7 @@
                     app:tint="@color/verdepastelq" />
 
                 <TextView
+                    android:fontFamily="@font/worksans_regular"
                     android:layout_marginStart="12dp"
                     android:layout_gravity="start"
                     android:textSize="18sp"
@@ -159,6 +164,7 @@
                     app:tint="@color/verdepastelq" />
 
                 <TextView
+                    android:fontFamily="@font/worksans_regular"
                     android:layout_marginStart="12dp"
                     android:layout_gravity="start"
                     android:textSize="18sp"
@@ -184,6 +190,7 @@
                     app:tint="@color/verdepastelq" />
 
                 <TextView
+                    android:fontFamily="@font/worksans_regular"
                     android:layout_marginStart="12dp"
                     android:layout_gravity="start"
                     android:textSize="18sp"
@@ -196,10 +203,10 @@
 
 
             <TextView
+                android:fontFamily="@font/worksans_black"
                 android:layout_marginTop="12dp"
                 android:layout_marginStart="22dp"
                 android:layout_gravity="start"
-                android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="@color/grisTitulo"
                 android:text="Se admiten únicamente"
@@ -228,6 +235,7 @@
                         android:layout_height="40dp"/>
 
                     <TextView
+                        android:fontFamily="@font/worksans_regular"
                         android:text="Perros"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -247,6 +255,7 @@
                         android:layout_height="40dp" />
 
                     <TextView
+                        android:fontFamily="@font/worksans_regular"
                         android:text="Gatos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -265,6 +274,7 @@
                         android:layout_height="wrap_content" />
 
                     <TextView
+                        android:fontFamily="@font/worksans_regular"
                         android:text="Roedores"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>

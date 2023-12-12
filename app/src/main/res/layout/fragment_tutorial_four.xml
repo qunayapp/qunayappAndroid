@@ -24,20 +24,23 @@
             android:layout_height="320dp"/>
 
         <TextView
+            android:fontFamily="@font/worksans_black"
+            android:textAlignment="center"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:textSize="22dp"
+            android:textSize="22sp"
             android:textColor="@color/verdeq"
             android:text="Mantén un Registro de Vacunas y Más"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:justificationMode="inter_word"
+            android:fontFamily="@font/worksans_regular"
+            android:textAlignment="center"
             android:padding="22dp"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:textSize="22dp"
+            android:textSize="16sp"
             android:textColor="@color/verdepastelq"
             android:text="Nada es más importante que la salud de tu mascota. Con nuestra función de registro, podrás llevar un seguimiento de todas las vacunas, tratamientos y citas médicas. ¡Mantén a tu mascota feliz y saludable!"
             android:layout_width="wrap_content"

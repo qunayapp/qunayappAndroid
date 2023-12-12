@@ -24,20 +24,23 @@
             android:layout_height="320dp"/>
 
         <TextView
+            android:fontFamily="@font/worksans_black"
+            android:textAlignment="center"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:textSize="22dp"
+            android:textSize="22sp"
             android:textColor="@color/verdeq"
             android:text="Explora Todo lo que Tenemos Para Ti!"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:justificationMode="inter_word"
+            android:fontFamily="@font/worksans_regular"
+            android:textAlignment="center"
             android:padding="22dp"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:textSize="22dp"
+            android:textSize="16sp"
             android:textColor="@color/verdepastelq"
             android:text="Únete a una comunidad de amantes de las mascotas como tú.\n¡Juntos, hacemos que el mundo sea un lugar mejor para nuestras queridas mascotas!"
             android:layout_width="wrap_content"

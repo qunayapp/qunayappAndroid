@@ -17,7 +17,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:textStyle="bold"
+                android:fontFamily="@font/worksans_black"
                 android:gravity="center"
                 android:layout_marginEnd="27dp"
                 android:layout_marginStart="27dp"
@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:fontFamily="@font/worksans_regular"
                 android:gravity="center"
                 android:layout_marginEnd="27dp"
                 android:layout_marginStart="27dp"
@@ -90,6 +91,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
+                android:background="@color/white"
                 android:id="@+id/edtNombre"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -109,6 +111,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:background="@color/white"
                 android:id="@+id/edtCorreo"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -134,6 +137,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:background="@color/white"
                     android:id="@+id/edtTelefono"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_weight="50"
@@ -154,6 +158,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:background="@color/white"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_weight="50"
                     android:layout_width="0dp"
@@ -178,6 +183,7 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:background="@color/white"
                 app:passwordToggleEnabled="true"
                 android:id="@+id/edtPassword"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -199,6 +205,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:background="@color/white"
                 app:passwordToggleEnabled="true"
                 android:id="@+id/edtPassword2"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

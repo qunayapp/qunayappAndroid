@@ -24,19 +24,20 @@
             android:layout_height="320dp"/>
 
         <TextView
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:textSize="26sp"
-            android:textColor="@color/verdeq"
-            android:text="Reserva tus Citas en Segundos"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/worksans_black"
+            android:text="Reserva tus Citas en Segundos"
+            android:textColor="@color/verdeq"
+            android:textSize="26sp" />
 
         <TextView
+            android:fontFamily="@font/worksans_regular"
             android:textAlignment="center"
             android:padding="22dp"
             android:layout_gravity="center"
-            android:textSize="22sp"
+            android:textSize="16sp"
             android:textColor="@color/verdepastelq"
             android:text="¿Necesitas programar una cita para tu mascota? Con Qunay, es rápido y sencillo. Tu mascota recibirá la atención que se merece, cuando se merece."
             android:layout_width="wrap_content"

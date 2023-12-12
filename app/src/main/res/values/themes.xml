@@ -19,4 +19,9 @@
     </style>
     <style name="Theme.Mascotapp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.Mascotapp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">#DDD</item>
+        <item name="boxStrokeWidth">10dp</item>
+    </style>
 </resources>
