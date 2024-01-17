@@ -22,7 +22,7 @@ class StepFive : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view: View = inflater.inflate(R.layout.fragment_tutorial_three, container,false)
+        var view: View = inflater.inflate(R.layout.fragment_tutorial_five, container,false)
         return view
     }
 

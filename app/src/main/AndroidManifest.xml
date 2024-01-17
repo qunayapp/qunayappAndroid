@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mascotapp">
         <activity
+            android:name=".vistas.reminder.RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".vistas.DetailServiceActivity"
             android:exported="false" />
         <activity

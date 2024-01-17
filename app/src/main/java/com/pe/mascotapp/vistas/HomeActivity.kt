@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -30,6 +31,8 @@ import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.adapters.HomeAdapter
 import com.pe.mascotapp.vistas.adapters.HomeListServiceAdapter
 import com.pe.mascotapp.vistas.adapters.HomeServiceAdapter
+import com.pe.mascotapp.vistas.fragments.home.HomeFragment
+import com.pe.mascotapp.vistas.fragments.home.ReminderFragment
 import java.io.File
 import java.io.FileInputStream
 
@@ -56,9 +59,9 @@ class HomeActivity : AppCompatActivity() {
             Utils.dump("item: " + item.itemId)
             when (item.itemId) {
 
-                /*R.id.nav_menu_principal -> {
+                R.id.nav_home -> {
 
-                    selectedFragment = HomeFragment.newInstance(moduloPrevencionArray)
+                    selectedFragment = HomeFragment.newInstance()
                     //title = R.string.menu_camera;
                     supportFragmentManager
                         .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
@@ -70,7 +73,7 @@ class HomeActivity : AppCompatActivity() {
 
                 }
 
-                R.id.nav_sobre_mimp -> {
+                /*R.id.nav_sobre_mimp -> {
 
                     val browserIntent =
                         Intent(Intent.ACTION_VIEW, Uri.parse("https://www.gob.pe/mimp"))
@@ -97,8 +100,8 @@ class HomeActivity : AppCompatActivity() {
                     //setTitle(getString(title));
                     drawer_layout!!.closeDrawer(GravityCompat.START)
                 }*/
-                /*R.id.nav_nosotros -> {
-                    selectedFragment = AboutUsFragment.newInstance()
+                /*R.id.nav_notification -> {
+                    selectedFragment = ReminderFragment.newInstance()
                     //title = R.string.menu_gallery;
                     supportFragmentManager
                         .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
@@ -136,7 +139,15 @@ class HomeActivity : AppCompatActivity() {
             //Utils.dump("item: " + item.itemId)*/
             when (item.itemId) {
                 R.id.nav_home -> {
+                    selectedFragment = HomeFragment.newInstance()
+                    //title = R.string.menu_camera;
+                    supportFragmentManager
+                        .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                        .replace(R.id.fragmentContainer, selectedFragment)
+                        .commit()
 
+                    //setTitle(getString(title));
+                    drawer_layout!!.closeDrawer(GravityCompat.START)
 
                 }
                 R.id.nav_history -> {
@@ -149,6 +160,17 @@ class HomeActivity : AppCompatActivity() {
 
                 R.id.nav_pet -> {
 
+                }
+                R.id.nav_notification -> {
+                    selectedFragment = ReminderFragment.newInstance()
+                    //title = R.string.menu_gallery;
+                    supportFragmentManager
+                        .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
+                        .replace(R.id.fragmentContainer, selectedFragment)
+                        .commit()
+
+                    //setTitle(getString(title));
+                    drawer_layout!!.closeDrawer(GravityCompat.START)
                 }
             }
             /*val transaction =
@@ -171,8 +193,8 @@ class HomeActivity : AppCompatActivity() {
         presentador = PrincipalPresentador.VistaStart(this)
 
 
-        obtenerData()
-        startRCVHome()
+        //obtenerData()
+        //startRCVHome()
         iniciarvista(savedInstanceState)
     }
     @SuppressLint("Range")
@@ -383,15 +405,17 @@ class HomeActivity : AppCompatActivity() {
 
         drawer_layout!!.addDrawerListener(toggle)
         toggle.syncState()
+
+
     }
 
     fun startMenu(savedInstanceState: Bundle?) {
 
         if (savedInstanceState == null) {
-            /*val transaction =
+            val transaction =
                 supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentContainer, HomeFragment.newInstance(moduloPrevencionArray))
-            transaction.commit()*/
+            transaction.replace(R.id.fragmentContainer, HomeFragment.newInstance())
+            transaction.commit()
             //toolTitle!!.text = "Hola, " + "Usuario"
             //menuHome!!.selectedItemId = R.id.nav_home
             //navigationView!!.setCheckedItem(R.id.nav_menu_principal)

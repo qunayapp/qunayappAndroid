@@ -23,164 +23,72 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/imgBanner">
+            android:layout_above="@+id/imgBanner" />
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="end"
+            android:background="@color/verdeclaroq"
+            android:elevation="4dp"
+            android:foregroundGravity="right"
+            android:gravity="center"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:touchscreenBlocksFocus="false"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            tools:ignore="MissingConstraints">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginEnd="24dp">
 
-                <TextView
-                    android:padding="14dp"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="@color/verdeq"
-                    android:text="Los mejores servicios para tu mascota"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center_horizontal"
+                    app:cardCornerRadius="140dp"
+                    app:cardElevation="12dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rcvHomeService"
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/imgUser"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="4dp"
-                        android:orientation="horizontal" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:padding="14dp"
                         android:layout_gravity="center"
-                        android:textStyle="bold"
-                        android:textSize="14sp"
-                        android:textColor="@color/plomoq"
-                        android:text="Todos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <View
-                        android:background="@color/plomoq"
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"/>
+                        android:src="@drawable/ic_baseline_account_circle_24" />
 
-                    <TextView
-                        android:padding="14dp"
-                        android:layout_gravity="center"
+                </androidx.cardview.widget.CardView>-->
 
-                        android:textSize="14sp"
-                        android:textColor="@color/plomoq"
-                        android:text="Favoritos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <LinearLayout
-                        android:gravity="end"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <ImageView
-                            android:layout_gravity="center"
-                            android:src="@drawable/filtros"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <TextView
-                            android:padding="14dp"
-                            android:layout_gravity="center"
-                            android:textStyle="bold"
-                            android:textSize="14sp"
-                            android:textColor="@color/plomoq"
-                            android:text="filtrar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcvHome"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="4dp"
-                    android:orientation="vertical" />
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="end"
-                android:background="@color/verdeclaroq"
-                android:elevation="4dp"
-                android:foregroundGravity="right"
-                android:gravity="center"
-                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-                android:touchscreenBlocksFocus="false"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                tools:ignore="MissingConstraints">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginEnd="24dp">
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo_q_blanco" />
 
-                    <!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:layout_gravity="center_horizontal"
-                        app:cardCornerRadius="140dp"
-                        app:cardElevation="12dp">
-
-                        <ImageView
-                            android:visibility="gone"
-                            android:id="@+id/imgUser"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_baseline_account_circle_24" />
-
-                    </androidx.cardview.widget.CardView>-->
-
-
-                </LinearLayout>
-
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="24dp">
 
                 <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="60dp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/logo_q_blanco" />
+                    android:src="@drawable/notificaciones" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginEnd="24dp">
+            </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/notificaciones" />
-
-                </LinearLayout>
-
-            </androidx.appcompat.widget.Toolbar>
-
-        </FrameLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <ImageView
             android:visibility="gone"
@@ -245,9 +153,9 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:fontFamily="@font/worksans_black"
                     android:textSize="32sp"
                     android:textColor="@color/white"
-                    android:textStyle="bold"
                     android:text="Julian Alvarez"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -273,9 +181,9 @@
                         android:layout_height="wrap_content">
 
                         <TextView
+                            android:fontFamily="@font/worksans_black"
                             android:textSize="18sp"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
                             android:text="Perfil"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -289,9 +197,9 @@
                             android:layout_height="2dp"/>
 
                         <TextView
+                            android:fontFamily="@font/worksans_black"
                             android:textSize="18sp"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
                             android:text="Mensajes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -306,9 +214,9 @@
 
 
                         <TextView
+                            android:fontFamily="@font/worksans_black"
                             android:textSize="18sp"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
                             android:text="Ajustes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -321,9 +229,9 @@
                             android:layout_height="2dp"/>
 
                         <TextView
+                            android:fontFamily="@font/worksans_black"
                             android:textSize="18sp"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
                             android:text="Log Out"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
