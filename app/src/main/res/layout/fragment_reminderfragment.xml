@@ -18,6 +18,7 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAgregar"
             android:textColor="@color/white"
             android:text="+ Agregar Nuevo"
             android:layout_width="200dp"
