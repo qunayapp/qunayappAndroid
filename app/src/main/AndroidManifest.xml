@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -97,6 +98,8 @@
             android:name=".vistas.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+
+        <receiver android:name=".notifications.AlarmReceiver"/>
     </application>
 
 </manifest>

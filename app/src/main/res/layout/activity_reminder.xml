@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -36,6 +37,30 @@
                     android:textSize="14sp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txtHora"
+                android:text="Hora seleccionada:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnSelectedDate"
+                android:text="Seleccionar fecha y hora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnSetAlarm"
+                android:text="Setear Alarma"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnCancelarAlarm"
+                android:text="Cancelar Alarma"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
