@@ -31,4 +31,6 @@
     <color name="grisTitulo">#767676</color>
     <color name="background">#EEEEEE</color>
     <color name="bannerActiviry">#F1F4E0</color>
+    <color name="backgroundBanner">#F9F9F9</color>
+    <color name="tituloCategoria">#DADADA</color>
 </resources>

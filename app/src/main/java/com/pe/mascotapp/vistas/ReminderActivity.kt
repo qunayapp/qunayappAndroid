@@ -8,6 +8,10 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +23,7 @@ import com.google.android.material.timepicker.TimeFormat
 import com.pe.mascotapp.R
 import com.pe.mascotapp.notifications.AlarmReceiver
 import com.pe.mascotapp.notifications.NotificationService
+import com.pe.mascotapp.utils.Utils
 import java.util.Calendar
 
 
@@ -31,6 +36,8 @@ class ReminderActivity : AppCompatActivity() {
     var btnCancelarAlarm: Button?= null
     var txtHora:TextView ?= null
 
+    var autoServicio: AutoCompleteTextView?= null
+
     private lateinit var picker :MaterialTimePicker
     private lateinit var calendar: Calendar
     private lateinit var alarmManager : AlarmManager
@@ -40,6 +47,9 @@ class ReminderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reminder)
         createNotificacionChannel()
+
+        autoServicio = findViewById<AutoCompleteTextView>(R.id.autoServicio)
+
         edtNombreEvento = findViewById<TextInputLayout>(R.id.edtNombreEvento)
         btnAceptar = findViewById<MaterialButton>(R.id.btnAceptar)
         btnSelectedDate = findViewById<Button>(R.id.btnSelectedDate)
@@ -63,6 +73,24 @@ class ReminderActivity : AppCompatActivity() {
 
         btnCancelarAlarm!!.setOnClickListener {
             cancelAlarm()
+        }
+
+        val servicioArrayOf = arrayListOf<String>()
+        servicioArrayOf.add("Cuadruple")
+        servicioArrayOf.add("Quintuple")
+        servicioArrayOf.add("Sextuple")
+        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            applicationContext,
+            android.R.layout.simple_dropdown_item_1line, servicioArrayOf
+        )
+
+        autoServicio?.setAdapter(adapter)
+        autoServicio?.threshold = 1
+
+        autoServicio?.onItemClickListener = AdapterView.OnItemClickListener{
+                parent,view,position,id->
+            val selectedItem = parent.getItemAtPosition(position).toString()
+            Utils.dump("categeoria selectedItem: $selectedItem")
         }
     }
 
@@ -106,7 +134,7 @@ class ReminderActivity : AppCompatActivity() {
             AlarmManager.INTERVAL_DAY, pendingIntent
         )
 
-        Toast.makeText(this,"Alarma successfuly",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"Alarma creada",Toast.LENGTH_SHORT).show()
     }
 
     private fun cancelAlarm() {
@@ -116,13 +144,13 @@ class ReminderActivity : AppCompatActivity() {
         pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
 
         alarmManager.cancel(pendingIntent)
-        Toast.makeText(this,"Alarma cancelled",Toast.LENGTH_LONG).show()
+        Toast.makeText(this,"Alarma cancelada",Toast.LENGTH_LONG).show()
     }
 
     private fun createNotificacionChannel(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val name : CharSequence = "foxandroidReminderChannel"
-            val description = "Canal de alarma manager"
+            val description = "Mensaje de alarma"
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel("foxandroid",name,importance)
             channel.description = description
