@@ -6,6 +6,8 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="secondary">#999999</color>
+    <color name="third">#7C7C7D</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#444cb4</color>
     <color name="gris">#F7FBFE</color>
@@ -24,9 +26,12 @@
     <color name="verdeq">#195622</color>
     <color name="verdepastelq">#ccd885</color>
     <color name="verdeclaroq">#93b504</color>
+    <color name="green100">#EDF4EC</color>
     <color name="blancoq">#fff4e9</color>
     <color name="plomoq">#C7C7C7</color>
     <color name="plomoRegular">#DDDDDD</color>
+    <color name="plomoDark">#B3B3B3</color>
+    <color name="grey100">#CECECE</color>
     <color name="verdeMenu">#93B604</color>
     <color name="grisTitulo">#767676</color>
     <color name="background">#EEEEEE</color>

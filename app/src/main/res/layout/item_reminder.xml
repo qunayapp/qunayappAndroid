@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="reminder"
+            type="com.pe.mascotapp.vistas.adapters.ReminderEntity" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="20dp"
+        app:cardBackgroundColor="#FBFBFB"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_rectangle_border_8">
+
+                <ImageView
+                    android:id="@+id/ivReminder"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/ic_rectangle_border_3"
+                    android:contentDescription="@string/app_name"
+                    android:padding="7dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/llContent"
+                    tools:src="@drawable/ic_vaccine" />
+
+                <LinearLayout
+                    android:id="@+id/llContent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="11dp"
+                    android:layout_marginEnd="18dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/ivEditReminder"
+                    app:layout_constraintStart_toEndOf="@+id/ivReminder"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvTitleReminder"
+                        style="@style/WorkSans_SemiBold20"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@{reminder.title}"
+                        app:layout_constraintStart_toStartOf="@+id/ivReminder"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Vacunación de antirrabia" />
+
+                    <TextView
+                        android:id="@+id/tvDescriptionReminder"
+                        style="@style/WorkSans_Regular14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{reminder.description}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitleReminder"
+                        tools:text="Vacunación de antirrabia" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivEditReminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_edit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvAnimalName"
+                    style="@style/WorkSans_Light12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:text="@{reminder.animalName}"
+                    app:drawableStartCompat="@drawable/ic_dog"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Harry Cane" />
+
+                <TextView
+                    android:id="@+id/tvDateReminder"
+                    style="@style/WorkSans_Light12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:drawablePadding="8dp"
+                    android:text="@{reminder.date}"
+                    app:drawableStartCompat="@drawable/ic_calendar"
+                    app:layout_constraintStart_toStartOf="@+id/tvAnimalName"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAnimalName"
+                    tools:text="11:35 am - 15/09/23" />
+
+                <TextView
+                    android:id="@+id/tvLocationReminder"
+                    style="@style/WorkSans_Light12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="12dp"
+                    android:drawablePadding="8dp"
+                    android:text="@{reminder.location}"
+                    app:drawableStartCompat="@drawable/ic_location"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvAnimalName"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDateReminder"
+                    tools:text="Location" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swReminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="11dp"
+                    android:checked="true"
+                    android:thumb="@drawable/ic_custom_thumb"
+                    app:layout_constraintBottom_toBottomOf="@id/tvLocationReminder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:track="@drawable/ic_custom_track" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

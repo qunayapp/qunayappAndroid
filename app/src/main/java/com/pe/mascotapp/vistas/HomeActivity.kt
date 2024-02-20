@@ -1,6 +1,5 @@
 package com.pe.mascotapp.vistas
 
-import android.R.attr.radius
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -8,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -33,10 +31,11 @@ import com.pe.mascotapp.vistas.adapters.HomeListServiceAdapter
 import com.pe.mascotapp.vistas.adapters.HomeServiceAdapter
 import com.pe.mascotapp.vistas.fragments.home.HomeFragment
 import com.pe.mascotapp.vistas.fragments.home.ReminderFragment
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileInputStream
 
-
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
     var menuHome: BottomNavigationView? = null

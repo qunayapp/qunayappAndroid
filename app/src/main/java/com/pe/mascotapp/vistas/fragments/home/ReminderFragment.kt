@@ -1,43 +1,46 @@
 package com.pe.mascotapp.vistas.fragments.home
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
-import com.pe.mascotapp.R
-import com.pe.mascotapp.vistas.CarosuelRegisterActivity
-import com.pe.mascotapp.vistas.ReminderActivity
+import com.pe.mascotapp.databinding.FragmentReminderfragmentBinding
+import com.pe.mascotapp.viewmodels.ReminderHistoryViewModel
+import com.pe.mascotapp.vistas.adapters.ReminderAdapter
+import com.pe.mascotapp.vistas.adapters.TabAnimalAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ReminderFragment : Fragment() {
 
-    var btnAgregar:MaterialButton ?= null
+    private val reminderViewModel: ReminderHistoryViewModel by viewModels()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view: View = inflater.inflate(R.layout.fragment_reminderfragment, container,false)
-        btnAgregar = view.findViewById<MaterialButton>(R.id.btnAgregar)
-
-        btnAgregar!!.setOnClickListener {
-            val intent = Intent(context, ReminderActivity::class.java)
-            startActivity(intent)
+    ): View {
+        val binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
+        binding.rvAnimalsReminder.apply {
+            this.adapter = TabAnimalAdapter(reminderViewModel.getAnimalTabs())
+            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
-
-        return view;
+        binding.rvReminders.apply {
+            this.adapter = ReminderAdapter(reminderViewModel.getReminders())
+            this.layoutManager = LinearLayoutManager(context)
+        }
+        return binding.root;
     }
 
     companion object {
-        fun newInstance() : Fragment{
-            val reminderFragment = ReminderFragment()
-            return reminderFragment
+        fun newInstance(): Fragment {
+            return ReminderFragment()
         }
     }
 }
