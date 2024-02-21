@@ -7,11 +7,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.TabAnimalBinding
+import com.pe.mascotapp.vistas.entities.TabAnimalEntity
 
 class TabAnimalAdapter(private val tabAnimals: List<TabAnimalEntity>) :
     RecyclerView.Adapter<TabAnimalAdapter.TabAnimalViewHolder>() {
 
-    var positionSelected = 0
+    private var positionSelected = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabAnimalViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -28,9 +29,8 @@ class TabAnimalAdapter(private val tabAnimals: List<TabAnimalEntity>) :
             if (position != positionSelected) {
                 tabAnimals[positionSelected].isSelected = false
                 animal.isSelected = true
-                notifyItemChanged(position)
-                notifyItemChanged(positionSelected)
                 positionSelected = position
+                notifyDataSetChanged()
             }
         }
     }
@@ -47,14 +47,19 @@ class TabAnimalAdapter(private val tabAnimals: List<TabAnimalEntity>) :
                 background,
                 binding.root.context.theme
             )
+            binding.ivTabAnimal.setImageDrawable(
+                ContextCompat.getDrawable(
+                    binding.root.context,
+                    animal.image
+                )
+            )
+            if (animal.isSelected) {
+                binding.ivTabAnimal.strokeColor =
+                    ContextCompat.getColorStateList(binding.root.context, R.color.white)
+                binding.ivTabAnimal.strokeWidth = 2.00f
+            }
             binding.tvTabName.setTextColor(ContextCompat.getColor(binding.root.context, textColor))
         }
     }
 }
 
-
-class TabAnimalEntity(
-    var isSelected: Boolean,
-    val name: String,
-    val image: Int
-)

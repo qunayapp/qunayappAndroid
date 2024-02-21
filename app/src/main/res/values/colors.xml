@@ -27,11 +27,13 @@
     <color name="verdepastelq">#ccd885</color>
     <color name="verdeclaroq">#93b504</color>
     <color name="green100">#EDF4EC</color>
+    <color name="green200">#CCD886</color>
     <color name="blancoq">#fff4e9</color>
     <color name="plomoq">#C7C7C7</color>
     <color name="plomoRegular">#DDDDDD</color>
     <color name="plomoDark">#B3B3B3</color>
     <color name="grey100">#CECECE</color>
+    <color name="grey200">#979797</color>
     <color name="verdeMenu">#93B604</color>
     <color name="grisTitulo">#767676</color>
     <color name="background">#EEEEEE</color>

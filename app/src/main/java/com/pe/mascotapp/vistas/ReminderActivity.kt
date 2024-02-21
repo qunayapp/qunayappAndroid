@@ -6,72 +6,72 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputLayout
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.pe.mascotapp.R
+import com.pe.mascotapp.databinding.ActivityReminderBinding
 import com.pe.mascotapp.notifications.AlarmReceiver
 import com.pe.mascotapp.notifications.NotificationService
 import com.pe.mascotapp.utils.Utils
+import com.pe.mascotapp.viewmodels.ReminderViewModel
+import com.pe.mascotapp.vistas.adapters.CategoryReminderAdapter
+import com.pe.mascotapp.vistas.adapters.PetAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
-
+@AndroidEntryPoint
 class ReminderActivity : AppCompatActivity() {
 
-    var edtNombreEvento: TextInputLayout?= null
-    var btnAceptar: MaterialButton?= null
-    var btnSelectedDate: Button?= null
-    var btnSetAlarm: Button?= null
-    var btnCancelarAlarm: Button?= null
-    var txtHora:TextView ?= null
-
-    var autoServicio: AutoCompleteTextView?= null
-
-    private lateinit var picker :MaterialTimePicker
+    private lateinit var binding: ActivityReminderBinding
+    private lateinit var picker: MaterialTimePicker
     private lateinit var calendar: Calendar
-    private lateinit var alarmManager : AlarmManager
+    private lateinit var alarmManager: AlarmManager
     private lateinit var pendingIntent: PendingIntent
+
+    private val reminderViewModel: ReminderViewModel by viewModels()
+
+    private fun setUpRecyclerViews() {
+        binding.rvAnimals.apply {
+            layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            adapter = PetAdapter(reminderViewModel.getPets())
+        }
+        binding.rvCategories.apply {
+            layoutManager = GridLayoutManager(context, 5)
+            adapter = CategoryReminderAdapter(reminderViewModel.getSelectCategories())
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reminder)
+        binding = ActivityReminderBinding.inflate(layoutInflater)
+        setUpRecyclerViews()
+        setContentView(binding.root)
         createNotificacionChannel()
 
-        autoServicio = findViewById<AutoCompleteTextView>(R.id.autoServicio)
-
-        edtNombreEvento = findViewById<TextInputLayout>(R.id.edtNombreEvento)
-        btnAceptar = findViewById<MaterialButton>(R.id.btnAceptar)
-        btnSelectedDate = findViewById<Button>(R.id.btnSelectedDate)
-        btnSetAlarm = findViewById<Button>(R.id.btnSetAlarm)
-        btnCancelarAlarm = findViewById<Button>(R.id.btnCancelarAlarm)
-        txtHora = findViewById<Button>(R.id.txtHora)
-
-        btnAceptar!!.setOnClickListener {
+        binding.btnAceptar!!.setOnClickListener {
 
             startService()
-            
+
         }
 
-        btnSelectedDate!!.setOnClickListener {
+        binding.btnSelectedDate!!.setOnClickListener {
             showTimePicker()
         }
 
-        btnSetAlarm!!.setOnClickListener {
+        binding.btnSetAlarm!!.setOnClickListener {
             setAlarm()
         }
 
-        btnCancelarAlarm!!.setOnClickListener {
+        binding.btnCancelarAlarm!!.setOnClickListener {
             cancelAlarm()
         }
 
@@ -84,19 +84,18 @@ class ReminderActivity : AppCompatActivity() {
             android.R.layout.simple_dropdown_item_1line, servicioArrayOf
         )
 
-        autoServicio?.setAdapter(adapter)
-        autoServicio?.threshold = 1
+        binding.autoServicio?.setAdapter(adapter)
+        binding.autoServicio?.threshold = 1
 
-        autoServicio?.onItemClickListener = AdapterView.OnItemClickListener{
-                parent,view,position,id->
-            val selectedItem = parent.getItemAtPosition(position).toString()
-            Utils.dump("categeoria selectedItem: $selectedItem")
-        }
+        binding.autoServicio?.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                val selectedItem = parent.getItemAtPosition(position).toString()
+                Utils.dump("categeoria selectedItem: $selectedItem")
+            }
     }
 
 
-
-    private fun showTimePicker(){
+    private fun showTimePicker() {
         picker = MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_12H)
             .setHour(12)
@@ -104,14 +103,14 @@ class ReminderActivity : AppCompatActivity() {
             .setTitleText("Alarma")
             .build()
 
-        picker.show(supportFragmentManager,"foxandroid")
+        picker.show(supportFragmentManager, "foxandroid")
 
-        picker.addOnPositiveButtonClickListener{
-            if (picker.hour > 12){
-                txtHora!!.text = String.format("%02d",picker.hour - 12) + " : " +
+        picker.addOnPositiveButtonClickListener {
+            if (picker.hour > 12) {
+                binding.txtHora!!.text = String.format("%02d", picker.hour - 12) + " : " +
                         String.format("%02d", picker.minute) + "PM"
-            }else{
-                txtHora!!.text = String.format("%02d",picker.hour - 12) + " : " +
+            } else {
+                binding.txtHora!!.text = String.format("%02d", picker.hour - 12) + " : " +
                         String.format("%02d", picker.minute) + "AM"
             }
 
@@ -123,36 +122,38 @@ class ReminderActivity : AppCompatActivity() {
         }
     }
 
-    private fun setAlarm(){
+    private fun setAlarm() {
 
         alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this,AlarmReceiver::class.java)
+        val intent = Intent(this, AlarmReceiver::class.java)
 
-        pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        pendingIntent =
+            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,calendar.timeInMillis,
+            AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
             AlarmManager.INTERVAL_DAY, pendingIntent
         )
 
-        Toast.makeText(this,"Alarma creada",Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Alarma creada", Toast.LENGTH_SHORT).show()
     }
 
     private fun cancelAlarm() {
         alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this,AlarmReceiver::class.java)
+        val intent = Intent(this, AlarmReceiver::class.java)
 
-        pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        pendingIntent =
+            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         alarmManager.cancel(pendingIntent)
-        Toast.makeText(this,"Alarma cancelada",Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Alarma cancelada", Toast.LENGTH_LONG).show()
     }
 
-    private fun createNotificacionChannel(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val name : CharSequence = "foxandroidReminderChannel"
+    private fun createNotificacionChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name: CharSequence = "foxandroidReminderChannel"
             val description = "Mensaje de alarma"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("foxandroid",name,importance)
+            val channel = NotificationChannel("foxandroid", name, importance)
             channel.description = description
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
@@ -164,9 +165,5 @@ class ReminderActivity : AppCompatActivity() {
         val serviceIntent = Intent(this, NotificationService::class.java)
         serviceIntent.putExtra("inputExtra", input)
         ContextCompat.startForegroundService(this, serviceIntent)
-    }
-    fun stopService() {
-        val serviceIntent = Intent(this, NotificationService::class.java)
-        stopService(serviceIntent)
     }
 }

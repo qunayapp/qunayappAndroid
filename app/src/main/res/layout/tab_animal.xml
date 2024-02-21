@@ -7,7 +7,7 @@
 
         <variable
             name="tabAnimal"
-            type="com.pe.mascotapp.vistas.adapters.TabAnimalEntity" />
+            type="com.pe.mascotapp.vistas.entities.TabAnimalEntity" />
     </data>
 
     <LinearLayout
@@ -26,7 +26,6 @@
             android:layout_height="24dp"
             android:contentDescription="@string/app_name"
             android:scaleType="centerCrop"
-            android:src="@{tabAnimal.image}"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             tools:src="@drawable/perro1" />
 
