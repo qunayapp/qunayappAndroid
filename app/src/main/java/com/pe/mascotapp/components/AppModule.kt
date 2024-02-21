@@ -5,11 +5,13 @@ import androidx.room.Room
 import com.pe.mascotapp.data.data_source.PetsDatabase
 import com.pe.mascotapp.data.repository.ReminderRepository
 import com.pe.mascotapp.domain.repository.ReminderRepositoryImpl
+import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+@Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
     @Provides
