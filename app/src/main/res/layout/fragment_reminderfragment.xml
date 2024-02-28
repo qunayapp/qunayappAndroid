@@ -1,89 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/tvTitleHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
-        android:text="Historial"
-        android:textColor="@color/verdeq"
-        android:textSize="24dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+	<data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAnimalsReminder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitleHistory"
-        tools:itemCount="1"
-        tools:listitem="@layout/tab_animal" />
+		<variable
+			name="reminderViewModel"
+			type="com.pe.mascotapp.viewmodels.ReminderHistoryViewModel" />
+	</data>
 
-    <Button
-        android:id="@+id/btnAddNew"
-        style="@style/Widget.Button.Primary"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="32dp"
-        android:text="+Agregar Nuevo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvAnimalsReminder" />
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginTop="?attr/actionBarSize">
 
+		<TextView
+			android:id="@+id/tvTitleHistory"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="32dp"
+			android:layout_marginTop="30dp"
+			android:fontFamily="@font/worksans_black"
+			android:visibility="@{!reminderViewModel.remindersIsEmpty}"
+			android:text="Historial"
+			android:textColor="@color/verdeq"
+			android:textSize="24dp"
+			android:textStyle="bold"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:fillViewport="true"
-        android:paddingHorizontal="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddNew">
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/rvAnimalsReminder"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="32dp"
+			android:layout_marginTop="20dp"
+			android:orientation="horizontal"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/tvTitleHistory"
+			tools:itemCount="1"
+			tools:listitem="@layout/tab_animal" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvReminders"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/item_reminder" />
-
-    </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_pets_griss">
-
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAgregar"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:text="+ Agregar Nuevo"
-            android:textColor="@color/white" />
+		<Button
+			android:id="@+id/btnAddNew"
+			style="@style/Widget.Button.Primary"
+			android:layout_width="wrap_content"
+			android:layout_marginTop="20dp"
+			android:layout_marginEnd="32dp"
+			android:visibility="@{!reminderViewModel.remindersIsEmpty}"
+			android:text="@string/plus_add_new"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/rvAnimalsReminder" />
 
 
-    </LinearLayout>
+		<androidx.core.widget.NestedScrollView
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_marginTop="10dp"
+			android:fillViewport="true"
+			android:paddingHorizontal="32dp"
+			android:visibility="@{!reminderViewModel.remindersIsEmpty}"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/btnAddNew">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+			<androidx.recyclerview.widget.RecyclerView
+				android:id="@+id/rvReminders"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				tools:listitem="@layout/item_reminder" />
+
+		</androidx.core.widget.NestedScrollView>
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:orientation="vertical"
+			android:visibility="@{reminderViewModel.remindersIsEmpty}"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/rvAnimalsReminder">
+
+			<TextView
+				android:id="@+id/tvDontHaveReminder"
+				style="@style/WorkSans_Regular15"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="50dp"
+				android:text="@string/dont_have_reminders"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:contentDescription="@string/app_name"
+				android:scaleType="centerCrop"
+				android:src="@drawable/background_pets_griss"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/tvDontHaveReminder" />
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/btnAgregar"
+				style="@style/Widget.Button.Primary"
+				android:layout_width="wrap_content"
+				android:layout_height="60dp"
+				android:text="@string/plus_add_new"
+				android:textColor="@color/white"
+				android:textSize="20dp"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent" />
+
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

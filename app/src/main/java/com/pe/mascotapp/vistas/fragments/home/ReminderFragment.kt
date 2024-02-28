@@ -33,6 +33,7 @@ class ReminderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
+        binding.reminderViewModel = reminderViewModel
         binding.rvAnimalsReminder.apply {
             this.adapter = TabAnimalAdapter(reminderViewModel.getAnimalTabs())
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
@@ -42,6 +43,10 @@ class ReminderFragment : Fragment() {
             this.layoutManager = LinearLayoutManager(context)
         }
         binding.btnAddNew.setOnClickListener {
+            val intent = Intent(activity, ReminderActivity::class.java)
+            launchCreateReminder.launch(intent)
+        }
+        binding.btnAgregar.setOnClickListener {
             val intent = Intent(activity, ReminderActivity::class.java)
             launchCreateReminder.launch(intent)
         }

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.databinding.ItemPetBinding
 import com.pe.mascotapp.vistas.entities.PetEntity
 
-class PetAdapter(private val pets: List<PetEntity>) :
+class PetAdapter(val pets: List<PetEntity> = listOf(), val itemOnClick: () -> Unit = {}) :
     RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
 
     class PetViewHolder(private val binding: ItemPetBinding) :
@@ -29,6 +29,7 @@ class PetAdapter(private val pets: List<PetEntity>) :
         holder.bind(pet)
         holder.itemView.setOnClickListener {
             pet.isSelected = !pet.isSelected
+            itemOnClick()
             notifyItemChanged(position)
         }
     }

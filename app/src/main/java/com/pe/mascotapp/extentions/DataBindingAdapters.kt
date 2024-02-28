@@ -2,9 +2,11 @@ package com.pe.mascotapp.extentions
 
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.PorterDuff
+import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.BindingConversion
 import com.google.android.material.imageview.ShapeableImageView
 import com.pe.mascotapp.R
 
@@ -62,3 +64,6 @@ fun setUnlocked(v: ImageView) {
     v.colorFilter = null
     v.imageAlpha = 255
 }
+
+@BindingConversion
+fun booleanToVisibility(value: Boolean?) = if (value == true) View.VISIBLE else View.GONE

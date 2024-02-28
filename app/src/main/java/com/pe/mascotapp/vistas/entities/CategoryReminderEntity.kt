@@ -7,79 +7,79 @@ sealed class CategoryReminderEntity(
     open val name: String,
     open val image: Int
 ) {
-    object VaccineReminder : CategoryReminderEntity(
-        true,
+    class VaccineReminder : CategoryReminderEntity(
+        false,
         "Vacuna",
         R.drawable.ic_vaccine
     )
 
-    object Deworming : CategoryReminderEntity(
+    class Deworming : CategoryReminderEntity(
         false,
         "Desparasitación",
         R.drawable.ic_bacterias
     )
 
-    object VetReminder : CategoryReminderEntity(
+    class VetReminder : CategoryReminderEntity(
         false,
         "Veterinario",
         R.drawable.ic_vet
     )
 
-    object AnalysisReminder : CategoryReminderEntity(
+    class AnalysisReminder : CategoryReminderEntity(
         false,
         "Análisis",
         R.drawable.ic_analysis
     )
 
-    object MedicineReminder : CategoryReminderEntity(
+    class MedicineReminder : CategoryReminderEntity(
         false,
         "Medicina",
         R.drawable.ic_medicine
     )
 
-    object DentalReminder : CategoryReminderEntity(
+    class DentalReminder : CategoryReminderEntity(
         false,
         "Profilaxis Dental",
         R.drawable.ic_dental_prophylaxis
     )
 
-    object WalkReminder : CategoryReminderEntity(
+    class WalkReminder : CategoryReminderEntity(
         false,
         "Paseo",
         R.drawable.ic_walk
     )
 
-    object TakeShowerReminder : CategoryReminderEntity(
+    class TakeShowerReminder : CategoryReminderEntity(
         false,
         "Baño y Corte",
         R.drawable.ic_take_shower
     )
 
-    object WaterFoodReminder : CategoryReminderEntity(
+    class WaterFoodReminder : CategoryReminderEntity(
         false,
         "Agua y Comida",
         R.drawable.ic_water_food
     )
 
-    object OthersReminder : CategoryReminderEntity(
+    class OthersReminder : CategoryReminderEntity(
         false,
         "Otros",
         R.drawable.ic_others
     )
 
     companion object {
-        fun getCategories():List<CategoryReminderEntity>{
+        fun getCategories(): List<CategoryReminderEntity> {
             return listOf(
-                VaccineReminder,
-                Deworming,
-                VetReminder,
-                AnalysisReminder,
-                MedicineReminder,
-                DentalReminder,
-                WalkReminder,
-                TakeShowerReminder,
-                WaterFoodReminder,
-                OthersReminder
+                VaccineReminder(),
+                Deworming(),
+                VetReminder(),
+                AnalysisReminder(),
+                MedicineReminder(),
+                DentalReminder(),
+                WalkReminder(),
+                TakeShowerReminder(),
+                WaterFoodReminder(),
+                OthersReminder()
             )
         }
     }

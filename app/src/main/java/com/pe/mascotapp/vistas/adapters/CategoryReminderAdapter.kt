@@ -7,7 +7,7 @@ import com.pe.mascotapp.databinding.ItemCategoryReminderBinding
 import com.pe.mascotapp.vistas.entities.CategoryReminderEntity
 
 class CategoryReminderAdapter(
-    private val categories: List<CategoryReminderEntity>,
+    private val categories: List<CategoryReminderEntity> = listOf(), val itemOnClick: () -> Unit = {}
 ) :
     RecyclerView.Adapter<CategoryReminderAdapter.CategoryReminderViewHolder>() {
     private var positionSelected = 0
@@ -37,6 +37,7 @@ class CategoryReminderAdapter(
                 positionSelected = position
                 notifyItemChanged(position)
             }
+            itemOnClick()
         }
     }
 }

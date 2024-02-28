@@ -42,17 +42,19 @@ class ReminderActivity : AppCompatActivity() {
     private fun setUpRecyclerViews() {
         binding.rvAnimals.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            adapter = PetAdapter(reminderViewModel.getPets())
         }
         binding.rvCategories.apply {
             layoutManager = GridLayoutManager(context, 5)
-            adapter = CategoryReminderAdapter(reminderViewModel.getSelectCategories())
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReminderBinding.inflate(layoutInflater)
+        binding.reminderViewModel = reminderViewModel
+        reminderViewModel.getSelectCategories()
+        reminderViewModel.getPets()
+        setUpObservables()
         setUpRecyclerViews()
         setContentView(binding.root)
         createNotificacionChannel()
@@ -92,6 +94,19 @@ class ReminderActivity : AppCompatActivity() {
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 Utils.dump("categeoria selectedItem: $selectedItem")
             }
+    }
+
+    private fun setUpObservables() {
+        reminderViewModel.listPets.observe(this) {
+            binding.rvAnimals.adapter = PetAdapter(it) {
+                reminderViewModel.enableForm()
+            }
+        }
+        reminderViewModel.categoriesReminder.observe(this) {
+            binding.rvCategories.adapter = CategoryReminderAdapter(it) {
+                reminderViewModel.enableForm()
+            }
+        }
     }
 
 

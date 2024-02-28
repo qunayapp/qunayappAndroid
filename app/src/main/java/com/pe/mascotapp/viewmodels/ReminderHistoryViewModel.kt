@@ -1,5 +1,6 @@
 package com.pe.mascotapp.viewmodels
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
 import com.pe.mascotapp.R
 import com.pe.mascotapp.domain.usecases.GetRemindersWithPetsUseCase
@@ -12,6 +13,13 @@ import javax.inject.Inject
 class ReminderHistoryViewModel @Inject constructor(
     private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase
 ) : ViewModel() {
+
+    val remindersIsEmpty: ObservableBoolean = ObservableBoolean(true)
+
+    init {
+        remindersIsEmpty.set(true)
+    }
+
     fun getAnimalTabs(): List<TabAnimalEntity> {
         getRemindersWithPetsUseCase(1)
         return listOf(
@@ -22,9 +30,11 @@ class ReminderHistoryViewModel @Inject constructor(
     }
 
     fun getReminders(): List<ReminderEntity> {
-        return listOf(
+
+        val reminder = listOf(
             ReminderEntity("asdf", "asdf", "asdf", "adf", "asdf", R.drawable.ic_vaccine),
             ReminderEntity("asdf", "asdf", "asdf", "adf", "asdf", R.drawable.ic_vaccine, false),
         )
+        return reminder
     }
 }
