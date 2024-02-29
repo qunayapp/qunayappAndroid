@@ -15,6 +15,18 @@
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Closed</string>
     <string name="select_animal">Selecciona tu mascota</string>
+    <string name="accept">Aceptar</string>
+    <string name="kind_of_vaccine">Tipo de vacuna</string>
+    <string name="add_new_event">Agregar nombre del evento</string>
+    <string name="add_event_name">Agregar nombre del evento</string>
+    <string name="plus_add">+agregar</string>
+    <string name="repeat">Repetir</string>
+    <string name="no_repeat">No repetir</string>
+    <string name="alarm">Alarma</string>
+    <string name="plus_add_alarm">+Agregar alarma</string>
+    <string name="plus_add_photos">+Agregar fotos</string>
+    <string name="description_event">Descripción del evento</string>
 	<string name="dont_have_reminders">Aun no tienes\nrecordatorios</string>
     <string name="plus_add_new">+ Agregar Nuevo</string>
+    <string name="select_vaccine">Selecciona tipo de vacuna</string>
 </resources>

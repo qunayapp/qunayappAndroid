@@ -10,7 +10,7 @@ class CategoryReminderAdapter(
     private val categories: List<CategoryReminderEntity> = listOf(), val itemOnClick: () -> Unit = {}
 ) :
     RecyclerView.Adapter<CategoryReminderAdapter.CategoryReminderViewHolder>() {
-    private var positionSelected = 0
+    private var positionSelected = -1
 
     class CategoryReminderViewHolder(private val binding: ItemCategoryReminderBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -31,11 +31,14 @@ class CategoryReminderAdapter(
         holder.bind(categories[position])
         holder.itemView.setOnClickListener {
             if (position != positionSelected) {
-                categories[position].isSelected = true
-                categories[positionSelected].isSelected = false
-                notifyItemChanged(positionSelected)
+                val tempPosition = positionSelected
                 positionSelected = position
-                notifyItemChanged(position)
+                categories[positionSelected].isSelected = true
+                notifyItemChanged(positionSelected)
+                if (tempPosition != -1) {
+                    categories[tempPosition].isSelected = false
+                    notifyItemChanged(tempPosition)
+                }
             }
             itemOnClick()
         }

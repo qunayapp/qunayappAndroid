@@ -8,6 +8,7 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.vistas.entities.CategoryReminderEntity
 import com.pe.mascotapp.vistas.entities.PetEntity
+import com.pe.mascotapp.vistas.entities.VaccineFieldEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -22,6 +23,8 @@ class ReminderViewModel @Inject constructor() : ViewModel() {
     val listPets: LiveData<List<PetEntity>> = _listPets
 
     val enableForm: ObservableBoolean = ObservableBoolean(false)
+
+    val listVaccines = mutableListOf(VaccineFieldEntity())
 
     init {
         enableForm.set(false)

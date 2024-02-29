@@ -15,13 +15,22 @@
 		android:layout_height="match_parent"
 		tools:context=".vistas.ReminderActivity">
 
-		<include layout="@layout/toolbar_activity" />
+		<include
+			android:id="@+id/toolbar"
+			layout="@layout/toolbar_activity"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
 
 		<ScrollView
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="0dp"
+			android:background="@color/backgroundBanner"
+			android:fillViewport="true"
+			app:layout_constraintBottom_toTopOf="@+id/llButton"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent">
+			app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
 			<LinearLayout
 				android:layout_width="match_parent"
@@ -32,7 +41,8 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:background="@color/backgroundBanner"
-					android:orientation="vertical">
+					android:orientation="vertical"
+					android:paddingBottom="16dp">
 
 					<TextView
 						style="@style/WorkSans_Regular_Bold16"
@@ -56,6 +66,7 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:background="@color/white"
 					android:orientation="vertical">
 
 					<TextView
@@ -83,75 +94,134 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginStart="22dp"
-					android:layout_marginEnd="22dp"
+					android:layout_marginTop="3dp"
+					android:background="@color/white"
 					android:orientation="vertical"
+					android:paddingHorizontal="48dp"
+					android:paddingVertical="25dp"
 					android:visibility="@{reminderViewModel.enableForm}">
 
-					<com.google.android.material.textfield.TextInputLayout
-						android:id="@+id/edtNombreEvento"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="8dp"
-						android:hint="Agregar nombre del evento">
-
-						<com.google.android.material.textfield.TextInputEditText
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:background="@color/white"
-							android:inputType="text"
-							android:textSize="14sp" />
-
-					</com.google.android.material.textfield.TextInputLayout>
 
 					<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="12dp"
-						android:fontFamily="@font/worksans_regular"
-						android:text="Tipo de vacuna"
-						android:textColor="@color/black" />
-
-					<com.google.android.material.textfield.TextInputLayout
-						android:id="@+id/edtServicio"
-						style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+						style="@style/WorkSans_Regular_SemiBold16"
 						android:layout_width="match_parent"
-						android:layout_height="match_parent"
-						android:gravity="center"
-						android:hint="Selecciona tipo de vacuna">
+						android:layout_height="wrap_content"
+						android:text="@string/add_event_name"
+						android:textColor="@color/grisTitulo" />
 
-						<AutoCompleteTextView
-							android:id="@+id/autoServicio"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:inputType="none" />
 
-					</com.google.android.material.textfield.TextInputLayout>
+					<com.google.android.material.textfield.TextInputEditText
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="text"
+						android:textSize="14sp" />
 
+				</LinearLayout>
+
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/rvVaccineFields"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="3dp"
+					android:background="@color/white"
+					android:paddingHorizontal="48dp"
+					android:paddingVertical="25dp"
+					android:visibility="@{reminderViewModel.enableForm}"
+					tools:listitem="@layout/item_field_vaccine" />
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="3dp"
+					android:background="@color/white"
+					android:orientation="vertical"
+					android:paddingHorizontal="48dp"
+					android:paddingVertical="25dp"
+					android:visibility="@{reminderViewModel.enableForm}">
 
 					<TextView
-						android:id="@+id/txtHora"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:text="Hora seleccionada:" />
-
-					<Button
-						android:id="@+id/btnSelectedDate"
+						style="@style/WorkSans_Regular_SemiBold16"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:text="Seleccionar fecha y hora" />
+						android:text="@string/repeat"
+						android:textColor="@color/grisTitulo" />
 
-					<Button
-						android:id="@+id/btnSetAlarm"
+					<TextView
+						style="@style/WorkSans_Regular16"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:text="Setear Alarma" />
+						android:text="@string/no_repeat"
+						android:textColor="@color/verdeclaroq" />
 
-					<Button
-						android:id="@+id/btnCancelarAlarm"
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="3dp"
+					android:background="@color/white"
+					android:orientation="vertical"
+					android:paddingHorizontal="48dp"
+					android:paddingVertical="25dp"
+					android:visibility="@{reminderViewModel.enableForm}">
+
+					<TextView
+						style="@style/WorkSans_Regular_SemiBold16"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:text="Cancelar Alarma" />
+						android:text="@string/alarm"
+						android:textColor="@color/grisTitulo" />
+
+					<TextView
+						style="@style/WorkSans_Regular16"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/plus_add_alarm"
+						android:textColor="@color/verdeclaroq" />
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:id="@+id/llAddImage"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="3dp"
+					android:background="@color/white"
+					android:orientation="vertical"
+					android:paddingHorizontal="48dp"
+					android:paddingVertical="25dp"
+					android:visibility="@{reminderViewModel.enableForm}">
+
+					<TextView
+						style="@style/WorkSans_Regular_SemiBold16"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/plus_add_photos"
+						android:textColor="@color/grisTitulo" />
+
+					<androidx.recyclerview.widget.RecyclerView
+						android:id="@+id/rvImages"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content" />
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="3dp"
+					android:background="@color/white"
+					android:orientation="vertical"
+					android:paddingHorizontal="48dp"
+					android:paddingVertical="25dp"
+					android:visibility="@{reminderViewModel.enableForm}">
+
+					<TextView
+						style="@style/WorkSans_Regular_SemiBold16"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/description_event"
+						android:textColor="@color/grisTitulo" />
 
 				</LinearLayout>
 
@@ -159,22 +229,28 @@
 
 		</ScrollView>
 
-		<RelativeLayout
+		<LinearLayout
+			android:id="@+id/llButton"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			tools:ignore="MissingConstraints">
+			android:layout_height="wrap_content"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent">
 
 
 			<com.google.android.material.button.MaterialButton
-				android:id="@+id/btnAceptar"
+				android:id="@+id/button_visa_next"
+				style="@style/Widget.AppCompat.Button.Borderless.Colored"
 				android:layout_width="match_parent"
 				android:layout_height="60dp"
-				android:layout_alignParentBottom="true"
-				android:layout_centerHorizontal="true"
-				android:text="Aceptar"
-				android:textColor="@color/white" />
+				android:background="@color/red"
+				android:text="@string/accept"
+				android:textColor="@color/white"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent" />
 
-		</RelativeLayout>
+		</LinearLayout>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 

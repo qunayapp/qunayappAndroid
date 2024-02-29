@@ -30,6 +30,12 @@
         <item name="android:textColor">@color/secondary</item>
     </style>
 
+    <style name="WorkSans_Regular16">
+        <item name="android:fontFamily">@font/worksans_regular</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/secondary</item>
+    </style>
+
     <style name="WorkSans_Regular10">
         <item name="android:fontFamily">@font/worksans_regular</item>
         <item name="android:textSize">11dp</item>
@@ -57,6 +63,20 @@
     <style name="WorkSans_Regular_Bold16">
         <item name="android:fontFamily">@font/worksans_regular</item>
         <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WorkSans_Regular_SemiBold16">
+        <item name="android:fontFamily">@font/worksans_semibold</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WorkSans_Regular_SemiBold14">
+        <item name="android:fontFamily">@font/worksans_semibold</item>
+        <item name="android:textSize">14dp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
     </style>
