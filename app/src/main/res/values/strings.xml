@@ -29,4 +29,5 @@
 	<string name="dont_have_reminders">Aun no tienes\nrecordatorios</string>
     <string name="plus_add_new">+ Agregar Nuevo</string>
     <string name="select_vaccine">Selecciona tipo de vacuna</string>
+    <string name="underline_accept"><u>  Aceptar  </u></string>
 </resources>

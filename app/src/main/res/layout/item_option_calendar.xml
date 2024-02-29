@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:animateLayoutChanges="true"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:id="@+id/llOption"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center">
+
+		<TextView
+			android:id="@+id/tvNameOption"
+			style="@style/WorkSans_Regular20"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingVertical="11dp"
+			android:textAlignment="center"
+			tools:text="De lunes a viernes" />
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:src="@drawable/vector" />
+
+	</LinearLayout>
+
+	<View
+		android:id="@+id/line1"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginHorizontal="32dp"
+		android:background="@android:color/darker_gray"
+		android:visibility="gone"
+		tools:visibility="visible" />
+
+	<CalendarView
+		android:id="@+id/calendarView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		tools:visibility="visible" />
+
+	<View
+		android:id="@+id/line2"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginHorizontal="32dp"
+		android:background="@android:color/darker_gray"
+		tools:visibility="visible" />
+
+	<LinearLayout
+		android:id="@+id/llAddHour"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center">
+
+		<TextView
+			style="@style/WorkSans_Regular_SemiBold16"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingVertical="11dp"
+			android:textAlignment="center"
+			android:textColor="#828282"
+			tools:text="Agregar Horario"
+			tools:visibility="visible" />
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="10dp"
+			android:src="@drawable/vector"
+			tools:visibility="visible" />
+
+	</LinearLayout>
+
+
+	<View
+		android:id="@+id/line3"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginHorizontal="32dp"
+		android:background="@android:color/darker_gray"
+		tools:visibility="visible" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

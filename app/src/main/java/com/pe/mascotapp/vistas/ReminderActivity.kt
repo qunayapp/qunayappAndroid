@@ -10,7 +10,6 @@ import android.content.Intent.EXTRA_ALLOW_MULTIPLE
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,25 +46,22 @@ class ReminderActivity : AppCompatActivity() {
     private val imageGalleryAdapter = ImageGalleryAdapter(listOf())
     private val pickImageFromGalleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
-            result.data?.let { data ->
+            result.data?.let { _ ->
                 val images = mutableListOf<Uri>()
-                Log.e("quack", "Asdfadf1231231321312")
                 try {
                     val data: Intent? = result.data
 
                     data?.clipData?.itemCount?.let {
-                        Log.e("quack", it.toString())
                         for (i in 0 until it) {
                             data.clipData?.getItemAt(i)?.let {
                                 images.add(it.uri)
                             }
                         }
-                        Log.e("quack", images.toString())
                     }
                     imageGalleryAdapter.images = images
                     imageGalleryAdapter.notifyDataSetChanged()
                 } catch (e: java.lang.Exception) {
-                    Log.e("quack", e.localizedMessage)
+                    e.localizedMessage?.let { Log.e("quack", it) }
                 }
             }
         }
@@ -73,10 +69,6 @@ class ReminderActivity : AppCompatActivity() {
 
     private var permissionMediaLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         handlePermissionGallery(true in permissions.values)
-    }
-
-    private val settingsGalleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _ ->
-        verifyPermissionGallery()
     }
 
     private fun verifyPermissionGallery() {
@@ -131,6 +123,9 @@ class ReminderActivity : AppCompatActivity() {
         binding.llAddImage.setOnClickListener {
             verifyPermissionGallery()
         }
+        binding.llRepeat.setOnClickListener {
+
+        }
     }
 
     private fun handlePermissionGallery(isGranted: Boolean) {
@@ -143,15 +138,10 @@ class ReminderActivity : AppCompatActivity() {
                 }
                 pickImageFromGalleryLauncher.launch(intent)
             } catch (e: Exception) {
-                Log.e("quack", e.localizedMessage)
+                e.localizedMessage?.let { Log.e("quack", it) }
             }
             return
         }
-        val intent = Intent().apply {
-            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            data = Uri.fromParts("package", this@ReminderActivity.packageName, null)
-        }
-        settingsGalleryLauncher.launch(intent)
     }
 
     private fun setUpObservables() {
