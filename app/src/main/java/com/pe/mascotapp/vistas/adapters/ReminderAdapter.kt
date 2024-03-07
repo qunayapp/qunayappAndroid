@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.ItemReminderBinding
 import com.pe.mascotapp.extentions.changeTintColor
+import com.pe.mascotapp.vistas.entities.CategoryReminderEntity
+import com.pe.mascotapp.vistas.entities.PetEntity
 
 class ReminderAdapter(private val reminders: List<ReminderEntity>) :
     RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
@@ -16,10 +18,13 @@ class ReminderAdapter(private val reminders: List<ReminderEntity>) :
         fun bind(reminder: ReminderEntity) {
             binding.reminder = reminder
             binding.ivReminder.setImageDrawable(
-                ContextCompat.getDrawable(
-                    binding.root.context,
-                    reminder.imageReminder
-                )
+                reminder.categoryReminder?.image?.let {
+                    ContextCompat.getDrawable(
+                        binding.root.context,
+                        it
+                    )
+                }
+
             )
             handleState(reminder.isActivated)
             binding.swReminder.setOnCheckedChangeListener { _, isChecked ->
@@ -105,11 +110,21 @@ class ReminderAdapter(private val reminders: List<ReminderEntity>) :
 }
 
 class ReminderEntity(
-    val title: String,
-    val description: String,
-    val animalName: String,
-    val date: String,
-    val location: String,
-    val imageReminder: Int,
-    var isActivated: Boolean = true
-)
+    var title: String = "",
+    val description: String = "",
+    val listPets: List<PetEntity> = listOf(),
+    var startDate: String = "",
+    val endDate: String = "",
+    var startHour: String = "",
+    var endHour: String = "",
+    val isAllDay: Boolean = false,
+    val location: String = "",
+    val categoryReminder: CategoryReminderEntity? = null,
+    var isActivated: Boolean = true,
+    var alarms: ArrayList<String> = arrayListOf(),
+    var dateAlarms : ArrayList<String> = arrayListOf()
+) {
+    fun pets(): String {
+        return this.listPets.joinToString(",")
+    }
+}

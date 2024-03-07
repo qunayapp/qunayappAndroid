@@ -3,8 +3,10 @@ package com.pe.mascotapp.components
 import android.app.Application
 import androidx.room.Room
 import com.pe.mascotapp.data.data_source.PetsDatabase
+import com.pe.mascotapp.data.repository.PetRepository
 import com.pe.mascotapp.data.repository.ReminderPetJoinRepository
 import com.pe.mascotapp.data.repository.ReminderRepository
+import com.pe.mascotapp.domain.repository.PetRepositoryImpl
 import com.pe.mascotapp.domain.repository.ReminderPetJoinRepositoryImpl
 import com.pe.mascotapp.domain.repository.ReminderRepositoryImpl
 import dagger.Module
@@ -36,5 +38,11 @@ class AppModule {
     @Singleton
     fun provideRepositoryReminderPetJoin(db: PetsDatabase): ReminderPetJoinRepository {
         return ReminderPetJoinRepositoryImpl(db.reminderPetJoinDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepositoryPet(db: PetsDatabase): PetRepository {
+        return PetRepositoryImpl(db.petDao)
     }
 }

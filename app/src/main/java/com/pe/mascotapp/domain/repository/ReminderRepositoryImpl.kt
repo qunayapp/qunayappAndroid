@@ -11,4 +11,8 @@ class ReminderRepositoryImpl(
     override fun getReminders(pageNumber: Int): Flow<List<Reminder>> {
         return reminderDao.getReminders(pageNumber)
     }
+
+    override fun insertReminder(reminder: Reminder) {
+        reminderDao.insertReminder(reminder)
+    }
 }

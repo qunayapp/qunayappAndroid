@@ -19,22 +19,27 @@
 			android:gravity="center"
 			android:orientation="vertical">
 
+
 			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/rvRvOptions"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="50dp"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />
 
 			<TextView
 				android:id="@+id/tvAccept"
+				style="@style/WorkSans_SemiBold20"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="100dp"
 				android:padding="10dp"
 				android:text="@string/underline_accept"
 				android:textAlignment="center"
+				android:textColor="@color/white"
+				android:textSize="23sp"
 				app:layout_constraintTop_toBottomOf="@+id/rvOptions" />
 
 		</LinearLayout>

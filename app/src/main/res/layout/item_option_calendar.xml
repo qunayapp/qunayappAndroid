@@ -1,91 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:animateLayoutChanges="true"
-	android:orientation="vertical">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-	<LinearLayout
-		android:id="@+id/llOption"
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:gravity="center">
+		android:animateLayoutChanges="true"
+		android:orientation="vertical">
 
-		<TextView
-			android:id="@+id/tvNameOption"
-			style="@style/WorkSans_Regular20"
-			android:layout_width="wrap_content"
+		<androidx.constraintlayout.widget.Group
+			android:id="@+id/gpSimpleCalendar"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:paddingVertical="11dp"
-			android:textAlignment="center"
-			tools:text="De lunes a viernes" />
+			app:constraint_referenced_ids="line1, line2, line3, llAddSchedule, tpHourSelect, llOption" />
 
-		<ImageView
-			android:layout_width="wrap_content"
+
+		<androidx.constraintlayout.widget.Group
+			android:id="@+id/gpHourCalendar"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="10dp"
-			android:src="@drawable/vector" />
+			app:constraint_referenced_ids="line1, line2, line3,calendarView, llAddSchedule, tpHourSelect" />
 
+		<androidx.constraintlayout.widget.Group
+			android:id="@+id/gpCalendar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:constraint_referenced_ids="line1, calendarView" />
+
+		<LinearLayout
+			android:id="@+id/llOption"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center">
+
+			<TextView
+				android:id="@+id/tvNameOption"
+				style="@style/WorkSans_Regular20"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingVertical="11dp"
+				android:textAlignment="center"
+				tools:text="De lunes a viernes" />
+
+			<ImageView
+				android:id="@+id/ivArrow"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="10dp"
+				android:rotation="90"
+				android:src="@drawable/vector" />
+
+		</LinearLayout>
+
+		<View
+			android:id="@+id/line1"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginHorizontal="32dp"
+			android:background="@android:color/darker_gray" />
+
+		<CalendarView
+			android:id="@+id/calendarView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:theme="@style/CalenderViewCustom"
+			android:weekDayTextAppearance="@style/CalenderViewWeekCustomText" />
+
+		<View
+			android:id="@+id/line2"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginHorizontal="32dp"
+			android:background="@android:color/darker_gray" />
+
+		<LinearLayout
+			android:id="@+id/llAddSchedule"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:orientation="horizontal">
+
+			<TextView
+				style="@style/WorkSans_Regular_SemiBold16"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingVertical="11dp"
+				android:text="Agregar Horario"
+				android:textAlignment="center"
+				android:textColor="#828282" />
+
+			<ImageView
+				android:id="@+id/ivArrowHour"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="10dp"
+				android:src="@drawable/vector" />
+
+		</LinearLayout>
+
+
+		<View
+			android:id="@+id/line3"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginHorizontal="32dp"
+			android:background="@android:color/darker_gray" />
+
+		<TimePicker
+			android:id="@+id/tpHourSelect"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:theme="@style/TimePickerStyle"
+			android:timePickerMode="spinner" />
 	</LinearLayout>
 
-	<View
-		android:id="@+id/line1"
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:layout_marginHorizontal="32dp"
-		android:background="@android:color/darker_gray"
-		android:visibility="gone"
-		tools:visibility="visible" />
-
-	<CalendarView
-		android:id="@+id/calendarView"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		tools:visibility="visible" />
-
-	<View
-		android:id="@+id/line2"
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:layout_marginHorizontal="32dp"
-		android:background="@android:color/darker_gray"
-		tools:visibility="visible" />
-
-	<LinearLayout
-		android:id="@+id/llAddHour"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center">
-
-		<TextView
-			style="@style/WorkSans_Regular_SemiBold16"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingVertical="11dp"
-			android:textAlignment="center"
-			android:textColor="#828282"
-			tools:text="Agregar Horario"
-			tools:visibility="visible" />
-
-		<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="10dp"
-			android:src="@drawable/vector"
-			tools:visibility="visible" />
-
-	</LinearLayout>
-
-
-	<View
-		android:id="@+id/line3"
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:layout_marginHorizontal="32dp"
-		android:background="@android:color/darker_gray"
-		tools:visibility="visible" />
-
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

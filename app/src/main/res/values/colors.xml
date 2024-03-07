@@ -9,6 +9,7 @@
     <color name="secondary">#999999</color>
     <color name="third">#7C7C7D</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray100">#F5F5F5</color>
     <color name="blue">#444cb4</color>
     <color name="gris">#F7FBFE</color>
     <color name="plomo">#6B7F9A</color>

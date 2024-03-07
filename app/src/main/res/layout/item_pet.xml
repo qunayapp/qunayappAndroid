@@ -16,13 +16,12 @@
         android:orientation="vertical">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivReminder"
+            android:id="@+id/ivPet"
             android:layout_width="86dp"
             android:layout_height="86dp"
             android:contentDescription="@string/app_name"
             android:padding="4dp"
             android:scaleType="centerCrop"
-            android:setSrc="@{petEntity.image}"
             android:setStatePet="@{petEntity.selected}"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             tools:src="@drawable/perro1" />
