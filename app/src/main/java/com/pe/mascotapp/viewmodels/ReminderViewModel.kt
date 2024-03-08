@@ -105,8 +105,8 @@ class ReminderViewModel @Inject constructor(
                 _listPets.postValue(pets.map { it.toPetEntity() })
             }
             .launchIn(viewModelScope)
-        //getData()
-        //setData()
+        getData()
+        setData()
     }
 
     private fun getData() {

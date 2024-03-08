@@ -16,63 +16,39 @@ class PetsMainViewModel @Inject constructor() : ViewModel() {
     val listPets: LiveData<List<PetEntity>> = _listPets*/
     fun getPets() :List<PetEntity>{
 
-        return    listOf(
-                PetEntity(
-                    1,
-                    R.drawable.perro1,
-                    "Paul Pugba",
-                    "Perro",
-                    "Especial",
-                    100.00,
-                    Sex.MALE,
-                    "12/02/2000",
-                    false
-                ),
-                PetEntity(
-                    1,
-                    R.drawable.perro1,
-                    "Paul Pugba",
-                    "Perro",
-                    "Especial",
-                    100.00,
-                    Sex.MALE,
-                    "12/02/2000",
-                    false
-                ),
-                PetEntity(
-                    1,
-                    R.drawable.perro1,
-                    "Paul Pugba",
-                    "Perro",
-                    "Especial",
-                    100.00,
-                    Sex.MALE,
-                    "12/02/2000",
-                    false
-                ),
-                PetEntity(
-                    1,
-                    R.drawable.perro1,
-                    "Paul Pugba",
-                    "Perro",
-                    "Especial",
-                    100.00,
-                    Sex.MALE,
-                    "12/02/2000",
-                    false
-                ),
-                PetEntity(
-                    1,
-                    R.drawable.perro1,
-                    "Paul Pugba",
-                    "Perro",
-                    "Especial",
-                    100.00,
-                    Sex.MALE,
-                    "12/02/2000",
-                    false
-                )
+        return      listOf(
+            PetEntity(
+                null,
+                "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1",
+                "Perro",
+                "Especial",
+                100.00,
+                Sex.MALE,
+                birthdate = "12/02/2010",
+                false
+            ),
+            PetEntity(
+                null,
+                "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg",
+                "Paul",
+                "Perro",
+                "Especial",
+                101.00,
+                Sex.MALE,
+                birthdate = "12/02/2010",
+                false
+            ),
+            PetEntity(
+                null,
+                "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3",
+                "Perro",
+                "Especial",
+                102.00,
+                Sex.MALE,
+                birthdate = "12/02/2010",
+                false
             )
+        )
 
     }
 }
