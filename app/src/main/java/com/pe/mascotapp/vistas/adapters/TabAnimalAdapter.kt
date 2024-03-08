@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.TabAnimalBinding
 import com.pe.mascotapp.vistas.entities.TabAnimalEntity
 
-class TabAnimalAdapter(private val tabAnimals: List<TabAnimalEntity>) :
+class TabAnimalAdapter(var tabAnimals: List<TabAnimalEntity>) :
     RecyclerView.Adapter<TabAnimalAdapter.TabAnimalViewHolder>() {
 
     private var positionSelected = 0
@@ -47,12 +48,11 @@ class TabAnimalAdapter(private val tabAnimals: List<TabAnimalEntity>) :
                 background,
                 binding.root.context.theme
             )
-            binding.ivTabAnimal.setImageDrawable(
-                ContextCompat.getDrawable(
-                    binding.root.context,
-                    animal.image
-                )
-            )
+            Glide.with(binding.root.context)
+                .load(animal.image)
+                .placeholder(R.drawable.perro1)
+                .error(R.drawable.perro1)
+                .into(binding.ivTabAnimal)
             if (animal.isSelected) {
                 binding.ivTabAnimal.strokeColor =
                     ContextCompat.getColorStateList(binding.root.context, R.color.white)

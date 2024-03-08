@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_tab_normal"
         android:gravity="center"
+        android:layout_marginEnd="8dp"
         android:paddingVertical="10dp"
         android:paddingStart="10dp"
         android:paddingEnd="20dp">

@@ -21,7 +21,7 @@
     <string name="kind_of_vaccine">Tipo de vacuna</string>
     <string name="add_new_event">Agregar nombre del evento</string>
     <string name="add_event_name">Agregar nombre del evento</string>
-    <string name="plus_add">+agregar</string>
+    <string name="plus_add">+ agregar</string>
     <string name="repeat">Repetir</string>
     <string name="no_repeat">No repetir</string>
     <string name="alarm">Alarma</string>
@@ -34,4 +34,6 @@
     <string name="underline_accept"><u>  Aceptar  </u></string>
     <string name="notes">Notas</string>
     <string name="pictures">Fotos</string>
+    <string name="add">agregar</string>
+    <string name="update_alarms">Actualizando alarmas</string>
 </resources>

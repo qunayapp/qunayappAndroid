@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReminderRepository {
     fun getReminders(pageNumber: Int): Flow<List<Reminder>>
+    fun insertReminder(reminder: Reminder)
 }

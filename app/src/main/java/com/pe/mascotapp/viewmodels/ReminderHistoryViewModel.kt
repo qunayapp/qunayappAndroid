@@ -1,40 +1,52 @@
 package com.pe.mascotapp.viewmodels
 
 import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.pe.mascotapp.R
+import androidx.lifecycle.viewModelScope
+import com.pe.mascotapp.domain.usecases.GetPetsUseCase
 import com.pe.mascotapp.domain.usecases.GetRemindersWithPetsUseCase
 import com.pe.mascotapp.vistas.adapters.ReminderEntity
 import com.pe.mascotapp.vistas.entities.TabAnimalEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class ReminderHistoryViewModel @Inject constructor(
+    private val getPetsUseCase: GetPetsUseCase,
     private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase
 ) : ViewModel() {
 
     val remindersIsEmpty: ObservableBoolean = ObservableBoolean(true)
 
+    private var getPetsJob: Job? = null
+
+    private val _listPets = MutableLiveData<List<TabAnimalEntity>>()
+    val listPets: LiveData<List<TabAnimalEntity>> = _listPets
+
     init {
         remindersIsEmpty.set(true)
     }
 
-    fun getAnimalTabs(): List<TabAnimalEntity> {
+    fun getAnimalTabs() {
         getRemindersWithPetsUseCase(1)
-        return listOf(
-            TabAnimalEntity(true, "Todos", R.drawable.ic_baseline_person_24),
-            TabAnimalEntity(false, "Gattuso", R.drawable.perro1),
-            TabAnimalEntity(false, "Harry Cane", R.drawable.perro1),
-        )
+        getPetsJob?.cancel()
+        getPetsJob = getPetsUseCase()
+            .onEach { pets ->
+                _listPets.postValue(pets.map {
+                    TabAnimalEntity(it.petId, false, it.name, it.image)
+                })
+            }
+            .launchIn(viewModelScope)
     }
 
     fun getReminders(): List<ReminderEntity> {
 
-        val reminder = listOf(
-            ReminderEntity("asdf", "asdf", "asdf", "adf", "asdf", R.drawable.ic_vaccine),
-            ReminderEntity("asdf", "asdf", "asdf", "adf", "asdf", R.drawable.ic_vaccine, false),
-        )
-        return reminder
+        return listOf()
+        //return reminder
     }
 }

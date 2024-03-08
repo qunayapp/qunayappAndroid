@@ -1,7 +1,6 @@
 package com.pe.mascotapp.vistas.adapters
 
 import android.R
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -13,7 +12,7 @@ import com.pe.mascotapp.vistas.entities.VaccineFieldEntity
 class VaccineFieldAdapter(
     private val vaccineFields: List<VaccineFieldEntity>,
     var addVaccineField: () -> Unit = {},
-    var removeVaccine: (position: Int) -> Unit ={}
+    var removeVaccine: (position: Int) -> Unit = {}
 ) :
     RecyclerView.Adapter<VaccineFieldAdapter.VaccineFieldAdapterViewHolder>() {
 
@@ -63,7 +62,7 @@ class VaccineFieldAdapter(
 
     private fun actionVaccineField(position: Int?) {
         position?.let {
-            removeVaccine(it)
+            if (position!=-1) removeVaccine(it)
         } ?: apply {
             addVaccineField()
         }

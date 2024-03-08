@@ -7,6 +7,6 @@ class GetRemindersWithPetsUseCase @Inject constructor(
     private val reminderPetJoinRepository: ReminderPetJoinRepository
 ) {
     operator fun invoke(pageNumber: Int) {
-        reminderPetJoinRepository.getReminders(pageNumber)
+        reminderPetJoinRepository.getReminderPet(pageNumber)
     }
 }

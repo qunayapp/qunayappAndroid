@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:animateLayoutChanges="true"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/tvTitleSchedule"
+			style="@style/WorkSans_Regular_SemiBold16"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingHorizontal="10dp"
+			android:paddingVertical="15dp"
+			android:text="Seleccionar Horario Inicio"
+			android:textAlignment="center"
+			android:textColor="#828282"
+			app:drawableEndCompat="@drawable/ic_chevron_right"
+			app:drawableStartCompat="@drawable/ic_chevron_left" />
+
+		<View
+			android:id="@+id/line1"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginHorizontal="32dp"
+			android:background="@android:color/darker_gray" />
+
+		<TimePicker
+			android:id="@+id/tpSelect"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:theme="@style/TimePickerStyle"
+			android:timePickerMode="spinner" />
+	</LinearLayout>
+</layout>

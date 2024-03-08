@@ -99,4 +99,42 @@
 		<item name="android:textColor">@color/black</item>
 	</style>
 
+	<style name="DialogTheme">
+
+		<item name="android:windowFrame">@null</item>
+		<item name="android:windowBackground">@color/dialogBackground</item>
+		<item name="android:windowIsFloating">false</item>
+		<item name="android:windowContentOverlay">@null</item>
+		<item name="android:windowTitleStyle">@null</item>
+		<item name="android:colorBackgroundCacheHint">@null</item>
+		<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+		<item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+		<item name="android:gravity">center</item>
+
+		<item name="android:statusBarColor">@android:color/transparent</item>
+		<item name="android:windowTranslucentStatus">false</item>
+		<item name="android:navigationBarColor">@android:color/transparent</item>
+
+		<item name="android:windowActionBarOverlay">true</item>
+
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+
+		<item name="android:windowNoTitle">true</item>
+	</style>
+
+	<color name="dialogBackground">#6603082f</color>
+
+	<style name="TimePickerStyle" parent="ThemeOverlay.MaterialComponents.Dialog">
+		<item name="colorControlNormal">@color/green200</item>
+	</style>
+
+	<style name="CalenderViewCustom" parent="Theme.AppCompat">
+		<item name="colorControlActivated">@color/green200</item>
+		<item name="android:textColorPrimary">@color/black</item>
+	</style>
+
+	<style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+		<item name="android:textColor">@color/black</item>
+	</style>
 </resources>

@@ -9,7 +9,7 @@ import com.pe.mascotapp.domain.models.ReminderWithPets
 
 @Database(
     entities = [Pet::class, Reminder::class, ReminderPetJoin::class],
-    version = 1
+    version = 2
 )
 
 abstract class PetsDatabase : RoomDatabase() {

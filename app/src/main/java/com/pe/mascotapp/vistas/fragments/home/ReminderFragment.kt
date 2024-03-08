@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ReminderFragment : Fragment() {
 
-    private val reminderViewModel: ReminderHistoryViewModel by viewModels()
+    private val viewModel: ReminderHistoryViewModel by viewModels()
 
     private val launchCreateReminder =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -33,13 +33,13 @@ class ReminderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
-        binding.reminderViewModel = reminderViewModel
+        binding.reminderViewModel = viewModel
         binding.rvAnimalsReminder.apply {
-            this.adapter = TabAnimalAdapter(reminderViewModel.getAnimalTabs())
+            this.adapter = TabAnimalAdapter(listOf())
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
         binding.rvReminders.apply {
-            this.adapter = ReminderAdapter(reminderViewModel.getReminders())
+            this.adapter = ReminderAdapter(viewModel.getReminders())
             this.layoutManager = LinearLayoutManager(context)
         }
         binding.btnAddNew.setOnClickListener {
@@ -50,6 +50,11 @@ class ReminderFragment : Fragment() {
             val intent = Intent(activity, ReminderActivity::class.java)
             launchCreateReminder.launch(intent)
         }
+        viewModel.listPets.observe(viewLifecycleOwner){
+            (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).tabAnimals = it
+            (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).notifyDataSetChanged()
+        }
+        viewModel.getAnimalTabs()
         return binding.root;
     }
 

@@ -1,18 +1,39 @@
 package com.pe.mascotapp.vistas.adapters
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.pe.mascotapp.databinding.ContainerOptionsAdapterBinding
 
-class ContainerOptionsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        TODO("Not yet implemented")
+class ContainerOptionsAdapter(
+    private val listOptionsFieldAdapter: List<OptionFieldAdapter>,
+    private val canAddOtherContainer: Boolean,
+    private val addRecyclerView: () -> Unit,
+) : RecyclerView.Adapter<ContainerOptionsAdapter.ContainerOptionsViewHolder>() {
+
+    class ContainerOptionsViewHolder(private val binding: ContainerOptionsAdapterBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(optionFieldAdapter: OptionFieldAdapter, addRecyclerView: () -> Unit, canAddOtherContainer: Boolean) {
+            binding.rvRvOptions.layoutManager = LinearLayoutManager(binding.root.context)
+            binding.rvRvOptions.adapter = optionFieldAdapter
+            binding.tvAdd.isVisible = canAddOtherContainer
+            binding.tvAdd.setOnClickListener {
+                addRecyclerView()
+            }
+        }
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContainerOptionsViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = ContainerOptionsAdapterBinding.inflate(layoutInflater, parent, false)
+        return ContainerOptionsViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+    override fun getItemCount(): Int = listOptionsFieldAdapter.size
+
+    override fun onBindViewHolder(holder: ContainerOptionsViewHolder, position: Int) {
+        holder.bind(listOptionsFieldAdapter[position], addRecyclerView, canAddOtherContainer)
     }
 }
