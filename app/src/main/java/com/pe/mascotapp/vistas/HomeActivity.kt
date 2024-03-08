@@ -30,6 +30,7 @@ import com.pe.mascotapp.vistas.adapters.HomeAdapter
 import com.pe.mascotapp.vistas.adapters.HomeListServiceAdapter
 import com.pe.mascotapp.vistas.adapters.HomeServiceAdapter
 import com.pe.mascotapp.vistas.fragments.home.HomeFragment
+import com.pe.mascotapp.vistas.fragments.home.PetsFragment
 import com.pe.mascotapp.vistas.fragments.home.ReminderFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -140,13 +141,6 @@ class HomeActivity : AppCompatActivity() {
                 R.id.nav_home -> {
                     selectedFragment = HomeFragment.newInstance()
                     //title = R.string.menu_camera;
-                    supportFragmentManager
-                        .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
-                        .replace(R.id.fragmentContainer, selectedFragment)
-                        .commit()
-
-                    //setTitle(getString(title));
-                    drawer_layout!!.closeDrawer(GravityCompat.START)
 
                 }
                 R.id.nav_history -> {
@@ -158,20 +152,23 @@ class HomeActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_pet -> {
-
+                    selectedFragment = PetsFragment.newInstance()
                 }
                 R.id.nav_notification -> {
                     selectedFragment = ReminderFragment.newInstance()
                     //title = R.string.menu_gallery;
-                    supportFragmentManager
-                        .beginTransaction() //.setCustomAnimations(R.anim.nav_enter, R.anim.nav_exit)
-                        .replace(R.id.fragmentContainer, selectedFragment)
-                        .commit()
-
-                    //setTitle(getString(title));
-                    drawer_layout!!.closeDrawer(GravityCompat.START)
                 }
+
             }
+            selectedFragment?.let {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, selectedFragment)
+                    .commit()
+            }
+
+            //setTitle(getString(title));
+            drawer_layout!!.closeDrawer(GravityCompat.START)
             /*val transaction =
                 supportFragmentManager.beginTransaction()
             transaction.replace(R.id.fragmentContainer, selectedFragment!!)
