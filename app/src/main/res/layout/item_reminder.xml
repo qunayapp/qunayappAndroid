@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="reminder"
-            type="com.pe.mascotapp.vistas.adapters.ReminderEntity" />
+            name="reminderPets"
+            type="com.pe.mascotapp.vistas.adapters.ReminderPetsJoinEntity" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="@{reminder.title}"
+                        android:text="@{reminderPets.reminder.title}"
                         app:layout_constraintStart_toStartOf="@+id/ivReminder"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Vacunación de antirrabia" />
@@ -78,7 +78,7 @@
                         style="@style/WorkSans_Regular14"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{reminder.description}"
+                        android:text="@{reminderPets.reminder.description}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvTitleReminder"
@@ -112,7 +112,7 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
                     android:drawablePadding="8dp"
-                    android:text="@{reminder.pets()}"
+                    android:text="@{reminderPets.pets()}"
                     app:drawableStartCompat="@drawable/ic_dog"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:drawablePadding="8dp"
-                    android:text="@{reminder.startDate}"
+                    android:text="@{reminderPets.reminder.startDate}"
                     app:drawableStartCompat="@drawable/ic_calendar"
                     app:layout_constraintStart_toStartOf="@+id/tvAnimalName"
                     app:layout_constraintTop_toBottomOf="@+id/tvAnimalName"
@@ -139,7 +139,7 @@
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="12dp"
                     android:drawablePadding="8dp"
-                    android:text="@{reminder.location}"
+                    android:text="@{reminderPets.reminder.location}"
                     app:drawableStartCompat="@drawable/ic_location"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/tvAnimalName"

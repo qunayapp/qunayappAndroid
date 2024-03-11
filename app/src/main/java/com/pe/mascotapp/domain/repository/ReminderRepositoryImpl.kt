@@ -12,7 +12,7 @@ class ReminderRepositoryImpl(
         return reminderDao.getReminders(pageNumber)
     }
 
-    override fun insertReminder(reminder: Reminder) {
-        reminderDao.insertReminder(reminder)
+    override suspend fun insertReminder(reminder: Reminder):Long {
+        return reminderDao.insertReminder(reminder)
     }
 }

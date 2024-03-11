@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -74,6 +75,7 @@ class ReminderActivity : AppCompatActivity() {
         }
         imageGalleryAdapter.images = images
         imageGalleryAdapter.notifyDataSetChanged()
+        viewModel.addImages(images)
     }
 
     override fun onRequestPermissionsResult(
@@ -122,6 +124,17 @@ class ReminderActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = vaccineAdapter
         }
+        binding.edtDescription.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.setDescriptionReminder(s.toString())
+            }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -248,10 +261,10 @@ class ReminderActivity : AppCompatActivity() {
 
     private fun setUpObservables() {
         viewModel.listPets.observe(this) {
-            binding.rvAnimals.adapter = PetAdapter(it) { viewModel.enableForm() }
+            binding.rvAnimals.adapter = PetAdapter(it) { viewModel.selectAnimalEntity() }
         }
         viewModel.categoriesReminder.observe(this) {
-            binding.rvCategories.adapter = CategoryReminderAdapter(it) { viewModel.enableForm() }
+            binding.rvCategories.adapter = CategoryReminderAdapter(it) { viewModel.setCategoryReminder() }
         }
         viewModel.listOptionsRepeat.observe(this) { options ->
             showDialogOptions(options) {
@@ -291,6 +304,12 @@ class ReminderActivity : AppCompatActivity() {
             showDialogOptions(options) {
                 viewModel.getEndDateSelected()?.let { binding.tvDateEnd.text = it }
             }
+        }
+        viewModel.showErrorDialog.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.loading.observe(this) {
         }
     }
 

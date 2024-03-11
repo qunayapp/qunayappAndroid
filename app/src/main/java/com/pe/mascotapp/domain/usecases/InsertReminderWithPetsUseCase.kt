@@ -7,7 +7,7 @@ import javax.inject.Inject
 class InsertReminderWithPetsUseCase @Inject constructor(
     private val reminderPetJoinRepository: ReminderPetJoinRepository
 ) {
-    operator fun invoke(reminderWithPets: ReminderPetJoin) {
-        reminderPetJoinRepository.insertReminderPet(reminderWithPets)
+    operator fun invoke(reminderPetJoin: ReminderPetJoin) {
+        reminderPetJoinRepository.insertReminderPet(reminderPetJoin)
     }
 }

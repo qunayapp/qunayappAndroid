@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface ReminderPetJoinRepository {
     fun getReminderPet(pageNumber: Int): Flow<List<ReminderWithPets>>
     fun insertReminderPet(reminder: ReminderPetJoin)
+    fun getReminders(pageNumber: Int): Flow<List<ReminderPetJoin>>
 }

@@ -7,7 +7,7 @@ import com.pe.mascotapp.vistas.entities.PetEntity
 @Entity
 data class Pet(
     @PrimaryKey(autoGenerate = true)
-    val petId: Int? = null,
+    val petId: Long? = null,
     val image: String,
     val name: String,
     val specie: String,

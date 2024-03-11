@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ReminderDao {
-    @Query("SELECT * FROM reminder ORDER BY date LIMIT 30 OFFSET :pageNumber")
+    @Query("SELECT * FROM reminder LIMIT 30 OFFSET :pageNumber")
     fun getReminders(pageNumber: Int): Flow<List<Reminder>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertReminder(reminder: Reminder)
+    suspend fun insertReminder(reminder: Reminder): Long
 }

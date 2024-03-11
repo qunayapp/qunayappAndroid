@@ -3,7 +3,7 @@ package com.pe.mascotapp.vistas.entities
 import com.pe.mascotapp.domain.models.Sex
 
 class PetEntity(
-    val petId: Int? = null,
+    val petId: Long? = null,
     val image: String,
     val name: String,
     val specie: String,
@@ -12,6 +12,4 @@ class PetEntity(
     val sex: Sex,
     val birthdate: String,
     var isSelected: Boolean
-){
-
-}
+)

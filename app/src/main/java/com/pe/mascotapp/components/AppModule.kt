@@ -25,7 +25,7 @@ class AppModule {
             app,
             PetsDatabase::class.java,
             PetsDatabase.DATABASE_NAME
-        ).build()
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 
     @Provides

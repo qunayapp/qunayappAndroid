@@ -39,7 +39,7 @@ class ReminderFragment : Fragment() {
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
         binding.rvReminders.apply {
-            this.adapter = ReminderAdapter(viewModel.getReminders())
+            this.adapter = ReminderAdapter(listOf())
             this.layoutManager = LinearLayoutManager(context)
         }
         binding.btnAddNew.setOnClickListener {
@@ -50,11 +50,16 @@ class ReminderFragment : Fragment() {
             val intent = Intent(activity, ReminderActivity::class.java)
             launchCreateReminder.launch(intent)
         }
-        viewModel.listPets.observe(viewLifecycleOwner){
+        viewModel.listPets.observe(viewLifecycleOwner) {
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).tabAnimals = it
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).notifyDataSetChanged()
         }
+        viewModel.listReminders.observe(viewLifecycleOwner) {
+            (binding.rvReminders.adapter as ReminderAdapter).reminders = it
+            (binding.rvReminders.adapter as ReminderAdapter).notifyDataSetChanged()
+        }
         viewModel.getAnimalTabs()
+        viewModel.getReminders()
         return binding.root;
     }
 
