@@ -1,7 +1,9 @@
 package com.pe.mascotapp.components
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
+import androidx.work.WorkerParameters
 import com.pe.mascotapp.data.data_source.PetsDatabase
 import com.pe.mascotapp.data.repository.PetRepository
 import com.pe.mascotapp.data.repository.ReminderPetJoinRepository
@@ -25,7 +27,7 @@ class AppModule {
             app,
             PetsDatabase::class.java,
             PetsDatabase.DATABASE_NAME
-        ).build()
+        ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     }
 
     @Provides
@@ -45,4 +47,11 @@ class AppModule {
     fun provideRepositoryPet(db: PetsDatabase): PetRepository {
         return PetRepositoryImpl(db.petDao)
     }
+
+    @Provides
+    @Singleton
+    fun provideContext(): Context {
+        return Application().applicationContext
+    }
+
 }

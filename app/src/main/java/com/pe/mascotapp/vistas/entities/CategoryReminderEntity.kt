@@ -91,22 +91,23 @@ sealed class CategoryReminderEntity(
         R.drawable.ic_others
     )
 
-    fun getReminder(categoryId: CATEGORYID) : CategoryReminderEntity {
-        return when (categoryId) {
-            CATEGORYID.VACCINE -> VaccineReminder()
-            CATEGORYID.ANALYSIS -> AnalysisReminder()
-            CATEGORYID.DEWORNING -> Deworming()
-            CATEGORYID.VET -> VetReminder()
-            CATEGORYID.MEDICINE -> MedicineReminder()
-            CATEGORYID.DENTAL -> DentalReminder()
-            CATEGORYID.WALK -> WalkReminder()
-            CATEGORYID.TAKESHOWER -> TakeShowerReminder()
-            CATEGORYID.WATERFOOD -> WaterFoodReminder()
-            CATEGORYID.OTHERS -> OthersReminder()
-        }
-    }
 
     companion object {
+        fun getReminder(categoryId: CATEGORYID): CategoryReminderEntity {
+            return when (categoryId) {
+                CATEGORYID.VACCINE -> VaccineReminder()
+                CATEGORYID.ANALYSIS -> AnalysisReminder()
+                CATEGORYID.DEWORNING -> Deworming()
+                CATEGORYID.VET -> VetReminder()
+                CATEGORYID.MEDICINE -> MedicineReminder()
+                CATEGORYID.DENTAL -> DentalReminder()
+                CATEGORYID.WALK -> WalkReminder()
+                CATEGORYID.TAKESHOWER -> TakeShowerReminder()
+                CATEGORYID.WATERFOOD -> WaterFoodReminder()
+                CATEGORYID.OTHERS -> OthersReminder()
+            }
+        }
+
         fun getCategories(): List<CategoryReminderEntity> {
             return listOf(
                 VaccineReminder(),

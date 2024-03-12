@@ -1,5 +1,6 @@
 package com.pe.mascotapp.viewmodels
 
+import android.net.Uri
 import android.util.Log
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
@@ -7,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pe.mascotapp.domain.models.Pet
+import com.pe.mascotapp.domain.models.ReminderPetJoin
 import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.domain.usecases.GetPetsUseCase
 import com.pe.mascotapp.domain.usecases.InsertPetUseCase
@@ -19,8 +21,10 @@ import com.pe.mascotapp.vistas.adapters.CalendarSimple
 import com.pe.mascotapp.vistas.adapters.CounterOption
 import com.pe.mascotapp.vistas.adapters.OptionViewInterface
 import com.pe.mascotapp.vistas.adapters.ReminderEntity
+import com.pe.mascotapp.vistas.adapters.ReminderPetsJoinEntity
 import com.pe.mascotapp.vistas.adapters.ScheduleOption
 import com.pe.mascotapp.vistas.adapters.TextOption
+import com.pe.mascotapp.vistas.adapters.TypeOption
 import com.pe.mascotapp.vistas.adapters.ValueTextOption
 import com.pe.mascotapp.vistas.entities.CategoryReminderEntity
 import com.pe.mascotapp.vistas.entities.PetEntity
@@ -30,6 +34,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -49,11 +54,9 @@ class ReminderViewModel @Inject constructor(
 
     private var getPetsJob: Job? = null
 
-    private var nameEvent: String? = null
-
-    private var allDay: Boolean = false
-
     private val reminderEntity: ReminderEntity = ReminderEntity()
+
+    private val reminderPetsJoin: ReminderPetsJoinEntity = ReminderPetsJoinEntity(ReminderEntity(), listOf())
 
     val listVaccines = mutableListOf(VaccineFieldEntity())
 
@@ -80,6 +83,12 @@ class ReminderViewModel @Inject constructor(
     private val _optionEndDate = MutableLiveData<List<OptionViewInterface>>()
     val optionEndDate: LiveData<List<OptionViewInterface>> = _optionEndDate
 
+    private val _showErrorDialog = MutableLiveData<String>()
+    val showErrorDialog: LiveData<String> = _showErrorDialog
+
+    private val _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean> = _loading
+
     init {
         enableForm.set(false)
     }
@@ -88,23 +97,35 @@ class ReminderViewModel @Inject constructor(
         _categoriesReminder.postValue(CategoryReminderEntity.getCategories())
     }
 
-    fun enableForm() {
-        val atLeastPetIsSelected = listPets.value?.firstOrNull { it.isSelected } != null
-        val atLeastCategoryIsSelected = categoriesReminder.value?.firstOrNull { it.isSelected } != null
+    fun selectAnimalEntity() {
+        reminderPetsJoin.pets = listPets.value?.filter { it.isSelected } ?: listOf()
+        enableForm()
+    }
+
+    fun setCategoryReminder() {
+        reminderEntity.categoryReminder = categoriesReminder.value?.firstOrNull { it.isSelected }
+        enableForm()
+    }
+
+    private fun enableForm() {
+        val atLeastPetIsSelected = reminderPetsJoin.pets.isNotEmpty()
+        val atLeastCategoryIsSelected = reminderEntity.categoryReminder != null
         enableForm.set(atLeastPetIsSelected && atLeastCategoryIsSelected)
     }
 
     fun setAllDay(allDay: Boolean) {
-        this.allDay = allDay
+        reminderEntity.isAllDay = allDay
+        if (reminderEntity.isAllDay) {
+            reminderEntity.endHour = ""
+            reminderEntity.startHour = ""
+        }
     }
 
     fun getPets() {
         getPetsJob?.cancel()
-        getPetsJob = getPetUseCase()
-            .onEach { pets ->
-                _listPets.postValue(pets.map { it.toPetEntity() })
-            }
-            .launchIn(viewModelScope)
+        getPetsJob = getPetUseCase().onEach { pets ->
+            _listPets.postValue(pets.map { it.toPetEntity() })
+        }.launchIn(viewModelScope)
         getData()
         setData()
     }
@@ -113,35 +134,11 @@ class ReminderViewModel @Inject constructor(
         _listPets.postValue(
             listOf(
                 PetEntity(
-                    null,
-                    "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1",
-                    "Perro",
-                    "Especial",
-                    100.00,
-                    Sex.MALE,
-                    birthdate = "12/02/2010",
-                    false
-                ),
-                PetEntity(
-                    null,
-                    "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg",
-                    "Paul",
-                    "Perro",
-                    "Especial",
-                    101.00,
-                    Sex.MALE,
-                    birthdate = "12/02/2010",
-                    false
-                ),
-                PetEntity(
-                    null,
-                    "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3",
-                    "Perro",
-                    "Especial",
-                    102.00,
-                    Sex.MALE,
-                    birthdate = "12/02/2010",
-                    false
+                    null, "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1", "Perro", "Especial", 100.00, Sex.MALE, birthdate = "12/02/2010", false
+                ), PetEntity(
+                    null, "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg", "Paul", "Perro", "Especial", 101.00, Sex.MALE, birthdate = "12/02/2010", false
+                ), PetEntity(
+                    null, "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3", "Perro", "Especial", 102.00, Sex.MALE, birthdate = "12/02/2010", false
                 )
             )
         )
@@ -151,48 +148,18 @@ class ReminderViewModel @Inject constructor(
         viewModelScope.launch {
             val pets = listOf(
                 PetEntity(
-                    null,
-                    "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1",
-                    "Perro",
-                    "Especial",
-                    100.00,
-                    Sex.MALE,
-                    birthdate = "12/02/2010",
-                    false
-                ),
-                PetEntity(
-                    null,
-                    "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg",
-                    "Paul",
-                    "Perro",
-                    "Especial",
-                    101.00,
-                    Sex.MALE,
-                    birthdate = "12/02/2010",
-                    false
-                ),
-                PetEntity(
-                    null,
-                    "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3",
-                    "Perro",
-                    "Especial",
-                    102.00,
-                    Sex.MALE,
-                    birthdate = "12/02/2010",
-                    false
+                    null, "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1", "Perro", "Especial", 100.00, Sex.MALE, birthdate = "12/02/2010", false
+                ), PetEntity(
+                    null, "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg", "Paul", "Perro", "Especial", 101.00, Sex.MALE, birthdate = "12/02/2010", false
+                ), PetEntity(
+                    null, "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3", "Perro", "Especial", 102.00, Sex.MALE, birthdate = "12/02/2010", false
                 )
             )
             pets.forEach {
                 Log.e("quack", "Asdf")
                 insertPetUseCase(
                     Pet(
-                        image = it.image,
-                        name = it.name,
-                        specie = it.specie,
-                        weight = it.weight,
-                        sex = it.sex,
-                        raza = it.raza,
-                        birthdate = it.birthdate
+                        image = it.image, name = it.name, specie = it.specie, weight = it.weight, sex = it.sex, raza = it.raza, birthdate = it.birthdate
                     )
                 )
             }
@@ -203,12 +170,7 @@ class ReminderViewModel @Inject constructor(
     fun getOptionsRepeat() {
         _listOptionsRepeat.postValue(
             listOf(
-                TextOption("No Repetir", ValueTextOption.DONT_REPEAT),
-                TextOption("Todos los dias", ValueTextOption.ALL_DAYS),
-                TextOption("De lunes a Viernes", ValueTextOption.MONDAY_FRIDAY),
-                TextOption("Todas las semanas", ValueTextOption.ALL_WEEKS),
-                TextOption("Todos los meses", ValueTextOption.ALL_MONTHS),
-                TextOption("Todos los años", ValueTextOption.ALL_YEARS)
+                TextOption("No Repetir", ValueTextOption.DONT_REPEAT), TextOption("Todos los dias", ValueTextOption.ALL_DAYS), TextOption("De lunes a Viernes", ValueTextOption.MONDAY_FRIDAY), TextOption("Todas las semanas", ValueTextOption.ALL_WEEKS), TextOption("Todos los meses", ValueTextOption.ALL_MONTHS), TextOption("Todos los años", ValueTextOption.ALL_YEARS)
             )
         )
     }
@@ -217,10 +179,7 @@ class ReminderViewModel @Inject constructor(
         _listAlarms.postValue(
             arrayListOf(
                 listOf(
-                    TextOption("15 minutos antes", ValueTextOption.MINUTES_15),
-                    TextOption("30 minutos antes", ValueTextOption.MINUTES_30),
-                    TextOption("1 hora antes", ValueTextOption.MINUTES_HOUR),
-                    CalendarHourOption("Personalizar")
+                    TextOption("15 minutos antes", ValueTextOption.MINUTES_15), TextOption("30 minutos antes", ValueTextOption.MINUTES_30), TextOption("1 hora antes", ValueTextOption.MINUTES_HOUR), CalendarHourOption("Personalizar")
                 )
             )
         )
@@ -229,9 +188,7 @@ class ReminderViewModel @Inject constructor(
     fun getOptionsDurationRepeat() {
         _listDurationRepeat.postValue(
             listOf(
-                TextOption("Para siempre", ValueTextOption.FOR_EVER),
-                CounterOption("Numero de veces"),
-                CalendarOptionNormal("Hasta el dia")
+                TextOption("Para siempre", ValueTextOption.FOR_EVER), CounterOption("Numero de veces"), CalendarOptionNormal("Hasta el dia")
             )
         )
     }
@@ -285,27 +242,50 @@ class ReminderViewModel @Inject constructor(
     }
 
     fun getStartDateSelected(): String? {
-        return (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let { CalendarUtils.getFormatDate(it) }?.let {
-            reminderEntity.startDate = it
-            it
+        return (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
+            reminderEntity.startDate = CalendarUtils.getFormatDate2(it)
+            CalendarUtils.getFormatDate(it)
         }
     }
 
     fun getEndDateSelected(): String? {
-        return (_optionEndDate.value?.firstOrNull() as CalendarSimple?)?.date?.let { CalendarUtils.getFormatDate(it) }
+        return (_optionEndDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
+            reminderEntity.endDate = CalendarUtils.getFormatDate2(it)
+            CalendarUtils.getFormatDate(it)
+        }
     }
 
 
     fun getOptionRepeat(): String? {
-        return (_listOptionsRepeat.value?.firstOrNull { it.isSelected } as TextOption?)?.name
+        return (_listOptionsRepeat.value?.firstOrNull { it.isSelected } as TextOption?)?.let {
+            reminderEntity.repeatOption = it.value
+            it.name
+        }
     }
 
     fun getDurationRepeat(): String? {
         return _listDurationRepeat.value?.firstOrNull { it.isSelected }?.let { option ->
             when (option) {
-                is TextOption -> option.name
-                is CalendarOptionNormal -> option.date?.let { "hasta el " + CalendarUtils.getFormatDate2(it) }
-                is CounterOption -> option.counter.toString() + " veces"
+                is TextOption -> {
+                    reminderEntity.durationTypeRepeat = TypeOption.TEXT
+                    reminderEntity.durationRepeat = option.name
+                    option.name
+                }
+
+                is CalendarOptionNormal -> {
+                    option.date?.let {
+                        reminderEntity.durationTypeRepeat = TypeOption.DATE
+                        reminderEntity.durationRepeat = CalendarUtils.getFormatDate2(it)
+                        "hasta el " + CalendarUtils.getFormatDate2(it)
+                    }
+                }
+
+                is CounterOption -> {
+                    reminderEntity.durationTypeRepeat = TypeOption.COUNTER
+                    reminderEntity.durationRepeat = option.counter.toString()
+                    option.counter.toString() + " veces"
+                }
+
                 else -> null
             }
         }
@@ -338,20 +318,44 @@ class ReminderViewModel @Inject constructor(
         return strings?.joinToString(",")
     }
 
-    fun validateForm(): Boolean {
-        if (!enableForm.get()) return false
-        if (nameEvent?.isEmpty() == true) return false
-        val optionRepeat = _listOptionsRepeat.value?.firstOrNull { it is TextOption && it.isSelected } ?: return false
-        val duration = _listDurationRepeat.value?.forEach {
-
-        }
-        return false
-    }
-
     fun setNameReminder(name: String) {
         reminderEntity.title = name
     }
 
+    fun setDescriptionReminder(description: String) {
+        reminderEntity.description = description
+    }
+
+    fun addImages(images: List<Uri>) {
+        reminderEntity.listImages = images.map { it.toString() }
+    }
+
     fun createReminder() {
+        if (reminderPetsJoin.pets.isEmpty() ||
+            reminderEntity.categoryReminder == null ||
+            reminderEntity.durationRepeat == null ||
+            reminderEntity.durationTypeRepeat == null ||
+            reminderEntity.repeatOption == null ||
+            reminderEntity.startDate.isEmpty() ||
+            reminderEntity.endDate.isEmpty() ||
+            //(!reminderEntity.isAllDay && reminderEntity.startHour.isEmpty() && reminderEntity.endHour.isEmpty()) ||
+            (reminderEntity.alarms.isEmpty() && reminderEntity.dateAlarms.isEmpty())
+        ) {
+            _showErrorDialog.postValue("Llena todo el formulario")
+            return
+        }
+        viewModelScope.launch {
+            try {
+                _loading.postValue(true)
+                val reminderId = insertReminderUseCase(reminderEntity.toReminder())
+                reminderPetsJoin.reminder = reminderEntity
+                reminderPetsJoin.pets.forEach {
+                    insertReminderWithPetsUseCase(ReminderPetJoin(reminderId, it.petId ?: 0))
+                }
+                _loading.postValue(false)
+            } catch (e: Exception) {
+                _showErrorDialog.postValue(e.localizedMessage)
+            }
+        }
     }
 }

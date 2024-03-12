@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -74,6 +75,7 @@ class ReminderActivity : AppCompatActivity() {
         }
         imageGalleryAdapter.images = images
         imageGalleryAdapter.notifyDataSetChanged()
+        viewModel.addImages(images)
     }
 
     override fun onRequestPermissionsResult(
@@ -122,6 +124,17 @@ class ReminderActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = vaccineAdapter
         }
+        binding.edtDescription.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.setDescriptionReminder(s.toString())
+            }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,42 +147,13 @@ class ReminderActivity : AppCompatActivity() {
         viewModel.getPets()
 
         checkPermission()
-        createChannel()
-        scheduleNotification()
+
 
         setUpObservables()
         setUpRecyclerViews()
         setUpListeners()
 
         setContentView(binding.root)
-    }
-
-    private fun scheduleNotification() {
-        val intent = Intent(applicationContext, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            NOTIFICATION_ID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + 15000, pendingIntent)
-    }
-
-    private fun createChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                MY_CHANNEL_ID,
-                MY_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            notificationManager.createNotificationChannel(channel)
-        }
     }
 
     private fun checkPermission() {
@@ -248,10 +232,10 @@ class ReminderActivity : AppCompatActivity() {
 
     private fun setUpObservables() {
         viewModel.listPets.observe(this) {
-            binding.rvAnimals.adapter = PetAdapter(it) { viewModel.enableForm() }
+            binding.rvAnimals.adapter = PetAdapter(it) { viewModel.selectAnimalEntity() }
         }
         viewModel.categoriesReminder.observe(this) {
-            binding.rvCategories.adapter = CategoryReminderAdapter(it) { viewModel.enableForm() }
+            binding.rvCategories.adapter = CategoryReminderAdapter(it) { viewModel.setCategoryReminder() }
         }
         viewModel.listOptionsRepeat.observe(this) { options ->
             showDialogOptions(options) {
@@ -290,6 +274,16 @@ class ReminderActivity : AppCompatActivity() {
         viewModel.optionEndDate.observe(this) { options ->
             showDialogOptions(options) {
                 viewModel.getEndDateSelected()?.let { binding.tvDateEnd.text = it }
+            }
+        }
+        viewModel.showErrorDialog.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.loading.observe(this) {
+            if (!it) {
+                setResult(RESULT_OK)
+                finish()
             }
         }
     }

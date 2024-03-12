@@ -7,18 +7,21 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.ItemReminderBinding
+import com.pe.mascotapp.domain.models.Reminder
+import com.pe.mascotapp.domain.models.ReminderWithPets
 import com.pe.mascotapp.extentions.changeTintColor
+import com.pe.mascotapp.vistas.entities.CATEGORYID
 import com.pe.mascotapp.vistas.entities.CategoryReminderEntity
 import com.pe.mascotapp.vistas.entities.PetEntity
 
-class ReminderAdapter(private val reminders: List<ReminderEntity>) :
+class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>) :
     RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
     class ReminderViewHolder(private val binding: ItemReminderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(reminder: ReminderEntity) {
-            binding.reminder = reminder
+        fun bind(reminderPets: ReminderPetsJoinEntity) {
+            binding.reminderPets = reminderPets
             binding.ivReminder.setImageDrawable(
-                reminder.categoryReminder?.image?.let {
+                reminderPets.reminder.categoryReminder?.image?.let {
                     ContextCompat.getDrawable(
                         binding.root.context,
                         it
@@ -26,10 +29,10 @@ class ReminderAdapter(private val reminders: List<ReminderEntity>) :
                 }
 
             )
-            handleState(reminder.isActivated)
+            handleState(reminderPets.reminder.isActivated)
             binding.swReminder.setOnCheckedChangeListener { _, isChecked ->
-                reminder.isActivated = isChecked
-                handleState(reminder.isActivated)
+                reminderPets.reminder.isActivated = isChecked
+                handleState(reminderPets.reminder.isActivated)
             }
         }
 
@@ -109,27 +112,69 @@ class ReminderAdapter(private val reminders: List<ReminderEntity>) :
     }
 }
 
+class ReminderPetsJoinEntity(
+    var reminder: ReminderEntity,
+    var pets: List<PetEntity>
+) {
+    constructor(reminder: ReminderWithPets) : this(
+        reminder.reminder.toReminderEntity(),
+        reminder.pets.map { it.toPetEntity() }
+    )
+
+    fun pets(): String {
+        return this.pets.joinToString(",") { it.name }
+    }
+
+}
+
 class ReminderEntity(
+    var reminderId: Long? = null,
     var title: String = "",
-    val description: String = "",
-    val listPets: List<PetEntity> = listOf(),
+    var description: String = "",
     var startDate: String = "",
-    val endDate: String = "",
+    var endDate: String = "",
     var startHour: String = "",
     var endHour: String = "",
-    val isAllDay: Boolean = false,
+    var isAllDay: Boolean = false,
     val location: String = "",
-    val categoryReminder: CategoryReminderEntity? = null,
+    var categoryReminder: CategoryReminderEntity? = null,
     var isActivated: Boolean = true,
     var alarms: ArrayList<String> = arrayListOf(),
-    var dateAlarms : ArrayList<String> = arrayListOf()
+    var dateAlarms: ArrayList<String> = arrayListOf(),
+    var listImages: List<String> = listOf(),
+    var repeatOption: ValueTextOption? = null,
+    var durationTypeRepeat: TypeOption? = null,
+    var durationRepeat: String? = null,
 ) {
-    fun pets(): String {
-        return this.listPets.joinToString(",")
+
+    fun toReminder(): Reminder {
+        return Reminder(
+            title = this.title,
+            description = this.description,
+            startDate = this.startDate,
+            endDate = this.endDate,
+            isAllDay = this.isAllDay,
+            categoryReminder = this.categoryReminder?.categoryId ?: CATEGORYID.OTHERS,
+            isActivated = true,
+            alarms = this.alarms,
+            dateAlarms = this.dateAlarms,
+            listImages = this.listImages,
+            repeatOption = this.repeatOption,
+            durationRepeat = this.durationRepeat,
+            durationTypeRepeat = this.durationTypeRepeat,
+            endHour = this.endHour,
+            startHour = this.startHour
+        )
     }
 
     fun getNamesPets(): String{
         val arrayOfValues =  listPets.map { it.name }.toTypedArray()
         return  arrayOfValues.joinToString(",")
     }
+}
+
+enum class TypeOption {
+    COUNTER,
+    TEXT,
+    DATE
 }

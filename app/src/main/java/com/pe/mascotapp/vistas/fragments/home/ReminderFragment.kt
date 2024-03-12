@@ -1,5 +1,6 @@
 package com.pe.mascotapp.vistas.fragments.home
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,7 +25,7 @@ class ReminderFragment : Fragment() {
 
     private val launchCreateReminder =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-
+            if (it.resultCode == Activity.RESULT_OK) viewModel.getReminders()
         }
 
     override fun onCreateView(
@@ -39,7 +40,7 @@ class ReminderFragment : Fragment() {
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
         binding.rvReminders.apply {
-            this.adapter = ReminderAdapter(viewModel.getReminders())
+            this.adapter = ReminderAdapter(listOf())
             this.layoutManager = LinearLayoutManager(context)
         }
         binding.btnAddNew.setOnClickListener {
@@ -50,12 +51,17 @@ class ReminderFragment : Fragment() {
             val intent = Intent(activity, ReminderActivity::class.java)
             launchCreateReminder.launch(intent)
         }
-        viewModel.listPets.observe(viewLifecycleOwner){
+        viewModel.listPets.observe(viewLifecycleOwner) {
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).tabAnimals = it
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).notifyDataSetChanged()
         }
+        viewModel.listReminders.observe(viewLifecycleOwner) {
+            (binding.rvReminders.adapter as ReminderAdapter).reminders = it
+            (binding.rvReminders.adapter as ReminderAdapter).notifyDataSetChanged()
+        }
         viewModel.getAnimalTabs()
-        return binding.root;
+        viewModel.getReminders()
+        return binding.root
     }
 
     companion object {

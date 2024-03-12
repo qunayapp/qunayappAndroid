@@ -5,8 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -24,6 +28,7 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.interfaces.PrincipalPresentador
 import com.pe.mascotapp.modelos.Categorias
 import com.pe.mascotapp.modelos.PromocionBanner
+import com.pe.mascotapp.notifications.WorkManagerScheduler
 import com.pe.mascotapp.utils.Constantes
 import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.adapters.HomeAdapter
@@ -191,7 +196,7 @@ class HomeActivity : AppCompatActivity() {
         imgBanner = findViewById<ImageView>(R.id.imgBanner)
         presentador = PrincipalPresentador.VistaStart(this)
 
-
+        checkBattery(this)
         //obtenerData()
         //startRCVHome()
         iniciarvista(savedInstanceState)
@@ -429,4 +434,23 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun isBatteryOptimized(context: Context): Boolean {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val name = context.packageName
+        return !powerManager.isIgnoringBatteryOptimizations(name)
+    }
+
+    private fun checkBattery(context: Context) {
+        if (isBatteryOptimized(context)) {
+            val name = context.resources.getString(R.string.app_name)
+            Toast.makeText(context, "Battery optimization -> All apps -> $name -> Don't optimize", Toast.LENGTH_LONG).show()
+
+            val intent = Intent(ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+            context.startActivity(intent)
+            return
+        }
+        WorkManagerScheduler.scheduleWorker(application.applicationContext)
+    }
+
 }
