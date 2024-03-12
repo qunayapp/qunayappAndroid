@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	package="com.pe.mascotapp">
 
 	<uses-permission android:name="android.permission.INTERNET" />
@@ -110,10 +111,11 @@
 		<receiver
 			android:name=".notifications.AlarmReceiver"
 			android:enabled="true" />
-
-		<service
-			android:name=".notifications.NightlyTaskService"
-			android:exported="false" />
+		<provider
+			android:name="androidx.startup.InitializationProvider"
+			android:authorities="${applicationId}.androidx-startup"
+			tools:node="remove">
+		</provider>
 	</application>
 
 </manifest>

@@ -19,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReminderHistoryViewModel @Inject constructor(
     private val getPetsUseCase: GetPetsUseCase,
-    private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
-    private val getRemindersPetsJoinUseCase: GetRemindersPetsJoinUseCase
+    private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase
 ) : ViewModel() {
 
     val remindersIsEmpty: ObservableBoolean = ObservableBoolean(true)

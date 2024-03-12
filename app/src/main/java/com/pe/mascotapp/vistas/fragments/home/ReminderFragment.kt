@@ -1,5 +1,6 @@
 package com.pe.mascotapp.vistas.fragments.home
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,7 +25,7 @@ class ReminderFragment : Fragment() {
 
     private val launchCreateReminder =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-
+            if (it.resultCode == Activity.RESULT_OK) viewModel.getReminders()
         }
 
     override fun onCreateView(
@@ -60,7 +61,7 @@ class ReminderFragment : Fragment() {
         }
         viewModel.getAnimalTabs()
         viewModel.getReminders()
-        return binding.root;
+        return binding.root
     }
 
     companion object {

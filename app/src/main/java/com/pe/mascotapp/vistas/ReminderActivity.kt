@@ -147,42 +147,13 @@ class ReminderActivity : AppCompatActivity() {
         viewModel.getPets()
 
         checkPermission()
-        createChannel()
-        scheduleNotification()
+
 
         setUpObservables()
         setUpRecyclerViews()
         setUpListeners()
 
         setContentView(binding.root)
-    }
-
-    private fun scheduleNotification() {
-        val intent = Intent(applicationContext, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            NOTIFICATION_ID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + 15000, pendingIntent)
-    }
-
-    private fun createChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                MY_CHANNEL_ID,
-                MY_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            notificationManager.createNotificationChannel(channel)
-        }
     }
 
     private fun checkPermission() {
@@ -310,6 +281,10 @@ class ReminderActivity : AppCompatActivity() {
         }
 
         viewModel.loading.observe(this) {
+            if (!it) {
+                setResult(RESULT_OK)
+                finish()
+            }
         }
     }
 

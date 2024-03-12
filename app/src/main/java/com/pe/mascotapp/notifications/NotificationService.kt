@@ -2,6 +2,7 @@ package com.pe.mascotapp.notifications
 
 import android.app.*
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
@@ -40,6 +41,7 @@ class NotificationService : Service() {
         val notification: Notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Example Service")
             .setContentText(input)
+            .setColor(Color.YELLOW)
             .setSmallIcon(R.drawable.mascotapp_icon)
             .setContentIntent(pendingIntent)
             .build()

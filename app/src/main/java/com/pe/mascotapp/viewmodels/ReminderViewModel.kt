@@ -242,16 +242,16 @@ class ReminderViewModel @Inject constructor(
     }
 
     fun getStartDateSelected(): String? {
-        return (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let { CalendarUtils.getFormatDate(it) }?.let {
-            reminderEntity.startDate = it
-            it
+        return (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
+            reminderEntity.startDate = CalendarUtils.getFormatDate2(it)
+            CalendarUtils.getFormatDate(it)
         }
     }
 
     fun getEndDateSelected(): String? {
-        return (_optionEndDate.value?.firstOrNull() as CalendarSimple?)?.date?.let { CalendarUtils.getFormatDate(it) }?.let {
-            reminderEntity.endDate = it
-            it
+        return (_optionEndDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
+            reminderEntity.endDate = CalendarUtils.getFormatDate2(it)
+            CalendarUtils.getFormatDate(it)
         }
     }
 
@@ -338,7 +338,7 @@ class ReminderViewModel @Inject constructor(
             reminderEntity.repeatOption == null ||
             reminderEntity.startDate.isEmpty() ||
             reminderEntity.endDate.isEmpty() ||
-            (!reminderEntity.isAllDay && reminderEntity.startHour.isEmpty() && reminderEntity.endHour.isEmpty()) ||
+            //(!reminderEntity.isAllDay && reminderEntity.startHour.isEmpty() && reminderEntity.endHour.isEmpty()) ||
             (reminderEntity.alarms.isEmpty() && reminderEntity.dateAlarms.isEmpty())
         ) {
             _showErrorDialog.postValue("Llena todo el formulario")
@@ -348,8 +348,6 @@ class ReminderViewModel @Inject constructor(
             try {
                 _loading.postValue(true)
                 val reminderId = insertReminderUseCase(reminderEntity.toReminder())
-                //Log.e("quack",reminderId.toString())
-                //Log.e("quack",reminderEntity.listPets.size.toString())
                 reminderPetsJoin.reminder = reminderEntity
                 reminderPetsJoin.pets.forEach {
                     insertReminderWithPetsUseCase(ReminderPetJoin(reminderId, it.petId ?: 0))
