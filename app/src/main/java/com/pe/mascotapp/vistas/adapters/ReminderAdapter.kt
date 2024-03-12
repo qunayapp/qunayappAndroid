@@ -127,4 +127,9 @@ class ReminderEntity(
     fun pets(): String {
         return this.listPets.joinToString(",")
     }
+
+    fun getNamesPets(): String{
+        val arrayOfValues =  listPets.map { it.name }.toTypedArray()
+        return  arrayOfValues.joinToString(",")
+    }
 }

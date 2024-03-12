@@ -9,11 +9,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.FragmentPetsBinding
 import com.pe.mascotapp.viewmodels.PetsMainViewModel
 import com.pe.mascotapp.vistas.adapters.PetMainAdapter
-import com.pe.mascotapp.vistas.adapters.ReminderAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

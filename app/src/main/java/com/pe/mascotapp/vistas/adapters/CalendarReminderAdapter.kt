@@ -1,29 +1,42 @@
 package com.pe.mascotapp.vistas.adapters
 
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.ItemCalendarPetBinding
 import com.pe.mascotapp.extentions.changeTintColor
 
 
-class CalendarReminderAdapter(private val reminders: List<ReminderEntity>): RecyclerView.Adapter<CalendarReminderAdapter.CalendarReminderViewHolder>() {
+class CalendarReminderAdapter(val reminders: List<ReminderEntity>): RecyclerView.Adapter<CalendarReminderAdapter.CalendarReminderViewHolder>() {
     class  CalendarReminderViewHolder(private val binding: ItemCalendarPetBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(reminder: ReminderEntity) {
             handleState(reminder.isActivated)
+            Glide.with(binding.root.context)
+                .load(reminder.listPets.get(0).image)
+                .placeholder(R.drawable.perro1)
+                .error(R.drawable.perro1)
+                .into(binding.petImage)
+            binding.reminder = reminder
+            binding.txtPetName.text = reminder.getNamesPets()
+            itemView.setOnClickListener {
+                binding.grpSecondQuestion.visibility = if(binding.grpSecondQuestion.isVisible) View.GONE else View.VISIBLE
+            }
         }
         private fun handleState(isActivated: Boolean) {
             var backgroundColor = R.color.verdeclaroq
             var primaryTextColor = R.color.white
-            var secondaryTextColor = R.color.white
             var iconColor = R.color.white
             if (!isActivated){
                 backgroundColor = R.color.green100
                 primaryTextColor = R.color.plomoDark
-                secondaryTextColor = R.color.plomoRegular
                 iconColor = R.color.plomoRegular
             }
             binding.clParent.changeTintColor(
@@ -32,20 +45,8 @@ class CalendarReminderAdapter(private val reminders: List<ReminderEntity>): Recy
                     backgroundColor
                 )
             )
-            binding.icDate.drawable.setColorFilter(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    iconColor
-                ),
-                PorterDuff.Mode.SRC_ATOP
-            )
-            binding.icLocation.drawable.setColorFilter(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    iconColor
-                ),
-                PorterDuff.Mode.SRC_ATOP
-            )
+            ImageViewCompat.setImageTintList( binding.icDate, ColorStateList.valueOf(ContextCompat.getColor( binding.root.context, iconColor)))
+            ImageViewCompat.setImageTintList( binding.icLocation, ColorStateList.valueOf(ContextCompat.getColor( binding.root.context, iconColor)))
             binding.txtReminder.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
