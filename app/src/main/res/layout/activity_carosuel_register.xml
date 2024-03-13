@@ -8,13 +8,13 @@
     tools:context=".vistas.CarosuelRegisterActivity">
 
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:adjustViewBounds="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/viewPStep"
         >
-    </androidx.viewpager.widget.ViewPager>
+    </androidx.viewpager2.widget.ViewPager2>
 
     <RelativeLayout
         android:orientation="vertical"

@@ -1,6 +1,7 @@
 package com.pe.mascotapp.vistas
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -30,6 +31,12 @@ import com.pe.mascotapp.utils.Constantes
 import android.graphics.Bitmap.CompressFormat
 import android.content.ContextWrapper
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.pe.mascotapp.vistas.fragments.stepRegister.StepOne
+import com.pe.mascotapp.vistas.fragments.stepRegister.StepThree
+import com.pe.mascotapp.vistas.fragments.stepRegister.StepTwo
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -38,7 +45,7 @@ import java.lang.Exception
 
 class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
-    var viewPStep: ViewPager? = null
+    var viewPStep: ViewPager2? = null
     var btnVolver: TextView? = null
     var btnSiguiente: MaterialButton? = null
     var usuario:Usuario ?= null
@@ -63,9 +70,9 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     var numCel = ""
     //var tabLayout: TabLayout? = null
     //var vista = 0
-
+    private lateinit var stepFmList : List<Fragment>
     private lateinit var presentador: PrincipalPresentador.VistaStart
-
+    private var isFromMainPets : Boolean = false
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,13 +83,13 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
         //Utils.dump(usuario!!.email)
 
-        viewPStep = findViewById<ViewPager>(R.id.viewPStep)
+        viewPStep = findViewById<ViewPager2>(R.id.viewPStep)
         //tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         btnVolver = findViewById<TextView>(R.id.btnVolver)
         btnSiguiente = findViewById<MaterialButton>(R.id.btnSiguiente)
-
-        viewPStep!!.adapter = CarosuelFragmentRegisterState(supportFragmentManager,this)
-
+        isFromMainPets =  intent.extras?.getBoolean("isFromMainPets", false)?:false
+        stepFmList = if(isFromMainPets) listOf(StepTwo.newInstance("Paso 1"),StepThree.newInstance("Paso 2"))  else listOf(StepOne.newInstance("Paso 1"),StepTwo.newInstance("Paso 2"),StepThree.newInstance("Paso 3"))
+        viewPStep!!.adapter =CarosuelFragmentRegisterState(stepFmList, this)
         //tabLayout!!.setupWithViewPager(viewPStep, true);
 
 
@@ -96,7 +103,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
         viewPStep!!.setOnTouchListener(OnTouchListener { arg0, arg1 -> true })
 
-        viewPStep!!.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        viewPStep!!.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
@@ -110,7 +117,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
             override fun onPageSelected(position: Int) {
                 Utils.dump("posicion por scrolear onPageSelected " + position)
 
-                if(position == 2){
+                if(position == viewPStep!!.adapter?.itemCount?.minus(1)){
 
                     btnSiguiente!!.setOnClickListener {
                         /*val str1 = "INSERT INTO usuario(name, birthdate, email,pass, numPhone, img, sex ) VALUES\n"+
@@ -166,13 +173,17 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     }
 
     private fun finishStep(){
-        finishActivity()
+        if (isFromMainPets) onBackStep()
+        else finishActivity()
     }
 
     private fun onBackStep(){
-        val intent = Intent(this, MainActivity::class.java)
+        val resultIntent = Intent()
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
+/*        val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(intent)*/
     }
 
     private fun finishActivity(){

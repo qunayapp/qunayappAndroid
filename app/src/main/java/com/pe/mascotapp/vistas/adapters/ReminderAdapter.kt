@@ -125,6 +125,11 @@ class ReminderPetsJoinEntity(
         return this.pets.joinToString(",") { it.name }
     }
 
+    fun getNamesPets(): String{
+        val arrayOfValues =  pets.map { it.name }.toTypedArray()
+        return  arrayOfValues.joinToString(",")
+    }
+
 }
 
 class ReminderEntity(
@@ -167,10 +172,6 @@ class ReminderEntity(
         )
     }
 
-    fun getNamesPets(): String{
-        val arrayOfValues =  listPets.map { it.name }.toTypedArray()
-        return  arrayOfValues.joinToString(",")
-    }
 }
 
 enum class TypeOption {

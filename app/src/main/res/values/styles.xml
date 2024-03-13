@@ -99,6 +99,18 @@
 		<item name="android:textColor">@color/black</item>
 	</style>
 
+	<style name="WorkSans_Regular32">
+		<item name="android:fontFamily">@font/worksans_semibold</item>
+		<item name="android:textSize">32dp</item>
+		<item name="android:textColor">@color/white</item>
+	</style>
+
+	<style name="WorkSans_Bold20">
+		<item name="android:fontFamily">@font/worksans_bold</item>
+		<item name="android:textSize">20sp</item>
+		<item name="android:textColor">@color/verdeq</item>
+	</style>
+
 	<style name="DialogTheme">
 
 		<item name="android:windowFrame">@null</item>

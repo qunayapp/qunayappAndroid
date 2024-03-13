@@ -17,6 +17,7 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/txtStepTitle"
                 android:fontFamily="@font/worksans_black"
                 android:gravity="center"
                 android:layout_marginEnd="27dp"

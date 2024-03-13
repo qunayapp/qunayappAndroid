@@ -24,6 +24,7 @@ class StepThree:Fragment() {
     lateinit var onEditTextChanged: OnEditTextChanged;
 
     var edtFecha: TextInputEditText?= null
+    var txtStepTitle : TextView ?= null
     var imgPet: ImageView?= null
     var edtPeso: TextInputLayout?= null
     private val pickImage = 100
@@ -55,7 +56,11 @@ class StepThree:Fragment() {
         edtPeso = view.findViewById<TextInputLayout>(R.id.edtPeso)
         imgPet = view.findViewById<ImageView>(R.id.imgPet)
         edtCompartir = view.findViewById<Button>(R.id.edtCompartir)
+        txtStepTitle = view.findViewById<TextView>(R.id.txtStepTitle)
 
+        arguments?.getString("title", "")?.let {
+            txtStepTitle!!.text = it
+        }
         edtFecha!!.setOnClickListener {
             datePicker.show(requireActivity().supportFragmentManager,datePicker.toString())
         }
@@ -151,9 +156,12 @@ class StepThree:Fragment() {
     }
 
     companion object {
-        fun newInstance() : StepOne {
-            val stepOne = StepOne()
-            return stepOne
+        fun newInstance(text: String) : StepThree{
+            val stepThree = StepThree()
+            val args = Bundle()
+            args.putString("title", text)
+            stepThree.arguments = args
+            return stepThree
         }
     }
 }

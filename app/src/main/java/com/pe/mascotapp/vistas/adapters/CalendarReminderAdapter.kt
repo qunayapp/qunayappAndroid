@@ -15,16 +15,16 @@ import com.pe.mascotapp.databinding.ItemCalendarPetBinding
 import com.pe.mascotapp.extentions.changeTintColor
 
 
-class CalendarReminderAdapter(val reminders: List<ReminderEntity>): RecyclerView.Adapter<CalendarReminderAdapter.CalendarReminderViewHolder>() {
+class CalendarReminderAdapter(val reminders: List<ReminderPetsJoinEntity>): RecyclerView.Adapter<CalendarReminderAdapter.CalendarReminderViewHolder>() {
     class  CalendarReminderViewHolder(private val binding: ItemCalendarPetBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(reminder: ReminderEntity) {
-            handleState(reminder.isActivated)
+        fun bind(reminder: ReminderPetsJoinEntity) {
+            handleState(reminder.reminder.isActivated)
             Glide.with(binding.root.context)
-                .load(reminder.listPets.get(0).image)
+                .load(reminder.pets.get(0).image)
                 .placeholder(R.drawable.perro1)
                 .error(R.drawable.perro1)
                 .into(binding.petImage)
-            binding.reminder = reminder
+            binding.reminder = reminder.reminder
             binding.txtPetName.text = reminder.getNamesPets()
             itemView.setOnClickListener {
                 binding.grpSecondQuestion.visibility = if(binding.grpSecondQuestion.isVisible) View.GONE else View.VISIBLE

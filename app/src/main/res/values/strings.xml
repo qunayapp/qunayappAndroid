@@ -36,4 +36,20 @@
     <string name="pictures">Fotos</string>
     <string name="add">agregar</string>
     <string name="update_alarms">Actualizando alarmas</string>
+    <string name="general_information">Información General</string>
+    <string name="label_age">Edad:</string>
+    <string name="label_weight">Peso:</string>
+    <string name="label_esteralized">Esterilizado:</string>
+    <string name="label_trained">Entrenado:</string>
+    <string name="label_friendly_with_others_dogs">Amigable con otros perros:</string>
+    <string name="label_friendly_with_kids">Amigable con niños:</string>
+    <string name="care_information">Información de cuidado</string>
+    <string name="label_bathroom_outlets">Salidas al baño:</string>
+    <string name="label_energy_level">Nivel de energia:</string>
+    <string name="label_lunch_hours">Horarios de comida:</string>
+    <string name="label_additional_info">Informacion Adicional:</string>
+    <string name="health_information">Información de salud</string>
+    <string name="label_has_illness">Tiene alguna enfermedad:</string>
+    <string name="label_additional_details">Detalles adicionales:</string>
+    <string name="pictures_gallery">Galería de fotos</string>
 </resources>

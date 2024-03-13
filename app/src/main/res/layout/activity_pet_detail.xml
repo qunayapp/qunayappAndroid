@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="petEntity"
+            type="com.pe.mascotapp.vistas.entities.PetEntity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".vistas.PetDetailActivity">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_activity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/petImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/perro1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvSpecies"
+                    style="@style/WorkSans_Regular10"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:scaleType="centerCrop"
+                    android:layout_marginTop="8dp"
+                    android:text="@{petEntity.specie}"
+                    android:textColor="@color/white"
+                    app:drawableTint="@color/white"
+                    app:drawableTopCompat="@drawable/perro"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Perro" />
+
+                <TextView
+                    android:id="@+id/tvGender"
+                    style="@style/WorkSans_Regular10"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:scaleType="fitXY"
+                    android:text=""
+                    android:textColor="@color/white"
+                    app:drawableTint="@color/white"
+                    app:drawableTopCompat="@drawable/hombre"
+                    app:layout_constraintEnd_toStartOf="@+id/tvSpecies"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Macho" />
+
+                <TextView
+                    android:id="@+id/tvPetName"
+                    style="@style/WorkSans_Regular32"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:paddingTop="10dp"
+                    android:text="@{petEntity.name}"
+                    android:textColor="@color/white"
+                    android:textSize="32sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/petImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="Paul pugba" />
+
+                <TextView
+                    android:id="@+id/txtPetRaza"
+                    style="@style/WorkSans_Regular14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/gray100"
+                    android:text="@{petEntity.raza}"
+                    android:textAlignment="center"
+                    android:textColor="@color/verdeq"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/petImage"
+                    tools:text="Labrador , Samoryedo" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llGeneralInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtPetRaza">
+
+                    <TextView
+                        android:id="@+id/txtGeneralInfo"
+                        style="@style/WorkSans_Bold20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="8dp"
+                        android:text="@string/general_information"
+                        android:textColor="@color/verdeq"
+                        app:drawableEndCompat="@drawable/ic_edit_second"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/petImage" />
+
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_age"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtAge"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        android:inputType="text"
+                        android:scrollbars="vertical"
+                        tools:text="7 años 3 meses" />
+
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_weight"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtWeight"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        android:inputType="text|number"
+                        android:scrollbars="vertical"
+                        tools:text="24kg" />
+
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_esteralized"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtEsteralized"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        android:inputType="text"
+                        android:scrollbars="vertical"
+                        tools:text="si" />
+
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_trained"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtTrained"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        android:inputType="text"
+                        android:scrollbars="vertical"
+                        tools:text="si" />
+
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_friendly_with_others_dogs"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtFriendlyDogs"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        android:inputType="text"
+                        android:scrollbars="vertical"
+                        tools:text="si" />
+
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_friendly_with_kids"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtFriendlyKids"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        android:inputType="text"
+                        android:scrollbars="vertical"
+                        tools:text="si" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llCareInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/llGeneralInfo">
+                    <TextView
+                        android:id="@+id/txtCareInfo"
+                        style="@style/WorkSans_Bold20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/care_information"
+                        android:textColor="@color/verdeq"
+                        android:drawablePadding="8dp"
+                        app:drawableEndCompat="@drawable/ic_edit_second"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/petImage"/>
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_bathroom_outlets"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtBathroomOut"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        tools:text="6 horas"
+                        android:inputType="text"
+                        android:scrollbars="vertical" />
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_energy_level"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtEnergyLevel"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        tools:text="high"
+                        android:inputType="text|number"
+                        android:scrollbars="vertical" />
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_lunch_hours"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtLunchHours"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        tools:text="cada 8 horas"
+                        android:inputType="text"
+                        android:scrollbars="vertical" />
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_additional_info"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtAditionalInfo"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        tools:text="si"
+                        android:inputType="text"
+                        android:scrollbars="vertical" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llHealthInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/llCareInfo">
+                    <TextView
+                        android:id="@+id/txtHealthInfo"
+                        style="@style/WorkSans_Bold20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_information"
+                        android:textColor="@color/verdeq"
+                        android:drawablePadding="8dp"
+                        app:drawableEndCompat="@drawable/ic_edit_second"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/petImage"/>
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_has_illness"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtHasIllness"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        tools:text="si"
+                        android:inputType="text"
+                        android:scrollbars="vertical" />
+                    <TextView
+                        style="@style/WorkSans_Regular_SemiBold16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/label_additional_details"
+                        android:textColor="@color/grisTitulo" />
+
+                    <EditText
+                        android:id="@+id/edtAdditionalDet"
+                        style="@style/WorkSans_Regular16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="start|top"
+                        tools:text="high"
+                        android:inputType="text|number"
+                        android:scrollbars="vertical" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/llGallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/llHealthInfo">
+                    <TextView
+                        android:id="@+id/txtGallery"
+                        style="@style/WorkSans_Bold20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pictures_gallery"
+                        android:textColor="@color/verdeq"
+                        android:drawablePadding="8dp"
+                        app:drawableEndCompat="@drawable/ic_edit_second"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/petImage"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

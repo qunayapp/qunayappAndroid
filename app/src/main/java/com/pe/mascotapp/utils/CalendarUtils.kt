@@ -2,6 +2,10 @@ package com.pe.mascotapp.utils
 
 import android.util.Log
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -41,6 +45,17 @@ class CalendarUtils {
             }
         }
 
+        fun formatMonthYear(localDate: LocalDate, locale: Locale): String {
+            val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
+            return localDate.format(formatter)
+        }
+
+        fun getAbbreviatedDayName(localDate: LocalDate, locale: Locale): String {
+            val formatter = DateTimeFormatter.ofPattern("EEE", locale)
+            return localDate.format(formatter)
+        }
+
+
 
         fun fechaCumplidaHoy(fecha: Date): Boolean {
             val formato = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
@@ -78,7 +93,33 @@ class CalendarUtils {
                 return Calendar.getInstance().time
             }
         }
+
+        fun daysInWeekArray(selectedDate: LocalDate): ArrayList<LocalDate> {
+            val days = ArrayList<LocalDate>()
+            var current: LocalDate? = sundayForDate(selectedDate)
+            val endDate = current!!.plusWeeks(1)
+            while (current!!.isBefore(endDate)) {
+                days.add(current)
+                current = current.plusDays(1)
+            }
+            return days
+        }
+
+        private fun sundayForDate(current: LocalDate): LocalDate? {
+            var current = current
+            val oneWeekAgo = current.minusWeeks(1)
+            while (current.isAfter(oneWeekAgo)) {
+                if (current.dayOfWeek == DayOfWeek.SUNDAY) return current
+                current = current.minusDays(1)
+            }
+            return null
+        }
+
+        fun convertLocalDateToDate(localDate: LocalDate): Date {
+            return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        }
     }
+
 }
 
 fun Date.addDay(days: Int): Date? {

@@ -28,11 +28,12 @@ import android.widget.RadioButton
 
 import android.widget.RadioGroup
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.pe.mascotapp.databinding.FragmentRegisterOneBinding
 
 
 class StepOne():Fragment() {
 
-    lateinit var onEditTextChanged:OnEditTextChanged;
+/*    lateinit var onEditTextChanged:OnEditTextChanged;
     var edtFecha: TextInputEditText?= null
     var imgPersona:ImageView ?= null
     var txtAgregarFoto:TextView ?= null
@@ -40,8 +41,11 @@ class StepOne():Fragment() {
     private val pickImage = 100
     private var imageUri:Uri ?= null
     var radioGroup: RadioGroup? = null
-    var radioButton: RadioButton?= null
-
+    var radioButton: RadioButton?= null*/
+    lateinit var onEditTextChanged:OnEditTextChanged
+    private val pickImage = 100
+    private var imageUri:Uri ?= null
+    var imgPersona:ImageView ?= null
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onEditTextChanged = context as OnEditTextChanged
@@ -53,6 +57,7 @@ class StepOne():Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         //return super.onCreateView(inflater, container, savedInstanceState)
+        val binding = FragmentRegisterOneBinding.inflate(inflater, container, false)
         var view: View = inflater.inflate(R.layout.fragment_register_one, container,false)
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
@@ -87,24 +92,22 @@ class StepOne():Fragment() {
             Utils.dump("" + dia + " - " + mes + " - " + calendar.get(Calendar.YEAR))
 
             val txtFecha = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
-            edtFecha!!.setText(txtFecha)
+            binding.edtFecha.setText(txtFecha)
             //fechaNacimiento = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
             onEditTextChanged.onTextChanged(txtFecha,1,"edtFecha")
 
         }
-        edtFecha = view.findViewById<TextInputEditText>(R.id.edtFecha)
-        imgPersona = view.findViewById<ImageView>(R.id.imgPersona)
-        txtAgregarFoto = view.findViewById<View>(R.id.txtAgregarFoto) as TextView
-        edtNombre = view.findViewById<TextInputLayout>(R.id.edtNombre)
+        arguments?.getString("title", "")?.let {
+            binding.txtStepTitle.text = it
+        }
 
-        radioGroup = view.findViewById<RadioGroup>(R.id.radioGroup)
 
-        radioGroup!!.setOnCheckedChangeListener { group, checkedId -> // checkedId is the RadioButton selected
+        binding.radioGroup.setOnCheckedChangeListener { group, checkedId -> // checkedId is the RadioButton selected
             val rb = view.findViewById(checkedId) as RadioButton
             onEditTextChanged.onTextChanged(rb.text.toString(),1,"radioGroup")
         }
 
-        imgPersona!!.setOnClickListener {
+        binding.imgPersona.setOnClickListener {
 
             ImagePicker.with(this)
                 .crop()	    			//Crop image(Optional), Check Customization for more option
@@ -116,7 +119,7 @@ class StepOne():Fragment() {
             //startActivityForResult(gallery,pickImage)
         }
 
-        txtAgregarFoto!!.setOnClickListener {
+        binding.txtAgregarFoto.setOnClickListener {
             //val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             //startActivityForResult(gallery,pickImage)
             ImagePicker.with(this)
@@ -126,11 +129,11 @@ class StepOne():Fragment() {
                 .start(pickImage)
         }
 
-        edtFecha!!.setOnClickListener {
+        binding.edtFecha.setOnClickListener {
             datePicker.show(requireActivity().supportFragmentManager,datePicker.toString())
         }
 
-        edtNombre!!.editText!!.doOnTextChanged { text, start, before, count ->
+        binding.edtNombre.editText!!.doOnTextChanged { text, start, before, count ->
             Utils.dump(text.toString())
             onEditTextChanged.onTextChanged(text.toString(),1,"edtNombre")
         }
@@ -138,7 +141,7 @@ class StepOne():Fragment() {
 
 
 
-        return view;
+        return binding.root;
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -153,8 +156,11 @@ class StepOne():Fragment() {
     }
 
     companion object {
-        fun newInstance() : StepOne {
+        fun newInstance(text: String) : StepOne {
             val stepOne = StepOne()
+            val args = Bundle()
+            args.putString("title", text)
+            stepOne.arguments = args
             return stepOne
         }
     }

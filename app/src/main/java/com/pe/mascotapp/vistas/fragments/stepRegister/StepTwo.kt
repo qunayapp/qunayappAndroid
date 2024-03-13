@@ -33,6 +33,7 @@ class StepTwo:Fragment() {
     lateinit var onEditTextChanged: OnEditTextChanged;
     var imgPet: ImageView?= null
     var txtAgregarFoto:TextView ?= null
+    var txtStepTitle : TextView ?= null
     var edtNombre: TextInputLayout?= null
     var edtRaza:TextInputLayout ?= null
     var edtTextRaza:TextInputEditText ?= null
@@ -65,6 +66,11 @@ class StepTwo:Fragment() {
         edtNombre = view.findViewById<TextInputLayout>(R.id.edtNombre)
         edtTextRaza = view.findViewById<TextInputEditText>(R.id.edtTextRaza)
         lnlDynamically = view.findViewById<LinearLayout>(R.id.lnlDynamically)
+        txtStepTitle = view.findViewById<TextView>(R.id.txtStepTitle)
+
+        arguments?.getString("title", "")?.let {
+            txtStepTitle!!.text = it
+        }
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Selecciona su fecha de nacimiento")
@@ -212,9 +218,12 @@ class StepTwo:Fragment() {
 
 
     companion object {
-        fun newInstance() : StepOne {
-            val stepOne = StepOne()
-            return stepOne
+        fun newInstance(text: String) : StepTwo {
+            val stepTwo = StepTwo()
+            val args = Bundle()
+            args.putString("title", text)
+            stepTwo.arguments = args
+            return stepTwo
         }
     }
 
