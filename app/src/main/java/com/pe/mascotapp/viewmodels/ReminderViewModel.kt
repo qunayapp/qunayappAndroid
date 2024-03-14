@@ -34,7 +34,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -170,7 +169,12 @@ class ReminderViewModel @Inject constructor(
     fun getOptionsRepeat() {
         _listOptionsRepeat.postValue(
             listOf(
-                TextOption("No Repetir", ValueTextOption.DONT_REPEAT), TextOption("Todos los dias", ValueTextOption.ALL_DAYS), TextOption("De lunes a Viernes", ValueTextOption.MONDAY_FRIDAY), TextOption("Todas las semanas", ValueTextOption.ALL_WEEKS), TextOption("Todos los meses", ValueTextOption.ALL_MONTHS), TextOption("Todos los años", ValueTextOption.ALL_YEARS)
+                TextOption("No Repetir", ValueTextOption.DONT_REPEAT),
+                TextOption("Todos los dias", ValueTextOption.ALL_DAYS),
+                TextOption("De lunes a Viernes", ValueTextOption.MONDAY_FRIDAY),
+                TextOption("Todas las semanas", ValueTextOption.ALL_WEEKS),
+                TextOption("Todos los meses", ValueTextOption.ALL_MONTHS),
+                TextOption("Todos los años", ValueTextOption.ALL_YEARS)
             )
         )
     }
@@ -179,7 +183,10 @@ class ReminderViewModel @Inject constructor(
         _listAlarms.postValue(
             arrayListOf(
                 listOf(
-                    TextOption("15 minutos antes", ValueTextOption.MINUTES_15), TextOption("30 minutos antes", ValueTextOption.MINUTES_30), TextOption("1 hora antes", ValueTextOption.MINUTES_HOUR), CalendarHourOption("Personalizar")
+                    TextOption("15 minutos antes", ValueTextOption.MINUTES_15),
+                    TextOption("30 minutos antes", ValueTextOption.MINUTES_30),
+                    TextOption("1 hora antes", ValueTextOption.MINUTES_HOUR),
+                    CalendarHourOption("Personalizar")
                 )
             )
         )
@@ -221,7 +228,7 @@ class ReminderViewModel @Inject constructor(
     fun getOptionStartHour() {
         _optionStartHour.postValue(
             listOf(
-                ScheduleOption("Seleccionar Horario Final")
+                ScheduleOption("Seleccionar Horario de Inicio")
             )
         )
     }

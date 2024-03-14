@@ -2,6 +2,10 @@ package com.pe.mascotapp.utils
 
 import android.util.Log
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.Month
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -142,4 +146,19 @@ fun Date.addHours(hours: Int): Date? {
         e.printStackTrace()
         null
     }
+}
+
+fun Date.getDayOfMonth():Int{
+    val localDate: LocalDate = this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    return localDate.dayOfMonth
+}
+
+fun Date.getDayOfWeek():DayOfWeek{
+    val localDate: LocalDate = this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    return localDate.dayOfWeek
+}
+
+fun Date.getMonthYear(): Month {
+    val localDate: LocalDate = this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    return localDate.month
 }

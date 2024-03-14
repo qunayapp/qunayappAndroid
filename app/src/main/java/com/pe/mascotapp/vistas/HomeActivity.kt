@@ -440,7 +440,6 @@ class HomeActivity : AppCompatActivity() {
 
             val intent = Intent(ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
             context.startActivity(intent)
-            return
         }
         WorkManagerScheduler.scheduleWorker(application.applicationContext)
     }

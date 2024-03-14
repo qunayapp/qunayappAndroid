@@ -1,6 +1,7 @@
 package com.pe.mascotapp.vistas.adapters
 
 import android.graphics.PorterDuff
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -14,11 +15,11 @@ import com.pe.mascotapp.vistas.entities.CATEGORYID
 import com.pe.mascotapp.vistas.entities.CategoryReminderEntity
 import com.pe.mascotapp.vistas.entities.PetEntity
 
-class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>) :
+class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>, val updateReminder: (ReminderEntity) -> Unit) :
     RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
     class ReminderViewHolder(private val binding: ItemReminderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(reminderPets: ReminderPetsJoinEntity) {
+        fun bind(reminderPets: ReminderPetsJoinEntity, updateReminder: (ReminderEntity) -> Unit) {
             binding.reminderPets = reminderPets
             binding.ivReminder.setImageDrawable(
                 reminderPets.reminder.categoryReminder?.image?.let {
@@ -32,6 +33,8 @@ class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>) :
             handleState(reminderPets.reminder.isActivated)
             binding.swReminder.setOnCheckedChangeListener { _, isChecked ->
                 reminderPets.reminder.isActivated = isChecked
+                Log.e("quack", reminderPets.reminder.isActivated.toString())
+                updateReminder(reminderPets.reminder)
                 handleState(reminderPets.reminder.isActivated)
             }
         }
@@ -108,7 +111,7 @@ class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>) :
     override fun getItemCount(): Int = reminders.size
 
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
-        holder.bind(reminders[position])
+        holder.bind(reminders[position], updateReminder)
     }
 }
 
@@ -149,13 +152,14 @@ class ReminderEntity(
 
     fun toReminder(): Reminder {
         return Reminder(
+            reminderId = reminderId,
             title = this.title,
             description = this.description,
             startDate = this.startDate,
             endDate = this.endDate,
             isAllDay = this.isAllDay,
             categoryReminder = this.categoryReminder?.categoryId ?: CATEGORYID.OTHERS,
-            isActivated = true,
+            isActivated = this.isActivated,
             alarms = this.alarms,
             dateAlarms = this.dateAlarms,
             listImages = this.listImages,

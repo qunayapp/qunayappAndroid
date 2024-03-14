@@ -16,6 +16,10 @@ interface ReminderPetJoinDao {
     @Query("SELECT * FROM reminder LIMIT 30 OFFSET :pageNumber")
     fun getReminderPet(pageNumber: Int): Flow<List<ReminderWithPets>>
 
+    @Transaction
+    @Query("SELECT * FROM reminder")
+    fun getAllReminderPet(): Flow<List<ReminderWithPets>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(join: ReminderPetJoin)
 

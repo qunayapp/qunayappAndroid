@@ -3,6 +3,7 @@ package com.pe.mascotapp.vistas.fragments.home
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,11 +37,16 @@ class ReminderFragment : Fragment() {
         val binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
         binding.reminderViewModel = viewModel
         binding.rvAnimalsReminder.apply {
-            this.adapter = TabAnimalAdapter(listOf())
+            this.adapter = TabAnimalAdapter(listOf()){
+                viewModel.filterPets(it)
+            }
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
         binding.rvReminders.apply {
-            this.adapter = ReminderAdapter(listOf())
+            this.adapter = ReminderAdapter(listOf()){
+                Log.e("quack", it.isActivated.toString())
+                viewModel.updateReminder(it)
+            }
             this.layoutManager = LinearLayoutManager(context)
         }
         binding.btnAddNew.setOnClickListener {

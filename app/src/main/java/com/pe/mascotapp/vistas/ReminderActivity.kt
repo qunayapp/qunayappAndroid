@@ -1,11 +1,6 @@
 package com.pe.mascotapp.vistas
 
 import android.Manifest
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.EXTRA_ALLOW_MULTIPLE
 import android.content.pm.PackageManager
@@ -24,9 +19,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.ActivityReminderBinding
-import com.pe.mascotapp.notifications.AlarmReceiver
-import com.pe.mascotapp.notifications.AlarmReceiver.Companion.NOTIFICATION_ID
 import com.pe.mascotapp.viewmodels.ReminderViewModel
 import com.pe.mascotapp.vistas.adapters.CategoryReminderAdapter
 import com.pe.mascotapp.vistas.adapters.ImageGalleryAdapter
@@ -36,7 +30,6 @@ import com.pe.mascotapp.vistas.adapters.VaccineFieldAdapter
 import com.pe.mascotapp.vistas.dialogs.DialogOption
 import com.pe.mascotapp.vistas.entities.VaccineFieldEntity
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Calendar
 
 
 @AndroidEntryPoint
@@ -188,6 +181,15 @@ class ReminderActivity : AppCompatActivity() {
         binding.swReminder.setOnCheckedChangeListener { _, isEnable ->
             binding.tvHourEnd.isEnabled = !isEnable
             binding.tvHourStart.isEnabled = !isEnable
+            if (isEnable) {
+                binding.tvHourEnd.text = "agregar hora"
+                binding.tvHourStart.text = "agregar hora"
+                binding.tvHourEnd.setTextColor(ContextCompat.getColor(this, R.color.verdepastelq))
+                binding.tvHourStart.setTextColor(ContextCompat.getColor(this, R.color.verdepastelq))
+            } else {
+                binding.tvHourEnd.setTextColor(ContextCompat.getColor(this, R.color.verdeq))
+                binding.tvHourStart.setTextColor(ContextCompat.getColor(this, R.color.verdeq))
+            }
             viewModel.setAllDay(isEnable)
         }
         binding.llAddImage.setOnClickListener {
