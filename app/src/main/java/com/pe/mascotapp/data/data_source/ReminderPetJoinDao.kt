@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ReminderPetJoinDao {
     @Transaction
-    @Query("SELECT * FROM reminder LIMIT 30 OFFSET :pageNumber")
-    fun getReminderPet(pageNumber: Int): Flow<List<ReminderWithPets>>
+    @Query("SELECT * FROM reminder LIMIT :limit OFFSET :offset")
+    fun getReminderPet(limit:Int, offset: Int): Flow<List<ReminderWithPets>>
 
     @Transaction
     @Query("SELECT * FROM reminder")

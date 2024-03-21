@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.shape.CornerFamily
@@ -29,6 +30,7 @@ import com.pe.mascotapp.interfaces.PrincipalPresentador
 import com.pe.mascotapp.modelos.Categorias
 import com.pe.mascotapp.modelos.PromocionBanner
 import com.pe.mascotapp.notifications.WorkManagerScheduler
+import com.pe.mascotapp.notifications.WorkManagerScheduler.WORKER_NAME
 import com.pe.mascotapp.utils.Constantes
 import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.adapters.HomeAdapter
@@ -44,17 +46,18 @@ import java.io.FileInputStream
 class HomeActivity : AppCompatActivity() {
 
     var menuHome: BottomNavigationView? = null
-    var toolbar: Toolbar?= null
-    var drawer_layout:DrawerLayout ?= null
-    var rcvHome: RecyclerView?= null
-    var rcvHomeService:RecyclerView ?= null
-    var homeAdapterType:HomeAdapter ?= null
-    var homeListServiceAdapterType: HomeListServiceAdapter?= null
-    var homeServiceAdapterType:HomeServiceAdapter ?= null
+    var toolbar: Toolbar? = null
+    var drawer_layout: DrawerLayout? = null
+    var rcvHome: RecyclerView? = null
+    var rcvHomeService: RecyclerView? = null
+    var homeAdapterType: HomeAdapter? = null
+    var homeListServiceAdapterType: HomeListServiceAdapter? = null
+    var homeServiceAdapterType: HomeServiceAdapter? = null
     var categoriasArray: ArrayList<Categorias> = ArrayList()
-    var promocionBanner:PromocionBanner = PromocionBanner()
+    var promocionBanner: PromocionBanner = PromocionBanner()
+
     //var imgUser:ImageView ?= null
-    var imgBanner:ImageView ?= null
+    var imgBanner: ImageView? = null
     var navigationView: NavigationView? = null
 
     private val onNavigationItemSelectedListener =
@@ -130,7 +133,6 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
-
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             var selectedFragment: Fragment? = null
@@ -154,6 +156,7 @@ class HomeActivity : AppCompatActivity() {
                     drawer_layout!!.closeDrawer(GravityCompat.START)
 
                 }
+
                 R.id.nav_history -> {
 
                 }
@@ -165,6 +168,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.nav_pet -> {
 
                 }
+
                 R.id.nav_notification -> {
                     selectedFragment = ReminderFragment.newInstance()
                     //title = R.string.menu_gallery;
@@ -201,17 +205,18 @@ class HomeActivity : AppCompatActivity() {
         //startRCVHome()
         iniciarvista(savedInstanceState)
     }
+
     @SuppressLint("Range")
-    fun obtenerData(){
+    fun obtenerData() {
         val preferences = getSharedPreferences(Constantes.SHARED_PREF, Context.MODE_PRIVATE)
         val id = preferences?.getInt(Constantes.SHARED_ID_USUARIO, 0)
 
 
-        val str = "SELECT * FROM usuario where id=" +id
+        val str = "SELECT * FROM usuario where id=" + id
         val data = presentador.leer(str)
         val count = data.count
         Utils.dump("cantidad:" + count)
-        if (data.moveToFirst()){
+        if (data.moveToFirst()) {
             do {
                 val name = data.getString(data.getColumnIndex("name"))
                 Utils.dump("name:" + name)
@@ -228,7 +233,7 @@ class HomeActivity : AppCompatActivity() {
 
                 //!!.setImageBitmap(b)
 
-            }while (data.moveToNext())
+            } while (data.moveToNext())
         }
 
         val categorias1 = Categorias()
@@ -282,14 +287,14 @@ class HomeActivity : AppCompatActivity() {
         categoriasArray.add(categorias7)
 
         val categorias8 = Categorias()
-        categorias8.id =7
+        categorias8.id = 7
         categorias8.titulo = "Juguetes, ropa y accesorios"
         categorias8.descripcion = "juguetes y variados"
         categorias8.img = "juguetes_perros"
         categoriasArray.add(categorias8)
 
         val categorias9 = Categorias()
-        categorias9.id =8
+        categorias9.id = 8
         categorias9.titulo = "Cerrar sesión"
         categorias9.descripcion = "Cerrar sesión"
         categorias9.img = "ic_baseline_logout_24"
@@ -302,14 +307,14 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    fun startRCVHome(){
+    fun startRCVHome() {
         /*val mLayoutManager = GridLayoutManager(this,2)
         rcvHome?.setLayoutManager(mLayoutManager)
         rcvHomeService?.setLayoutManager(mLayoutManager)*/
         rcvHome?.setLayoutManager(LinearLayoutManager(this))
         rcvHomeService?.setLayoutManager(LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false))
 
-        homeListServiceAdapterType = HomeListServiceAdapter(categoriasArray,promocionBanner){ categorias ->
+        homeListServiceAdapterType = HomeListServiceAdapter(categoriasArray, promocionBanner) { categorias ->
 
             val intent = Intent(this, DetailServiceActivity::class.java)
             startActivity(intent)
@@ -340,7 +345,7 @@ class HomeActivity : AppCompatActivity() {
 
         }
 
-        homeServiceAdapterType = HomeServiceAdapter(categoriasArray,promocionBanner){ categorias ->
+        homeServiceAdapterType = HomeServiceAdapter(categoriasArray, promocionBanner) { categorias ->
             /*when(categorias.id){
                 0,2 -> {
                     val intent = Intent(this, MarketPlaceActivity::class.java)
@@ -367,7 +372,6 @@ class HomeActivity : AppCompatActivity() {
             }*/
 
 
-
         }
         rcvHome?.setAdapter(homeListServiceAdapterType)
         rcvHome?.setItemAnimator(DefaultItemAnimator())
@@ -380,7 +384,7 @@ class HomeActivity : AppCompatActivity() {
         return BitmapFactory.decodeByteArray(data, 0, data.size)
     }
 
-    fun iniciarvista(savedInstanceState: Bundle?){
+    fun iniciarvista(savedInstanceState: Bundle?) {
         menuHome = findViewById<BottomNavigationView>(R.id.menuHome)
         navigationView = findViewById<NavigationView>(R.id.navigationView)
         drawer_layout = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -441,7 +445,12 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
             context.startActivity(intent)
         }
-        WorkManagerScheduler.scheduleWorker(application.applicationContext)
+        val worker = WorkManager.getInstance(context)
+            .getWorkInfosForUniqueWork(WORKER_NAME)
+            .get()
+            .firstOrNull()
+        if (worker == null) WorkManagerScheduler.scheduleWorker(application.applicationContext)
+
     }
 
 }

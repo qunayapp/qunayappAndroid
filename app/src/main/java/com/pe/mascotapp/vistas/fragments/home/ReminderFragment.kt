@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,14 +20,19 @@ import com.pe.mascotapp.vistas.adapters.ReminderAdapter
 import com.pe.mascotapp.vistas.adapters.TabAnimalAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class ReminderFragment : Fragment() {
 
     private val viewModel: ReminderHistoryViewModel by viewModels()
+    var pageNumber: Int = 0
 
     private val launchCreateReminder =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) viewModel.getReminders()
+            if (it.resultCode == Activity.RESULT_OK) {
+                pageNumber = 0
+                viewModel.getReminders(pageNumber)
+            }
         }
 
     override fun onCreateView(
@@ -37,13 +43,13 @@ class ReminderFragment : Fragment() {
         val binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
         binding.reminderViewModel = viewModel
         binding.rvAnimalsReminder.apply {
-            this.adapter = TabAnimalAdapter(listOf()){
+            this.adapter = TabAnimalAdapter(listOf()) {
                 viewModel.filterPets(it)
             }
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
         binding.rvReminders.apply {
-            this.adapter = ReminderAdapter(listOf()){
+            this.adapter = ReminderAdapter(listOf()) {
                 Log.e("quack", it.isActivated.toString())
                 viewModel.updateReminder(it)
             }
@@ -57,6 +63,13 @@ class ReminderFragment : Fragment() {
             val intent = Intent(activity, ReminderActivity::class.java)
             launchCreateReminder.launch(intent)
         }
+
+        binding.nsvReminders.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
+            if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
+                pageNumber++
+                viewModel.getReminders(pageNumber)
+            }
+        })
         viewModel.listPets.observe(viewLifecycleOwner) {
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).tabAnimals = it
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).notifyDataSetChanged()
@@ -66,7 +79,8 @@ class ReminderFragment : Fragment() {
             (binding.rvReminders.adapter as ReminderAdapter).notifyDataSetChanged()
         }
         viewModel.getAnimalTabs()
-        viewModel.getReminders()
+        pageNumber = 0
+        viewModel.getReminders(pageNumber)
         return binding.root
     }
 

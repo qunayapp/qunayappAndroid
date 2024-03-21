@@ -1,5 +1,6 @@
 package com.pe.mascotapp.viewmodels
 
+import android.util.Log
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,7 +31,6 @@ class ReminderHistoryViewModel @Inject constructor(
 
     private var getPetsJob: Job? = null
     private var getRemindersJob: Job? = null
-
     private var originalReminders = listOf<ReminderPetsJoinEntity>()
 
     private val _listPets = MutableLiveData<List<TabAnimalEntity>>()
@@ -44,7 +44,6 @@ class ReminderHistoryViewModel @Inject constructor(
     }
 
     fun getAnimalTabs() {
-        getRemindersWithPetsUseCase(1)
         getPetsJob?.cancel()
         getPetsJob = getPetsUseCase()
             .onEach { pets ->
@@ -57,12 +56,14 @@ class ReminderHistoryViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun getReminders() {
+    fun getReminders(pageNumber: Int) {
+        if (pageNumber == 0) originalReminders = listOf()
         getRemindersJob?.cancel()
-        getRemindersJob = getRemindersWithPetsUseCase(1)
+        getRemindersJob = getRemindersWithPetsUseCase(pageNumber)
             .onEach { reminders ->
-                remindersIsEmpty.set(reminders.isEmpty())
-                originalReminders = reminders.map { ReminderPetsJoinEntity(it) }
+                if (pageNumber != 0 && reminders.isEmpty()) return@onEach
+                originalReminders = originalReminders + reminders.map { ReminderPetsJoinEntity(it) }
+                remindersIsEmpty.set(originalReminders.isEmpty())
                 _listReminders.postValue(originalReminders)
             }
             .launchIn(viewModelScope)

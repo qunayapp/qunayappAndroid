@@ -11,6 +11,7 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 object WorkManagerScheduler {
+    const val WORKER_NAME = "MyWorker"
     fun scheduleWorker(context: Context) {
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance()
@@ -19,14 +20,11 @@ object WorkManagerScheduler {
         dueDate.set(Calendar.MINUTE, 2)
         dueDate.set(Calendar.SECOND, 0)
         if (dueDate.before(currentDate)) {
-            Log.e("quack", "es dedspues")
-
             dueDate.add(Calendar.DAY_OF_MONTH, 1)
         }
 
         val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
         val minutes = TimeUnit.MILLISECONDS.toMinutes(timeDiff)
-        Log.e("quack", minutes.toString())
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
@@ -40,7 +38,7 @@ object WorkManagerScheduler {
             .setConstraints(constraints)
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "MyWorker",
+            WORKER_NAME,
             ExistingPeriodicWorkPolicy.REPLACE,
             periodicWorkRequest
         )
