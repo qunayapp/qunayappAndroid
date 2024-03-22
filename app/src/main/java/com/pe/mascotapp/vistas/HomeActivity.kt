@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.shape.CornerFamily
@@ -29,6 +30,7 @@ import com.pe.mascotapp.interfaces.PrincipalPresentador
 import com.pe.mascotapp.modelos.Categorias
 import com.pe.mascotapp.modelos.PromocionBanner
 import com.pe.mascotapp.notifications.WorkManagerScheduler
+import com.pe.mascotapp.notifications.WorkManagerScheduler.WORKER_NAME
 import com.pe.mascotapp.utils.Constantes
 import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.adapters.HomeAdapter
@@ -316,6 +318,7 @@ class HomeActivity : AppCompatActivity() {
             )
         )
 
+        homeListServiceAdapterType = HomeListServiceAdapter(categoriasArray, promocionBanner) { categorias ->
         homeListServiceAdapterType =
             HomeListServiceAdapter(categoriasArray, promocionBanner) { categorias ->
 
@@ -448,9 +451,13 @@ class HomeActivity : AppCompatActivity() {
 
             val intent = Intent(ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
             context.startActivity(intent)
-            return
         }
-        WorkManagerScheduler.scheduleWorker(application.applicationContext)
+        val worker = WorkManager.getInstance(context)
+            .getWorkInfosForUniqueWork(WORKER_NAME)
+            .get()
+            .firstOrNull()
+        if (worker == null) WorkManagerScheduler.scheduleWorker(application.applicationContext)
+
     }
 
 }

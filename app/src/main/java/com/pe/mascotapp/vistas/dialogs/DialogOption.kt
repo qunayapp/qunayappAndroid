@@ -55,11 +55,15 @@ class DialogOption : DialogFragment() {
         val binding = DialogOptionBinding.inflate(inflater, container, false)
         binding.rvRvOptions.layoutManager = LinearLayoutManager(binding.root.context)
         binding.rvRvOptions.adapter = ContainerOptionsAdapter(
-            listOptionsFieldAdapter = listOptionsFieldAdapter,
-            canAddOtherContainer = canAddOtherContainer
+            listOptionsFieldAdapter = listOptionsFieldAdapter, canAddOtherContainer = canAddOtherContainer
         ) {
-            listOptionsFieldAdapter.add(OptionFieldAdapter(listOptions))
-            listListOptions.add(listOptions)
+            val tempOptions = listOptions.map {
+                val copyOption = it.copyOption()
+                copyOption.isSelected = false
+                copyOption
+            }
+            listOptionsFieldAdapter.add(OptionFieldAdapter(tempOptions))
+            listListOptions.add(tempOptions)
             binding.rvRvOptions.adapter?.notifyItemInserted(listOptionsFieldAdapter.size)
         }
         binding.tvAccept.setOnClickListener {

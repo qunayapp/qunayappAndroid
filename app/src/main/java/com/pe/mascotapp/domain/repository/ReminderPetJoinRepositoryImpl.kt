@@ -11,8 +11,8 @@ class ReminderPetJoinRepositoryImpl @Inject constructor(
     private val reminderPetJoinDao: ReminderPetJoinDao
 ) : ReminderPetJoinRepository {
 
-    override fun getReminderPet(pageNumber: Int): Flow<List<ReminderWithPets>> {
-        return reminderPetJoinDao.getReminderPet(pageNumber)
+    override fun getReminderPet(limit: Int, pageNumber: Int): Flow<List<ReminderWithPets>> {
+        return reminderPetJoinDao.getReminderPet(limit, limit * pageNumber)
     }
 
     override fun insertReminderPet(reminder: ReminderPetJoin) {
@@ -21,6 +21,10 @@ class ReminderPetJoinRepositoryImpl @Inject constructor(
 
     override fun getReminders(pageNumber: Int): Flow<List<ReminderPetJoin>> {
         return reminderPetJoinDao.getReminders(pageNumber)
+    }
+
+    override fun getAllReminders(): Flow<List<ReminderWithPets>> {
+        return reminderPetJoinDao.getAllReminderPet()
     }
 
 }

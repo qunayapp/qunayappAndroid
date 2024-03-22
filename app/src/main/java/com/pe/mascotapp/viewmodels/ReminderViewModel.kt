@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pe.mascotapp.domain.models.Pet
 import com.pe.mascotapp.domain.models.ReminderPetJoin
+import com.pe.mascotapp.domain.models.ReminderWithPets
 import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.domain.usecases.GetPetsUseCase
 import com.pe.mascotapp.domain.usecases.InsertPetUseCase
@@ -34,7 +35,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -88,6 +88,10 @@ class ReminderViewModel @Inject constructor(
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
+
+    private val _reminderWithPets = MutableLiveData<ReminderWithPets>()
+    val reminderWithPets: LiveData<ReminderWithPets> = _reminderWithPets
+
 
     init {
         enableForm.set(false)
@@ -170,7 +174,12 @@ class ReminderViewModel @Inject constructor(
     fun getOptionsRepeat() {
         _listOptionsRepeat.postValue(
             listOf(
-                TextOption("No Repetir", ValueTextOption.DONT_REPEAT), TextOption("Todos los dias", ValueTextOption.ALL_DAYS), TextOption("De lunes a Viernes", ValueTextOption.MONDAY_FRIDAY), TextOption("Todas las semanas", ValueTextOption.ALL_WEEKS), TextOption("Todos los meses", ValueTextOption.ALL_MONTHS), TextOption("Todos los años", ValueTextOption.ALL_YEARS)
+                TextOption("No Repetir", ValueTextOption.DONT_REPEAT),
+                TextOption("Todos los dias", ValueTextOption.ALL_DAYS),
+                TextOption("De lunes a Viernes", ValueTextOption.MONDAY_FRIDAY),
+                TextOption("Todas las semanas", ValueTextOption.ALL_WEEKS),
+                TextOption("Todos los meses", ValueTextOption.ALL_MONTHS),
+                TextOption("Todos los años", ValueTextOption.ALL_YEARS)
             )
         )
     }
@@ -179,7 +188,10 @@ class ReminderViewModel @Inject constructor(
         _listAlarms.postValue(
             arrayListOf(
                 listOf(
-                    TextOption("15 minutos antes", ValueTextOption.MINUTES_15), TextOption("30 minutos antes", ValueTextOption.MINUTES_30), TextOption("1 hora antes", ValueTextOption.MINUTES_HOUR), CalendarHourOption("Personalizar")
+                    TextOption("15 minutos antes", ValueTextOption.MINUTES_15),
+                    TextOption("30 minutos antes", ValueTextOption.MINUTES_30),
+                    TextOption("1 hora antes", ValueTextOption.MINUTES_HOUR),
+                    CalendarHourOption("Personalizar")
                 )
             )
         )
@@ -221,7 +233,7 @@ class ReminderViewModel @Inject constructor(
     fun getOptionStartHour() {
         _optionStartHour.postValue(
             listOf(
-                ScheduleOption("Seleccionar Horario Final")
+                ScheduleOption("Seleccionar Horario de Inicio")
             )
         )
     }
@@ -303,12 +315,11 @@ class ReminderViewModel @Inject constructor(
                 }
 
                 is CalendarHourOption -> {
+                    Log.e("quack",it.date.toString())
                     it.date?.let { date ->
-                        {
-                            val dateFormat = "${CalendarUtils.getFormatDate2(date)} ${it.hour}"
-                            reminderEntity.dateAlarms.add(dateFormat)
-                            dateFormat
-                        }
+                        val dateFormat = "${CalendarUtils.getFormatDate2(date)} ${it.hour}"
+                        reminderEntity.dateAlarms.add(dateFormat)
+                        dateFormat
                     }
                 }
 
@@ -337,10 +348,15 @@ class ReminderViewModel @Inject constructor(
             reminderEntity.durationTypeRepeat == null ||
             reminderEntity.repeatOption == null ||
             reminderEntity.startDate.isEmpty() ||
-            reminderEntity.endDate.isEmpty() ||
+            reminderEntity.endDate.isEmpty()
             //(!reminderEntity.isAllDay && reminderEntity.startHour.isEmpty() && reminderEntity.endHour.isEmpty()) ||
-            (reminderEntity.alarms.isEmpty() && reminderEntity.dateAlarms.isEmpty())
         ) {
+            _showErrorDialog.postValue("Llena todo el formulario")
+            return
+        }
+        if (!reminderEntity.isAllDay && reminderEntity.startHour.isEmpty() && reminderEntity.endHour.isEmpty() &&
+            (reminderEntity.alarms.isEmpty() && reminderEntity.dateAlarms.isEmpty())
+            ) {
             _showErrorDialog.postValue("Llena todo el formulario")
             return
         }
@@ -348,10 +364,16 @@ class ReminderViewModel @Inject constructor(
             try {
                 _loading.postValue(true)
                 val reminderId = insertReminderUseCase(reminderEntity.toReminder())
+                reminderEntity.reminderId = reminderId
                 reminderPetsJoin.reminder = reminderEntity
                 reminderPetsJoin.pets.forEach {
                     insertReminderWithPetsUseCase(ReminderPetJoin(reminderId, it.petId ?: 0))
                 }
+                _reminderWithPets.postValue(
+                    ReminderWithPets(
+                        reminderPetsJoin.reminder.toReminder(),
+                        reminderPetsJoin.pets.map { it.toPet() })
+                )
                 _loading.postValue(false)
             } catch (e: Exception) {
                 _showErrorDialog.postValue(e.localizedMessage)

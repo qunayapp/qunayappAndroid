@@ -1,5 +1,6 @@
 package com.pe.mascotapp.vistas.entities
 
+import com.pe.mascotapp.domain.models.Pet
 import com.pe.mascotapp.domain.models.Sex
 
 class PetEntity(
@@ -12,4 +13,17 @@ class PetEntity(
     val sex: Sex,
     val birthdate: String,
     var isSelected: Boolean
-)
+) {
+    fun toPet() : Pet {
+        return Pet(
+            petId,
+            image,
+            name,
+            specie,
+            raza,
+            weight,
+            sex,
+            birthdate
+        )
+    }
+}

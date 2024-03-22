@@ -147,9 +147,9 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
     class ScheduleViewHolder(private val binding: ItemOptionSheduleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(option: ScheduleOption) {
             binding.tvTitleSchedule.text = option.name
-            option.hour = binding.tpSelect.getTime()
-            binding.tpSelect.setOnTimeChangedListener { _, _, _ ->
-                option.hour = binding.tpSelect.getTime()
+            option.hour = "${String.format("%02d", binding.tpSelect.hour)}:${String.format("%02d", binding.tpSelect.minute)}"
+            binding.tpSelect.setOnTimeChangedListener { _, hourOfDay, minute ->
+                option.hour = "${String.format("%02d", hourOfDay)}:${String.format("%02d", minute)}"
             }
         }
     }
@@ -220,6 +220,7 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
 interface OptionViewInterface {
     val viewType: OptionViewType
     var isSelected: Boolean
+    fun copyOption():OptionViewInterface
 }
 
 sealed class OptionViewType {
@@ -242,39 +243,65 @@ enum class ValueTextOption {
     FOR_EVER
 }
 
-class TextOption(
+data class TextOption(
     val name: String,
     val value: ValueTextOption,
     override var isSelected: Boolean = false,
     override val viewType: OptionViewType.TextViewOption = OptionViewType.TextViewOption
-) : OptionViewInterface
+) : OptionViewInterface{
+    override fun copyOption(): OptionViewInterface {
+        return this.copy()
+    }
+}
 
 
-class CounterOption(
+data class CounterOption(
     val name: String,
     var counter: Int = 1,
     override var isSelected: Boolean = false,
     override val viewType: OptionViewType.CounterViewOption = OptionViewType.CounterViewOption
-) : OptionViewInterface
+) : OptionViewInterface {
+    override fun copyOption(): OptionViewInterface {
+        return this.copy()
+    }
+}
 
 open class CalendarOption(
-    val name: String,
+    open val name: String,
     var date: Date? = null,
     var hour: String? = null,
     override var isSelected: Boolean = false,
     override val viewType: OptionViewType.CalendarViewOption = OptionViewType.CalendarViewOption,
-) : OptionViewInterface
+) : OptionViewInterface {
+    override fun copyOption(): OptionViewInterface = this
+}
 
-class CalendarOptionNormal(name: String) : CalendarOption(name)
+data class CalendarOptionNormal(override val name: String) : CalendarOption(name){
+    override fun copyOption(): OptionViewInterface {
+        return this.copy()
+    }
+}
 
-class CalendarHourOption(name: String) : CalendarOption(name)
+data class CalendarHourOption(override val name: String) : CalendarOption(name){
+    override fun copyOption(): OptionViewInterface {
+        return this.copy()
+    }
+}
 
-class CalendarSimple(name: String) : CalendarOption(name)
+data class CalendarSimple(override val name: String) : CalendarOption(name){
+    override fun copyOption(): OptionViewInterface {
+        return this.copy()
+    }
+}
 
-class ScheduleOption(
+data class ScheduleOption(
     val name: String,
     var hour: String? = null,
     override var isSelected: Boolean = false,
     override val viewType: OptionViewType.ScheduleViewOption = OptionViewType.ScheduleViewOption,
-) : OptionViewInterface
+) : OptionViewInterface {
+    override fun copyOption(): OptionViewInterface {
+        return this.copy()
+    }
+}
 
