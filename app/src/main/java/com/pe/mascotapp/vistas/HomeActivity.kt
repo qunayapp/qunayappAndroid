@@ -386,6 +386,7 @@ class HomeActivity : AppCompatActivity() {
         rcvHomeService?.setAdapter(homeServiceAdapterType)
         rcvHomeService?.setItemAnimator(DefaultItemAnimator())
     }
+    }
 
     fun byteArrayToBitmap(data: ByteArray): Bitmap {
         return BitmapFactory.decodeByteArray(data, 0, data.size)
