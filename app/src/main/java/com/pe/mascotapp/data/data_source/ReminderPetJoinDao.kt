@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.pe.mascotapp.domain.models.Reminder
 import com.pe.mascotapp.domain.models.ReminderPetJoin
 import com.pe.mascotapp.domain.models.ReminderWithPets
 import kotlinx.coroutines.flow.Flow
@@ -14,10 +13,13 @@ import kotlinx.coroutines.flow.Flow
 interface ReminderPetJoinDao {
     @Transaction
     @Query("SELECT * FROM reminder LIMIT :limit OFFSET :offset")
-    fun getReminderPet(limit:Int, offset: Int): Flow<List<ReminderWithPets>>
+    fun getReminderPet(
+        limit: Int,
+        offset: Int,
+    ): Flow<List<ReminderWithPets>>
 
     @Transaction
-    @Query("SELECT * FROM reminder")
+    @Query("SELECT * FROM reminder WHERE isActivated")
     fun getAllReminderPet(): Flow<List<ReminderWithPets>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

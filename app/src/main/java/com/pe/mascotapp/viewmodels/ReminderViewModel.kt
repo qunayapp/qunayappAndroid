@@ -16,7 +16,6 @@ import com.pe.mascotapp.domain.usecases.InsertPetUseCase
 import com.pe.mascotapp.domain.usecases.InsertReminderUseCase
 import com.pe.mascotapp.domain.usecases.InsertReminderWithPetsUseCase
 import com.pe.mascotapp.utils.CalendarUtils
-import com.pe.mascotapp.vistas.adapters.CalendarHourOption
 import com.pe.mascotapp.vistas.adapters.CalendarOptionNormal
 import com.pe.mascotapp.vistas.adapters.CalendarSimple
 import com.pe.mascotapp.vistas.adapters.CounterOption
@@ -37,347 +36,309 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class ReminderViewModel @Inject constructor(
-    val insertReminderWithPetsUseCase: InsertReminderWithPetsUseCase,
-    val insertReminderUseCase: InsertReminderUseCase,
-    val insertPetUseCase: InsertPetUseCase,
-    val getPetUseCase: GetPetsUseCase
-) : ViewModel() {
+class ReminderViewModel
+    @Inject
+    constructor(
+        val insertReminderWithPetsUseCase: InsertReminderWithPetsUseCase,
+        val insertReminderUseCase: InsertReminderUseCase,
+        val insertPetUseCase: InsertPetUseCase,
+        val getPetUseCase: GetPetsUseCase,
+    ) : ViewModel() {
+        private val _categoriesReminder = MutableLiveData<List<CategoryReminderEntity>>()
+        val categoriesReminder: LiveData<List<CategoryReminderEntity>> = _categoriesReminder
 
-    private val _categoriesReminder = MutableLiveData<List<CategoryReminderEntity>>()
-    val categoriesReminder: LiveData<List<CategoryReminderEntity>> = _categoriesReminder
+        private val _listPets = MutableLiveData<List<PetEntity>>()
+        val listPets: LiveData<List<PetEntity>> = _listPets
 
-    private val _listPets = MutableLiveData<List<PetEntity>>()
-    val listPets: LiveData<List<PetEntity>> = _listPets
+        private var getPetsJob: Job? = null
 
-    private var getPetsJob: Job? = null
+        private val reminderEntity: ReminderEntity = ReminderEntity()
 
-    private val reminderEntity: ReminderEntity = ReminderEntity()
+        private val reminderPetsJoin: ReminderPetsJoinEntity = ReminderPetsJoinEntity(ReminderEntity(), listOf())
 
-    private val reminderPetsJoin: ReminderPetsJoinEntity = ReminderPetsJoinEntity(ReminderEntity(), listOf())
+        val listVaccines = mutableListOf(VaccineFieldEntity())
 
-    val listVaccines = mutableListOf(VaccineFieldEntity())
+        val enableForm: ObservableBoolean = ObservableBoolean(false)
 
-    val enableForm: ObservableBoolean = ObservableBoolean(false)
+        private val _listOptionsRepeat = MutableLiveData<List<OptionViewInterface>>()
+        val listOptionsRepeat: LiveData<List<OptionViewInterface>> = _listOptionsRepeat
 
-    private val _listOptionsRepeat = MutableLiveData<List<OptionViewInterface>>()
-    val listOptionsRepeat: LiveData<List<OptionViewInterface>> = _listOptionsRepeat
+        private val _listDurationRepeat = MutableLiveData<List<OptionViewInterface>>()
+        val listDurationRepeat: LiveData<List<OptionViewInterface>> = _listDurationRepeat
 
-    private val _listDurationRepeat = MutableLiveData<List<OptionViewInterface>>()
-    val listDurationRepeat: LiveData<List<OptionViewInterface>> = _listDurationRepeat
+        private val _listAlarms = MutableLiveData<List<OptionViewInterface>>()
+        val listAlarms: LiveData<List<OptionViewInterface>> = _listAlarms
 
-    private val _listAlarms = MutableLiveData<ArrayList<List<OptionViewInterface>>>()
-    val listAlarms: LiveData<ArrayList<List<OptionViewInterface>>> = _listAlarms
+        private val _optionStartHour = MutableLiveData<List<OptionViewInterface>>()
+        val optionStartHour: LiveData<List<OptionViewInterface>> = _optionStartHour
 
-    private val _optionStartHour = MutableLiveData<List<OptionViewInterface>>()
-    val optionStartHour: LiveData<List<OptionViewInterface>> = _optionStartHour
+        private val _optionStartDate = MutableLiveData<List<OptionViewInterface>>()
+        val optionStartDate: LiveData<List<OptionViewInterface>> = _optionStartDate
 
-    private val _optionEndHour = MutableLiveData<List<OptionViewInterface>>()
-    val optionEndHour: LiveData<List<OptionViewInterface>> = _optionEndHour
+        private val _showErrorDialog = MutableLiveData<String>()
+        val showErrorDialog: LiveData<String> = _showErrorDialog
 
-    private val _optionStartDate = MutableLiveData<List<OptionViewInterface>>()
-    val optionStartDate: LiveData<List<OptionViewInterface>> = _optionStartDate
+        private val _loading = MutableLiveData<Boolean>()
+        val loading: LiveData<Boolean> = _loading
 
-    private val _optionEndDate = MutableLiveData<List<OptionViewInterface>>()
-    val optionEndDate: LiveData<List<OptionViewInterface>> = _optionEndDate
+        private val _reminderWithPets = MutableLiveData<ReminderWithPets>()
+        val reminderWithPets: LiveData<ReminderWithPets> = _reminderWithPets
 
-    private val _showErrorDialog = MutableLiveData<String>()
-    val showErrorDialog: LiveData<String> = _showErrorDialog
-
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
-
-    private val _reminderWithPets = MutableLiveData<ReminderWithPets>()
-    val reminderWithPets: LiveData<ReminderWithPets> = _reminderWithPets
-
-
-    init {
-        enableForm.set(false)
-    }
-
-    fun getSelectCategories() {
-        _categoriesReminder.postValue(CategoryReminderEntity.getCategories())
-    }
-
-    fun selectAnimalEntity() {
-        reminderPetsJoin.pets = listPets.value?.filter { it.isSelected } ?: listOf()
-        enableForm()
-    }
-
-    fun setCategoryReminder() {
-        reminderEntity.categoryReminder = categoriesReminder.value?.firstOrNull { it.isSelected }
-        enableForm()
-    }
-
-    private fun enableForm() {
-        val atLeastPetIsSelected = reminderPetsJoin.pets.isNotEmpty()
-        val atLeastCategoryIsSelected = reminderEntity.categoryReminder != null
-        enableForm.set(atLeastPetIsSelected && atLeastCategoryIsSelected)
-    }
-
-    fun setAllDay(allDay: Boolean) {
-        reminderEntity.isAllDay = allDay
-        if (reminderEntity.isAllDay) {
-            reminderEntity.endHour = ""
-            reminderEntity.startHour = ""
+        init {
+            enableForm.set(false)
         }
-    }
 
-    fun getPets() {
-        getPetsJob?.cancel()
-        getPetsJob = getPetUseCase().onEach { pets ->
-            _listPets.postValue(pets.map { it.toPetEntity() })
-        }.launchIn(viewModelScope)
-        getData()
-        setData()
-    }
+        fun getSelectCategories() {
+            _categoriesReminder.postValue(CategoryReminderEntity.getCategories())
+        }
 
-    private fun getData() {
-        _listPets.postValue(
-            listOf(
-                PetEntity(
-                    null, "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1", "Perro", "Especial", 100.00, Sex.MALE, birthdate = "12/02/2010", false
-                ), PetEntity(
-                    null, "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg", "Paul", "Perro", "Especial", 101.00, Sex.MALE, birthdate = "12/02/2010", false
-                ), PetEntity(
-                    null, "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3", "Perro", "Especial", 102.00, Sex.MALE, birthdate = "12/02/2010", false
-                )
-            )
-        )
-    }
+        fun selectAnimalEntity() {
+            reminderPetsJoin.pets = listPets.value?.filter { it.isSelected } ?: listOf()
+            enableForm()
+        }
 
-    private fun setData() {
-        viewModelScope.launch {
-            val pets = listOf(
-                PetEntity(
-                    null, "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1", "Perro", "Especial", 100.00, Sex.MALE, birthdate = "12/02/2010", false
-                ), PetEntity(
-                    null, "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg", "Paul", "Perro", "Especial", 101.00, Sex.MALE, birthdate = "12/02/2010", false
-                ), PetEntity(
-                    null, "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3", "Perro", "Especial", 102.00, Sex.MALE, birthdate = "12/02/2010", false
-                )
-            )
-            pets.forEach {
-                Log.e("quack", "Asdf")
-                insertPetUseCase(
-                    Pet(
-                        image = it.image, name = it.name, specie = it.specie, weight = it.weight, sex = it.sex, raza = it.raza, birthdate = it.birthdate
+        fun setCategoryReminder() {
+            reminderEntity.categoryReminder = categoriesReminder.value?.firstOrNull { it.isSelected }
+            enableForm()
+        }
+
+        private fun enableForm() {
+            val atLeastPetIsSelected = reminderPetsJoin.pets.isNotEmpty()
+            val atLeastCategoryIsSelected = reminderEntity.categoryReminder != null
+            enableForm.set(atLeastPetIsSelected && atLeastCategoryIsSelected)
+        }
+
+        fun getPets() {
+            getPetsJob?.cancel()
+            getPetsJob =
+                getPetUseCase().onEach { pets ->
+                    _listPets.postValue(pets.map { it.toPetEntity() })
+                }.launchIn(viewModelScope)
+        }
+
+        private fun setData() {
+            viewModelScope.launch {
+                val pets =
+                    listOf(
+                        PetEntity(
+                            null,
+                            "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg",
+                            "Paul Pugba1",
+                            "Perro",
+                            "Especial",
+                            100.00,
+                            Sex.MALE,
+                            birthdate = "12/02/2010",
+                            false,
+                        ),
+                        PetEntity(
+                            null,
+                            "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg",
+                            "Paul",
+                            "Perro",
+                            "Especial",
+                            101.00,
+                            Sex.MALE,
+                            birthdate = "12/02/2010",
+                            false,
+                        ),
+                        PetEntity(
+                            null,
+                            "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg",
+                            "Paul Pugba3",
+                            "Perro",
+                            "Especial",
+                            102.00,
+                            Sex.MALE,
+                            birthdate = "12/02/2010",
+                            false,
+                        ),
                     )
-                )
+                pets.forEach {
+                    Log.e("quack", "Asdf")
+                    insertPetUseCase(
+                        Pet(
+                            image = it.image,
+                            name = it.name,
+                            specie = it.specie,
+                            weight = it.weight,
+                            sex = it.sex,
+                            raza = it.raza,
+                            birthdate = it.birthdate,
+                        ),
+                    )
+                }
             }
         }
 
-    }
-
-    fun getOptionsRepeat() {
-        _listOptionsRepeat.postValue(
-            listOf(
-                TextOption("No Repetir", ValueTextOption.DONT_REPEAT),
-                TextOption("Todos los dias", ValueTextOption.ALL_DAYS),
-                TextOption("De lunes a Viernes", ValueTextOption.MONDAY_FRIDAY),
-                TextOption("Todas las semanas", ValueTextOption.ALL_WEEKS),
-                TextOption("Todos los meses", ValueTextOption.ALL_MONTHS),
-                TextOption("Todos los años", ValueTextOption.ALL_YEARS)
-            )
-        )
-    }
-
-    fun getAlarmOptions() {
-        _listAlarms.postValue(
-            arrayListOf(
+        fun getOptionsRepeat() {
+            _listOptionsRepeat.postValue(
                 listOf(
-                    TextOption("15 minutos antes", ValueTextOption.MINUTES_15),
-                    TextOption("30 minutos antes", ValueTextOption.MINUTES_30),
-                    TextOption("1 hora antes", ValueTextOption.MINUTES_HOUR),
-                    CalendarHourOption("Personalizar")
-                )
+                    TextOption("No Repetir", ValueTextOption.DONT_REPEAT),
+                    CounterOption("Cada dia", category = ValueTextOption.ALL_DAYS),
+                    CounterOption("Cada semana", category = ValueTextOption.ALL_WEEKS),
+                    CounterOption("Cada mes", category = ValueTextOption.ALL_MONTHS),
+                    CounterOption("Cada año", category = ValueTextOption.ALL_YEARS),
+                ),
             )
-        )
-    }
-
-    fun getOptionsDurationRepeat() {
-        _listDurationRepeat.postValue(
-            listOf(
-                TextOption("Para siempre", ValueTextOption.FOR_EVER), CounterOption("Numero de veces"), CalendarOptionNormal("Hasta el dia")
-            )
-        )
-    }
-
-
-    fun getOptionStartDate() {
-        _optionStartDate.postValue(
-            listOf(
-                CalendarSimple("Seleccionar Horario Inicio")
-            )
-        )
-    }
-
-    fun getOptionEndDate() {
-        _optionEndDate.postValue(
-            listOf(
-                CalendarSimple("Seleccionar Horario Inicio")
-            )
-        )
-    }
-
-    fun getOptionEndHour() {
-        _optionEndHour.postValue(
-            listOf(
-                ScheduleOption("Seleccionar Horario Final")
-            )
-        )
-    }
-
-    fun getOptionStartHour() {
-        _optionStartHour.postValue(
-            listOf(
-                ScheduleOption("Seleccionar Horario de Inicio")
-            )
-        )
-    }
-
-
-    fun getEndHourSelected(): String? {
-        return (_optionEndHour.value?.firstOrNull() as ScheduleOption?)?.hour?.let {
-            reminderEntity.endHour = it
-            it
         }
-    }
 
-    fun getStartHourSelected(): String? {
-        return (_optionStartHour.value?.firstOrNull() as ScheduleOption?)?.hour?.let {
-            reminderEntity.startHour = it
-            it
+        fun getAlarmOptions() {
+            _listAlarms.postValue(
+                listOf(
+                    CounterOption("minutos", category = ValueTextOption.MINUTES),
+                    CounterOption("horas", category = ValueTextOption.HOUR),
+                    CounterOption("dias", category = ValueTextOption.DAYS),
+                ),
+            )
         }
-    }
 
-    fun getStartDateSelected(): String? {
-        return (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
-            reminderEntity.startDate = CalendarUtils.getFormatDate2(it)
-            CalendarUtils.getFormatDate(it)
+        fun getOptionsDurationRepeat() {
+            _listDurationRepeat.postValue(
+                listOf(
+                    TextOption("Para siempre", ValueTextOption.FOR_EVER),
+                    CounterOption("Numero de veces"),
+                    CalendarOptionNormal("Hasta el dia"),
+                ),
+            )
         }
-    }
 
-    fun getEndDateSelected(): String? {
-        return (_optionEndDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
-            reminderEntity.endDate = CalendarUtils.getFormatDate2(it)
-            CalendarUtils.getFormatDate(it)
+        fun getOptionStartDate() {
+            _optionStartDate.postValue(
+                listOf(
+                    CalendarSimple("Seleccionar Horario Inicio"),
+                ),
+            )
         }
-    }
 
-
-    fun getOptionRepeat(): String? {
-        return (_listOptionsRepeat.value?.firstOrNull { it.isSelected } as TextOption?)?.let {
-            reminderEntity.repeatOption = it.value
-            it.name
+        fun getOptionStartHour() {
+            _optionStartHour.postValue(
+                listOf(
+                    ScheduleOption("Seleccionar Horario de Inicio"),
+                ),
+            )
         }
-    }
 
-    fun getDurationRepeat(): String? {
-        return _listDurationRepeat.value?.firstOrNull { it.isSelected }?.let { option ->
-            when (option) {
+        fun getStartHourSelected(): String? {
+            return (_optionStartHour.value?.firstOrNull() as ScheduleOption?)?.hour?.let {
+                reminderEntity.startHour = it
+                it
+            }
+        }
+
+        fun getStartDateSelected(): String? {
+            return (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
+                reminderEntity.startDate = CalendarUtils.getFormatDate2(it)
+                CalendarUtils.getFormatDate(it)
+            }
+        }
+
+        fun getOptionRepeat(): String? {
+            val optionSelected = _listOptionsRepeat.value?.firstOrNull { it.isSelected }
+            when (optionSelected) {
                 is TextOption -> {
-                    reminderEntity.durationTypeRepeat = TypeOption.TEXT
-                    reminderEntity.durationRepeat = option.name
-                    option.name
+                    reminderEntity.repeatOption = optionSelected.value
+                    reminderEntity.countRepeatOption = null
+                    return optionSelected.name
                 }
-
-                is CalendarOptionNormal -> {
-                    option.date?.let {
-                        reminderEntity.durationTypeRepeat = TypeOption.DATE
-                        reminderEntity.durationRepeat = CalendarUtils.getFormatDate2(it)
-                        "hasta el " + CalendarUtils.getFormatDate2(it)
-                    }
-                }
-
                 is CounterOption -> {
-                    reminderEntity.durationTypeRepeat = TypeOption.COUNTER
-                    reminderEntity.durationRepeat = option.counter.toString()
-                    option.counter.toString() + " veces"
-                }
-
-                else -> null
-            }
-        }
-    }
-
-    fun getAlarms(): String? {
-        reminderEntity.alarms = arrayListOf()
-        reminderEntity.dateAlarms = arrayListOf()
-        val options = _listAlarms.value?.flatMap { it.filter { option -> option.isSelected } }
-        val strings = options?.mapNotNull {
-            when (it) {
-                is TextOption -> {
-                    reminderEntity.alarms.add(it.value.name)
-                    it.name
-                }
-
-                is CalendarHourOption -> {
-                    Log.e("quack",it.date.toString())
-                    it.date?.let { date ->
-                        val dateFormat = "${CalendarUtils.getFormatDate2(date)} ${it.hour}"
-                        reminderEntity.dateAlarms.add(dateFormat)
-                        dateFormat
+                    optionSelected.category?.let {
+                        reminderEntity.repeatOption = optionSelected.category
+                        reminderEntity.countRepeatOption = optionSelected.counter
+                        return optionSelected.name + " " + optionSelected.counter
                     }
                 }
-
-                else -> null
             }
+            return null
         }
-        return strings?.joinToString(",")
-    }
 
-    fun setNameReminder(name: String) {
-        reminderEntity.title = name
-    }
+        fun getDurationRepeat(): String? {
+            return _listDurationRepeat.value?.firstOrNull { it.isSelected }?.let { option ->
+                when (option) {
+                    is TextOption -> {
+                        reminderEntity.durationTypeRepeat = TypeOption.TEXT
+                        reminderEntity.durationRepeat = option.name
+                        option.name
+                    }
 
-    fun setDescriptionReminder(description: String) {
-        reminderEntity.description = description
-    }
+                    is CalendarOptionNormal -> {
+                        option.date?.let {
+                            reminderEntity.durationTypeRepeat = TypeOption.DATE
+                            reminderEntity.durationRepeat = CalendarUtils.getFormatDate2(it)
+                            "hasta el " + CalendarUtils.getFormatDate2(it)
+                        }
+                    }
 
-    fun addImages(images: List<Uri>) {
-        reminderEntity.listImages = images.map { it.toString() }
-    }
+                    is CounterOption -> {
+                        reminderEntity.durationTypeRepeat = TypeOption.COUNTER
+                        reminderEntity.durationRepeat = option.counter.toString()
+                        option.counter.toString() + " veces"
+                    }
 
-    fun createReminder() {
-        if (reminderPetsJoin.pets.isEmpty() ||
-            reminderEntity.categoryReminder == null ||
-            reminderEntity.durationRepeat == null ||
-            reminderEntity.durationTypeRepeat == null ||
-            reminderEntity.repeatOption == null ||
-            reminderEntity.startDate.isEmpty() ||
-            reminderEntity.endDate.isEmpty()
-            //(!reminderEntity.isAllDay && reminderEntity.startHour.isEmpty() && reminderEntity.endHour.isEmpty()) ||
-        ) {
-            _showErrorDialog.postValue("Llena todo el formulario")
-            return
-        }
-        if (!reminderEntity.isAllDay && reminderEntity.startHour.isEmpty() && reminderEntity.endHour.isEmpty() &&
-            (reminderEntity.alarms.isEmpty() && reminderEntity.dateAlarms.isEmpty())
-            ) {
-            _showErrorDialog.postValue("Llena todo el formulario")
-            return
-        }
-        viewModelScope.launch {
-            try {
-                _loading.postValue(true)
-                val reminderId = insertReminderUseCase(reminderEntity.toReminder())
-                reminderEntity.reminderId = reminderId
-                reminderPetsJoin.reminder = reminderEntity
-                reminderPetsJoin.pets.forEach {
-                    insertReminderWithPetsUseCase(ReminderPetJoin(reminderId, it.petId ?: 0))
+                    else -> null
                 }
-                _reminderWithPets.postValue(
-                    ReminderWithPets(
-                        reminderPetsJoin.reminder.toReminder(),
-                        reminderPetsJoin.pets.map { it.toPet() })
-                )
-                _loading.postValue(false)
-            } catch (e: Exception) {
-                _showErrorDialog.postValue(e.localizedMessage)
+            }
+        }
+
+        fun getAlarms(): String? {
+            val option = _listAlarms.value?.firstOrNull { option -> option.isSelected } as CounterOption?
+            return option?.let {
+                reminderEntity.alarm = option.counter
+                reminderEntity.alarmOption = option.category ?: ValueTextOption.MINUTES
+                it.counter.toString() + " " + it.name
+            }
+        }
+
+        fun setNameReminder(name: String) {
+            reminderEntity.title = name
+        }
+
+        fun setDescriptionReminder(description: String) {
+            reminderEntity.description = description
+        }
+
+        fun addImages(images: List<Uri>) {
+            reminderEntity.listImages = images.map { it.toString() }
+        }
+
+        fun createReminder() {
+            if (reminderEntity.title.isEmpty()) {
+                _showErrorDialog.postValue("Llena el nombre")
+                return
+            }
+            if (reminderEntity.categoryReminder == null) {
+                _showErrorDialog.postValue("Selecciona una categoria")
+                return
+            }
+            if (reminderEntity.startDate.isEmpty()) {
+                _showErrorDialog.postValue("Selecciona fecha de inicio")
+                return
+            }
+            if (listVaccines.firstOrNull()?.nameSelected?.isEmpty() == true) {
+                _showErrorDialog.postValue("Selecciona vacunas")
+                return
+            }
+
+            viewModelScope.launch {
+                try {
+                    _loading.postValue(true)
+                    val reminderId = insertReminderUseCase(reminderEntity.toReminder())
+                    reminderEntity.reminderId = reminderId
+                    reminderPetsJoin.reminder = reminderEntity
+                    reminderPetsJoin.pets.forEach {
+                        insertReminderWithPetsUseCase(ReminderPetJoin(reminderId, it.petId ?: 0))
+                    }
+                    _reminderWithPets.postValue(
+                        ReminderWithPets(
+                            reminderPetsJoin.reminder.toReminder(),
+                            reminderPetsJoin.pets.map { it.toPet() },
+                        ),
+                    )
+                    _loading.postValue(false)
+                } catch (e: Exception) {
+                    _showErrorDialog.postValue(e.localizedMessage)
+                }
             }
         }
     }
-}

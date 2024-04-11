@@ -20,36 +20,42 @@ data class Reminder(
     val alarms: List<String>,
     val dateAlarms: List<String>,
     val isActivated: Boolean,
+    val alarm: Int = 15,
+    val alarmOption: ValueTextOption = ValueTextOption.MINUTES,
     val categoryReminder: CATEGORYID,
     val startDate: String,
     var endDate: String,
     var startHour: String,
-    var endHour: String,
-    val isAllDay: Boolean,
     val listImages: List<String>,
-    val repeatOption: ValueTextOption?,
+    val repeatOption: ValueTextOption = ValueTextOption.DONT_REPEAT,
+    val countRepeatOption: Int?,
+    val times: Int,
     val durationTypeRepeat: TypeOption?,
-    val durationRepeat: String?
+    val durationRepeat: String?,
 ) {
+    fun alarmsPassed(): Boolean {
+        return countRepeatOption == times
+    }
+
     fun toReminderEntity(): ReminderEntity {
         return ReminderEntity(
-            this.reminderId ?: 0,
-            this.title,
-            this.description,
-            this.startDate,
-            this.endDate,
-            this.startHour,
-            this.endHour,
-            this.isAllDay,
-            "",
-            CategoryReminderEntity.getReminder(this.categoryReminder),
-            this.isActivated,
-            ArrayList(this.alarms),
-            ArrayList(this.dateAlarms),
-            this.listImages,
-            this.repeatOption,
+            reminderId = this.reminderId ?: 0,
+            title = this.title,
+            description = this.description,
+            startDate = this.startDate,
+            endDate = this.endDate,
+            startHour = this.startHour,
+            location = "",
+            categoryReminder = CategoryReminderEntity.getReminder(this.categoryReminder),
+            isActivated = this.isActivated,
+            alarm = this.alarm,
+            alarmOption = this.alarmOption,
+            listImages = this.listImages,
+            repeatOption = this.repeatOption,
+            this.countRepeatOption,
+            this.times,
             this.durationTypeRepeat,
-            this.durationRepeat
+            this.durationRepeat,
         )
     }
 }

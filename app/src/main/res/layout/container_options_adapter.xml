@@ -16,16 +16,21 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
-	<TextView
-		android:id="@+id/tvAdd"
-		style="@style/WorkSans_Regular20"
+	<androidx.appcompat.widget.LinearLayoutCompat
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:padding="10dp"
-		android:text="@string/plus_add"
-		android:textAlignment="center"
-		android:textColor="@color/verdeclaroq"
-		android:textStyle="bold"
-		app:layout_constraintTop_toBottomOf="@+id/rvOptions" />
+		android:layout_marginHorizontal="50dp"
+		android:layout_marginBottom="30dp"
+		android:background="@drawable/bg_card_radius"
+		android:orientation="vertical"
+		android:padding="3dp">
 
+		<androidx.recyclerview.widget.RecyclerView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+	</androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>
+
