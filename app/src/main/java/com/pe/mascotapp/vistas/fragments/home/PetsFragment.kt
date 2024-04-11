@@ -44,6 +44,7 @@ class PetsFragment : Fragment() {
         binding.rvPets.apply {
             this.adapter = PetMainAdapter(petsMainViewModel.getPets()){
                 val intent = Intent(activity, PetDetailActivity::class.java)
+                intent.putExtra("petEntity", it)
                 startActivity(intent)
             }
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)

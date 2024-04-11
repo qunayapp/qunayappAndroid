@@ -8,7 +8,7 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.ItemPetFrontBinding
 import com.pe.mascotapp.vistas.entities.PetEntity
 
-class PetMainAdapter(val pets: List<PetEntity> = listOf(), val itemOnClick: () -> Unit = {}) : RecyclerView.Adapter<PetMainAdapter.PetMainViewHolder>(){
+class PetMainAdapter(val pets: List<PetEntity> = listOf(), val itemOnClick: (pet:PetEntity) -> Unit = {}) : RecyclerView.Adapter<PetMainAdapter.PetMainViewHolder>(){
 
     class PetMainViewHolder(private val binding: ItemPetFrontBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -35,7 +35,7 @@ class PetMainAdapter(val pets: List<PetEntity> = listOf(), val itemOnClick: () -
         holder.bind(pet)
         holder.itemView.setOnClickListener {
             pet.isSelected = !pet.isSelected
-            itemOnClick()
+            itemOnClick(pet)
             notifyItemChanged(position)
         }
     }

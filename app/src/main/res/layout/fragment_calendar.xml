@@ -93,19 +93,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/grey100"
             app:layout_constraintTop_toTopOf="@+id/calendarRecyclerView" />
-
+        <ImageView
+            android:id="@+id/icCalShow"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_arrow_expand"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/grey100"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarRecyclerView" />
         <CalendarView
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:datePickerMode="calendar"
-            android:visibility="gone"
+            android:visibility="visible"
             android:theme="@style/CalenderViewCustom"
             android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarRecyclerView" />
-
+            app:layout_constraintTop_toBottomOf="@+id/icCalShow" />
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/gpDayVisibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="calendarRecyclerView, icCalShow, icCalRight,icCalLeft" />
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"

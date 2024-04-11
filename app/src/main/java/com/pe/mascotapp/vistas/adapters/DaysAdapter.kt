@@ -1,30 +1,39 @@
 package com.pe.mascotapp.vistas.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.ItemDayBinding
+import com.pe.mascotapp.utils.CalendarUtils
 import java.time.LocalDate
+import java.util.Locale
 
 class DaysAdapter(
-    val days: ArrayList<LocalDate>,
+    val days: ArrayList<DayCalendarEntity>,
     val itemOnClick: (day: LocalDate, position: Int) -> Unit = { _, _ -> }
 ) : RecyclerView.Adapter<DaysAdapter.DaysViewHolder>() {
 
     private var selectedPosition: Int = RecyclerView.NO_POSITION
     private var dateSelected :LocalDate = LocalDate.now()
-    class DaysViewHolder(private val binding: ItemDayBinding) :
+    class DaysViewHolder( val binding: ItemDayBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(date: LocalDate?, isSelected: Boolean) {
-            if (date == null) binding.cellDayText.text else
-                binding.cellDayText.text = if (date == null) "" else
-                    date.dayOfMonth.toString()
-            if (isSelected) {
-                binding.parentView.setBackgroundResource(R.drawable.ic_rectangle_border_3)
+        fun bind(date: DayCalendarEntity) {
+            binding.cellDayText.text = if (date == null) "" else
+                date.day.dayOfMonth.toString()
+            binding.cellDayLetter.text =     if (date == null) "" else CalendarUtils.getAbbreviatedDayName(date.day, Locale("es", "ES")).first().toString().toUpperCase()
+            if (date.isSelected) {
+                binding.parentView.setBackgroundResource(R.drawable.ic_rectangle_border_28)
                 binding.cellDayText.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.white
+                    )
+                )
+                binding.cellDayLetter.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
                         R.color.white
@@ -32,6 +41,12 @@ class DaysAdapter(
                 )
             }else{
                 binding.parentView.setBackgroundColor(ContextCompat.getColor(binding.parentView.context, R.color.white))
+                binding.cellDayLetter.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.third
+                    )
+                )
                 binding.cellDayText.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
@@ -39,8 +54,8 @@ class DaysAdapter(
                     )
                 )
             }
-
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DaysViewHolder {
@@ -58,13 +73,19 @@ class DaysAdapter(
     override fun getItemCount(): Int = days.size
 
     override fun onBindViewHolder(holder: DaysViewHolder, position: Int) {
-        holder.bind(days[position], days[position] == dateSelected)
+        val currentDate = days[position]
+        holder.bind(days[position])
         holder.itemView.setOnClickListener {
-            val previousSelectedPosition = selectedPosition
-            selectedPosition = holder.adapterPosition
-            dateSelected = days[position]
-            notifyItemChanged(position)
-            itemOnClick(days[position], position)
+            if (selectedPosition != position) {
+                dateSelected = currentDate.day
+                selectedPosition = position
+                itemOnClick(currentDate.day, position)
+            }
         }
     }
 }
+
+class DayCalendarEntity(
+   var  day: LocalDate,
+    var isSelected: Boolean,
+)

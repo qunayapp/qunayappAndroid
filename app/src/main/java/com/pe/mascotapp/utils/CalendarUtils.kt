@@ -14,6 +14,8 @@ import java.util.Locale
 
 class CalendarUtils {
     companion object {
+
+        const val CONST_FORMAT = "dd/MM/yyyy"
         fun getTime(year: Int, month: Int, day: Int): Date {
             val calendar = Calendar.getInstance()
             calendar.set(year, month, day)
@@ -118,6 +120,18 @@ class CalendarUtils {
 
         fun convertLocalDateToDate(localDate: LocalDate): Date {
             return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        }
+
+        fun convertLocalDateToCalendar(localDate: LocalDate): Calendar {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.YEAR, localDate.year)
+            calendar.set(Calendar.MONTH, localDate.monthValue - 1) // Note: Calendar.MONTH is zero-based
+            calendar.set(Calendar.DAY_OF_MONTH, localDate.dayOfMonth)
+            return calendar
+        }
+        fun convertStringFormatToLocalDate(dateString: String,format:String):LocalDate{
+            val dateFormatter = DateTimeFormatter.ofPattern(format)
+            return  LocalDate.parse(dateString, dateFormatter)
         }
     }
 

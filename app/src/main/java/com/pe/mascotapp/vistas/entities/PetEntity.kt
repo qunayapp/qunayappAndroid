@@ -1,8 +1,11 @@
 package com.pe.mascotapp.vistas.entities
 
+import android.os.Parcelable
 import com.pe.mascotapp.domain.models.Pet
 import com.pe.mascotapp.domain.models.Sex
-
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
+@Parcelize
 class PetEntity(
     val petId: Long? = null,
     val image: String,
@@ -13,7 +16,7 @@ class PetEntity(
     val sex: Sex,
     val birthdate: String,
     var isSelected: Boolean
-) {
+)  : Parcelable{
     fun toPet() : Pet {
         return Pet(
             petId,
