@@ -16,11 +16,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.ActivityReminderBinding
 import com.pe.mascotapp.notifications.AlarmEventHelper
 import com.pe.mascotapp.viewmodels.ReminderViewModel
@@ -33,10 +31,8 @@ import com.pe.mascotapp.vistas.dialogs.DialogOption
 import com.pe.mascotapp.vistas.entities.VaccineFieldEntity
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class ReminderActivity : AppCompatActivity() {
-
     companion object {
         const val MY_CHANNEL_ID = "myChannel"
         const val MY_CHANNEL_NAME = "MySuperChannel"
@@ -54,13 +50,15 @@ class ReminderActivity : AppCompatActivity() {
 
     private val imageGalleryAdapter = ImageGalleryAdapter(listOf())
 
-    private val pickImageFromGalleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) result.data?.let { addImages(it) }
-    }
+    private val pickImageFromGalleryLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) result.data?.let { addImages(it) }
+        }
 
-    private var permissionMediaLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        handlePermissionGallery(true in permissions.values)
-    }
+    private var permissionMediaLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            handlePermissionGallery(true in permissions.values)
+        }
 
     private fun setUpAlarmHelper(): AlarmEventHelper {
         return AlarmEventHelper(applicationContext)
@@ -82,7 +80,7 @@ class ReminderActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSION) {
@@ -93,11 +91,12 @@ class ReminderActivity : AppCompatActivity() {
     }
 
     private fun verifyPermissionGallery() {
-        val permissions = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
-            arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
-        } else {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
+        val permissions =
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+                arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+            } else {
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
         permissionMediaLauncher.launch(permissions)
     }
 
@@ -125,17 +124,29 @@ class ReminderActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = vaccineAdapter
         }
-        binding.edtDescription.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+        binding.edtDescription.addTextChangedListener(
+            object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.setDescriptionReminder(s.toString())
-            }
-        })
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    viewModel.setDescriptionReminder(s.toString())
+                }
+            },
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,39 +179,36 @@ class ReminderActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
-
         } else {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_CODE_PERMISSION)
         }
     }
 
     private fun setUpListeners() {
-        binding.nameReminder.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+        binding.nameReminder.addTextChangedListener(
+            object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.setNameReminder(s.toString())
-            }
-        })
-        binding.swReminder.setOnCheckedChangeListener { _, isEnable ->
-            binding.tvHourEnd.isEnabled = !isEnable
-            binding.tvHourStart.isEnabled = !isEnable
-            binding.llAlarm.isVisible = !isEnable
-            if (isEnable) {
-                binding.tvHourEnd.text = "agregar hora"
-                binding.tvHourStart.text = "agregar hora"
-                binding.tvHourEnd.setTextColor(ContextCompat.getColor(this, R.color.verdepastelq))
-                binding.tvHourStart.setTextColor(ContextCompat.getColor(this, R.color.verdepastelq))
-            } else {
-                binding.tvHourEnd.setTextColor(ContextCompat.getColor(this, R.color.verdeq))
-                binding.tvHourStart.setTextColor(ContextCompat.getColor(this, R.color.verdeq))
-            }
-            viewModel.setAllDay(isEnable)
-        }
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    viewModel.setNameReminder(s.toString())
+                }
+            },
+        )
+
         binding.llAddImage.setOnClickListener {
             verifyPermissionGallery()
         }
@@ -213,14 +221,8 @@ class ReminderActivity : AppCompatActivity() {
         binding.tvAddDuration.setOnClickListener {
             viewModel.getOptionsDurationRepeat()
         }
-        binding.tvDateEnd.setOnClickListener {
-            viewModel.getOptionEndDate()
-        }
         binding.tvDateStart.setOnClickListener {
             viewModel.getOptionStartDate()
-        }
-        binding.tvHourEnd.setOnClickListener {
-            viewModel.getOptionEndHour()
         }
         binding.tvHourStart.setOnClickListener {
             viewModel.getOptionStartHour()
@@ -232,11 +234,12 @@ class ReminderActivity : AppCompatActivity() {
 
     private fun handlePermissionGallery(isGranted: Boolean) {
         if (isGranted) {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = TYPE_MEDIA
-                putExtra(EXTRA_ALLOW_MULTIPLE, true)
-            }
+            val intent =
+                Intent(Intent.ACTION_GET_CONTENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = TYPE_MEDIA
+                    putExtra(EXTRA_ALLOW_MULTIPLE, true)
+                }
             pickImageFromGalleryLauncher.launch(intent)
         }
     }
@@ -258,18 +261,9 @@ class ReminderActivity : AppCompatActivity() {
                 viewModel.getDurationRepeat()?.let { binding.tvAddDuration.text = it }
             }
         }
-        viewModel.listAlarms.observe(this) {
-            val dialogOptions = DialogOption()
-            dialogOptions.setListListOptions(it)
-            dialogOptions.setCanAddOtherContainer(true)
-            dialogOptions.setCallBackOptions {
-                binding.tvAlarm.text = viewModel.getAlarms()
-            }
-            dialogOptions.show(supportFragmentManager, DialogOption::class.java.simpleName)
-        }
-        viewModel.optionEndHour.observe(this) { options ->
+        viewModel.listAlarms.observe(this) { options ->
             showDialogOptions(options) {
-                viewModel.getEndHourSelected()?.let { binding.tvHourEnd.text = it }
+                binding.tvAlarm.text = viewModel.getAlarms()
             }
         }
         viewModel.optionStartHour.observe(this) { options ->
@@ -280,11 +274,6 @@ class ReminderActivity : AppCompatActivity() {
         viewModel.optionStartDate.observe(this) { options ->
             showDialogOptions(options) {
                 viewModel.getStartDateSelected()?.let { binding.tvDateStart.text = it }
-            }
-        }
-        viewModel.optionEndDate.observe(this) { options ->
-            showDialogOptions(options) {
-                viewModel.getEndDateSelected()?.let { binding.tvDateEnd.text = it }
             }
         }
         viewModel.showErrorDialog.observe(this) {
@@ -299,18 +288,18 @@ class ReminderActivity : AppCompatActivity() {
         }
 
         viewModel.reminderWithPets.observe(this) {
-            alarmEventHelper.setAlarmPeriod(
-                listOf(it), it.reminder.reminderId?.toInt() ?: 0
-            )
+            alarmEventHelper.setAlarmPeriod(listOf(it))
         }
     }
 
-    private fun showDialogOptions(listOptions: List<OptionViewInterface>, callBackOptions: () -> Unit) {
+    private fun showDialogOptions(
+        listOptions: List<OptionViewInterface>,
+        callBackOptions: () -> Unit,
+    ) {
         val dialogOptions = DialogOption()
         dialogOptions.setListOptions(listOptions)
         dialogOptions.setCanAddOtherContainer(false)
         dialogOptions.setCallBackOptions { callBackOptions() }
         dialogOptions.show(supportFragmentManager, DialogOption::class.java.simpleName)
     }
-
 }

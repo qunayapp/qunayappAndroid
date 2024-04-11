@@ -23,7 +23,10 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
 
     class OptionTextViewHolder(private val binding: ItemOptionTextBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(option: TextOption, optionClick: (position: Int) -> Unit) {
+        fun bind(
+            option: TextOption,
+            optionClick: (position: Int) -> Unit,
+        ) {
             binding.llOption.setOnClickListener {
                 optionClick(adapterPosition)
             }
@@ -40,7 +43,10 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
 
     class OptionCounterViewHolder(private val binding: ItemOptionCounterBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(option: CounterOption, optionClick: (position: Int) -> Unit) {
+        fun bind(
+            option: CounterOption,
+            optionClick: (position: Int) -> Unit,
+        ) {
             binding.tvNameOption.text = option.name
             binding.tvCounter.text = option.counter.toString()
             binding.tvCounter.text = if (option.isSelected) option.counter.toString() else "0"
@@ -61,8 +67,10 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
 
     class OptionCalendarViewHolder(private val binding: ItemOptionCalendarBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindCalendarHour(option: CalendarHourOption, optionClick: (position: Int) -> Unit) {
-
+        fun bindCalendarHour(
+            option: CalendarHourOption,
+            optionClick: (position: Int) -> Unit,
+        ) {
             binding.tvNameOption.text = option.name
             binding.gpHourCalendar.isVisible = false
 
@@ -70,7 +78,11 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
             binding.llOption.setBackgroundColor(ContextCompat.getColor(binding.root.context, bg))
 
             val lisOfViewNoCalendarHour = arrayListOf(binding.line1, binding.line2, binding.line3)
-            if (!option.isSelected) lisOfViewNoCalendarHour.addAll(listOf(binding.llAddSchedule, binding.tpHourSelect, binding.calendarView))
+            if (!option.isSelected) {
+                lisOfViewNoCalendarHour.addAll(
+                    listOf(binding.llAddSchedule, binding.tpHourSelect, binding.calendarView),
+                )
+            }
 
             lisOfViewNoCalendarHour.forEach { it.isVisible = false }
 
@@ -99,26 +111,30 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
         fun bindSimpleCalendar(option: CalendarSimple) {
             val bg = if (adapterPosition % 2 == 0) R.color.white else R.color.gray100
             binding.llOption.setBackgroundColor(ContextCompat.getColor(binding.root.context, bg))
-            val lisOfViewNoCalendarHour = listOf(
-                binding.line1,
-                binding.line2,
-                binding.line3,
-                binding.llAddSchedule,
-                binding.tpHourSelect,
-                binding.llOption
-            )
+            val lisOfViewNoCalendarHour =
+                listOf(
+                    binding.line1,
+                    binding.line2,
+                    binding.line3,
+                    binding.llAddSchedule,
+                    binding.tpHourSelect,
+                    binding.llOption,
+                )
             lisOfViewNoCalendarHour.forEach { it.isVisible = !it.isVisible }
             binding.calendarView.setOnDateChangeListener { _, year, month, day ->
                 option.date = CalendarUtils.getTime(year, month, day)
             }
         }
 
-        fun bindNormalCalendar(option: CalendarOptionNormal, optionClick: (position: Int) -> Unit) {
-
+        fun bindNormalCalendar(
+            option: CalendarOptionNormal,
+            optionClick: (position: Int) -> Unit,
+        ) {
             val bg = if (adapterPosition % 2 == 0) R.color.white else R.color.gray100
             binding.llOption.setBackgroundColor(ContextCompat.getColor(binding.root.context, bg))
 
-            val listOfViewsNoNormal = listOf(binding.line1, binding.line2, binding.line3, binding.calendarView, binding.llAddSchedule, binding.tpHourSelect)
+            val listOfViewsNoNormal =
+                listOf(binding.line1, binding.line2, binding.line3, binding.calendarView, binding.llAddSchedule, binding.tpHourSelect)
             listOfViewsNoNormal.forEach { it.isVisible = false }
 
             binding.tvNameOption.text = if (option.isSelected) option.date?.let { CalendarUtils.getFormatDate3(it) } else option.name
@@ -140,9 +156,7 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
                 optionClick(adapterPosition)
             }
         }
-
     }
-
 
     class ScheduleViewHolder(private val binding: ItemOptionSheduleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(option: ScheduleOption) {
@@ -154,7 +168,10 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val dataBinding: ViewBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
         return when (viewType) {
@@ -167,7 +184,10 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
 
     override fun getItemCount(): Int = options.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         val option = options[position]
         when (holder) {
             is OptionTextViewHolder -> {
@@ -206,7 +226,6 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
         }
     }
 
-
     override fun getItemViewType(position: Int): Int {
         return when (options[position].viewType) {
             OptionViewType.TextViewOption -> R.layout.item_option_text
@@ -220,13 +239,17 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
 interface OptionViewInterface {
     val viewType: OptionViewType
     var isSelected: Boolean
-    fun copyOption():OptionViewInterface
+
+    fun copyOption(): OptionViewInterface
 }
 
 sealed class OptionViewType {
     object TextViewOption : OptionViewType()
+
     object CounterViewOption : OptionViewType()
+
     object CalendarViewOption : OptionViewType()
+
     object ScheduleViewOption : OptionViewType()
 }
 
@@ -240,26 +263,29 @@ enum class ValueTextOption {
     MINUTES_15,
     MINUTES_30,
     MINUTES_HOUR,
-    FOR_EVER
+    FOR_EVER,
+    MINUTES,
+    HOUR,
+    DAYS,
 }
 
 data class TextOption(
     val name: String,
     val value: ValueTextOption,
     override var isSelected: Boolean = false,
-    override val viewType: OptionViewType.TextViewOption = OptionViewType.TextViewOption
-) : OptionViewInterface{
+    override val viewType: OptionViewType.TextViewOption = OptionViewType.TextViewOption,
+) : OptionViewInterface {
     override fun copyOption(): OptionViewInterface {
         return this.copy()
     }
 }
 
-
 data class CounterOption(
     val name: String,
-    var counter: Int = 1,
+    var counter: Int = 0,
+    val category: ValueTextOption? = null,
     override var isSelected: Boolean = false,
-    override val viewType: OptionViewType.CounterViewOption = OptionViewType.CounterViewOption
+    override val viewType: OptionViewType.CounterViewOption = OptionViewType.CounterViewOption,
 ) : OptionViewInterface {
     override fun copyOption(): OptionViewInterface {
         return this.copy()
@@ -276,19 +302,19 @@ open class CalendarOption(
     override fun copyOption(): OptionViewInterface = this
 }
 
-data class CalendarOptionNormal(override val name: String) : CalendarOption(name){
+data class CalendarOptionNormal(override val name: String) : CalendarOption(name) {
     override fun copyOption(): OptionViewInterface {
         return this.copy()
     }
 }
 
-data class CalendarHourOption(override val name: String) : CalendarOption(name){
+data class CalendarHourOption(override val name: String) : CalendarOption(name) {
     override fun copyOption(): OptionViewInterface {
         return this.copy()
     }
 }
 
-data class CalendarSimple(override val name: String) : CalendarOption(name){
+data class CalendarSimple(override val name: String) : CalendarOption(name) {
     override fun copyOption(): OptionViewInterface {
         return this.copy()
     }
@@ -304,4 +330,3 @@ data class ScheduleOption(
         return this.copy()
     }
 }
-

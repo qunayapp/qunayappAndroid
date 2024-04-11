@@ -19,12 +19,13 @@
 			android:gravity="center"
 			android:orientation="vertical">
 
-
 			<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/rvRvOptions"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginHorizontal="50dp"
+				android:background="@drawable/bg_card_radius"
+				android:padding="3dp"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="parent" />

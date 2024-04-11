@@ -1,6 +1,5 @@
 package com.pe.mascotapp.utils
 
-import android.util.Log
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -10,10 +9,13 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-
 class CalendarUtils {
     companion object {
-        fun getTime(year: Int, month: Int, day: Int): Date {
+        fun getTime(
+            year: Int,
+            month: Int,
+            day: Int,
+        ): Date {
             val calendar = Calendar.getInstance()
             calendar.set(year, month, day)
             return calendar.time
@@ -34,7 +36,6 @@ class CalendarUtils {
             return sdf.format(date)
         }
 
-
         fun convertirFechaATime(fechaString: String): Date? {
             val formato = SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("es", "ES"))
             return try {
@@ -44,7 +45,6 @@ class CalendarUtils {
                 null
             }
         }
-
 
         fun fechaCumplidaHoy(fecha: Date): Boolean {
             val formato = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
@@ -56,7 +56,10 @@ class CalendarUtils {
             return fechaString == fechaStringHoy
         }
 
-        fun joinDateAndHour(dateString: String, hourString: String): Date {
+        fun joinDateAndHour(
+            dateString: String,
+            hourString: String,
+        ): Date {
             try {
                 val dateFormat = SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("es", "ES"))
                 val hourFormat = SimpleDateFormat("HH:mm", Locale("es", "ES"))
@@ -86,7 +89,6 @@ class CalendarUtils {
 }
 
 fun Date.addDay(days: Int): Date? {
-
     val calendar = Calendar.getInstance()
     calendar.time = this
     return try {
@@ -104,11 +106,6 @@ fun Date.establecerHoraEnFechaActual(horaMinutos: String): Date? {
         // Formato de hora incorrecto
         return null
     }
-    Log.e("quack", horaMinutosPartes.toString())
-    Log.e("quack", horaMinutosPartes[0].toIntOrNull().toString())
-    Log.e("quack", horaMinutosPartes[1].toIntOrNull().toString())
-
-
     val hora = horaMinutosPartes[0].toIntOrNull() ?: return null
     val minutos = horaMinutosPartes[1].toIntOrNull() ?: return null
 
@@ -123,7 +120,6 @@ fun Date.establecerHoraEnFechaActual(horaMinutos: String): Date? {
 }
 
 fun Date.addMinutes(minutes: Int): Date? {
-
     val calendar = Calendar.getInstance()
     calendar.time = this
     return try {
@@ -136,7 +132,6 @@ fun Date.addMinutes(minutes: Int): Date? {
 }
 
 fun Date.addHours(hours: Int): Date? {
-
     val calendar = Calendar.getInstance()
     calendar.time = this
     return try {
@@ -148,12 +143,12 @@ fun Date.addHours(hours: Int): Date? {
     }
 }
 
-fun Date.getDayOfMonth():Int{
+fun Date.getDayOfMonth(): Int {
     val localDate: LocalDate = this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     return localDate.dayOfMonth
 }
 
-fun Date.getDayOfWeek():DayOfWeek{
+fun Date.getDayOfWeek(): DayOfWeek {
     val localDate: LocalDate = this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     return localDate.dayOfWeek
 }

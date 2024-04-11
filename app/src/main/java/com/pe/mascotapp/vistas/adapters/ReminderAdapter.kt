@@ -19,16 +19,18 @@ class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>, val updateRem
     RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
     class ReminderViewHolder(private val binding: ItemReminderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(reminderPets: ReminderPetsJoinEntity, updateReminder: (ReminderEntity) -> Unit) {
+        fun bind(
+            reminderPets: ReminderPetsJoinEntity,
+            updateReminder: (ReminderEntity) -> Unit,
+        ) {
             binding.reminderPets = reminderPets
             binding.ivReminder.setImageDrawable(
                 reminderPets.reminder.categoryReminder?.image?.let {
                     ContextCompat.getDrawable(
                         binding.root.context,
-                        it
+                        it,
                     )
-                }
-
+                },
             )
             handleState(reminderPets.reminder.isActivated)
             binding.swReminder.setOnCheckedChangeListener { _, isChecked ->
@@ -56,53 +58,56 @@ class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>, val updateRem
             binding.clHeader.changeTintColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    backgroundColor
-                )
+                    backgroundColor,
+                ),
             )
             binding.ivReminder.drawable.setColorFilter(
                 ContextCompat.getColor(
                     binding.root.context,
-                    iconColor
+                    iconColor,
                 ),
-                PorterDuff.Mode.SRC_ATOP
+                PorterDuff.Mode.SRC_ATOP,
             )
             binding.ivReminder.background.setColorFilter(
                 ContextCompat.getColor(
                     binding.root.context,
-                    backgroundIconColor
+                    backgroundIconColor,
                 ),
-                PorterDuff.Mode.SRC_ATOP
+                PorterDuff.Mode.SRC_ATOP,
             )
             binding.tvTitleReminder.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    titleTextColor
-                )
+                    titleTextColor,
+                ),
             )
             binding.tvAnimalName.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    itemTextColor
-                )
+                    itemTextColor,
+                ),
             )
 
             binding.tvDateReminder.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    itemTextColor
-                )
+                    itemTextColor,
+                ),
             )
 
             binding.tvLocationReminder.setTextColor(
                 ContextCompat.getColor(
                     binding.root.context,
-                    itemTextColor
-                )
+                    itemTextColor,
+                ),
             )
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ReminderViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemReminderBinding.inflate(layoutInflater, parent, false)
         return ReminderViewHolder(binding)
@@ -110,24 +115,26 @@ class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>, val updateRem
 
     override fun getItemCount(): Int = reminders.size
 
-    override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ReminderViewHolder,
+        position: Int,
+    ) {
         holder.bind(reminders[position], updateReminder)
     }
 }
 
 class ReminderPetsJoinEntity(
     var reminder: ReminderEntity,
-    var pets: List<PetEntity>
+    var pets: List<PetEntity>,
 ) {
     constructor(reminder: ReminderWithPets) : this(
         reminder.reminder.toReminderEntity(),
-        reminder.pets.map { it.toPetEntity() }
+        reminder.pets.map { it.toPetEntity() },
     )
 
     fun pets(): String {
         return this.pets.joinToString(",") { it.name }
     }
-
 }
 
 class ReminderEntity(
@@ -136,20 +143,19 @@ class ReminderEntity(
     var description: String = "",
     var startDate: String = "",
     var endDate: String = "",
-    var startHour: String = "",
-    var endHour: String = "",
-    var isAllDay: Boolean = false,
+    var startHour: String = "12:00",
     val location: String = "",
     var categoryReminder: CategoryReminderEntity? = null,
     var isActivated: Boolean = true,
-    var alarms: ArrayList<String> = arrayListOf(),
-    var dateAlarms: ArrayList<String> = arrayListOf(),
+    var alarm: Int = 15,
+    var alarmOption: ValueTextOption = ValueTextOption.MINUTES,
     var listImages: List<String> = listOf(),
-    var repeatOption: ValueTextOption? = null,
+    var repeatOption: ValueTextOption = ValueTextOption.DONT_REPEAT,
+    var countRepeatOption: Int? = null,
+    var times: Int = 0,
     var durationTypeRepeat: TypeOption? = null,
     var durationRepeat: String? = null,
 ) {
-
     fun toReminder(): Reminder {
         return Reminder(
             reminderId = reminderId,
@@ -157,17 +163,19 @@ class ReminderEntity(
             description = this.description,
             startDate = this.startDate,
             endDate = this.endDate,
-            isAllDay = this.isAllDay,
             categoryReminder = this.categoryReminder?.categoryId ?: CATEGORYID.OTHERS,
             isActivated = this.isActivated,
-            alarms = this.alarms,
-            dateAlarms = this.dateAlarms,
+            alarms = arrayListOf(),
+            alarm = this.alarm,
+            alarmOption = this.alarmOption,
+            dateAlarms = arrayListOf(),
             listImages = this.listImages,
             repeatOption = this.repeatOption,
             durationRepeat = this.durationRepeat,
             durationTypeRepeat = this.durationTypeRepeat,
-            endHour = this.endHour,
-            startHour = this.startHour
+            startHour = this.startHour,
+            times = this.times,
+            countRepeatOption = this.countRepeatOption,
         )
     }
 }
@@ -175,5 +183,5 @@ class ReminderEntity(
 enum class TypeOption {
     COUNTER,
     TEXT,
-    DATE
+    DATE,
 }

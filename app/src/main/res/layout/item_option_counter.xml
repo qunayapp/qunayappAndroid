@@ -16,7 +16,7 @@
 			android:paddingVertical="11dp"
 			android:textAlignment="center"
 			tools:text="De lunes a viernes" />
-
+		
 		<TextView
 			android:id="@+id/reduce"
 			style="@style/WorkSans_Regular20"

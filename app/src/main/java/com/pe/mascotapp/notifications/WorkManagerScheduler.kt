@@ -1,7 +1,6 @@
 package com.pe.mascotapp.notifications
 
 import android.content.Context
-import android.util.Log
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -12,6 +11,7 @@ import java.util.concurrent.TimeUnit
 
 object WorkManagerScheduler {
     const val WORKER_NAME = "MyWorker"
+
     fun scheduleWorker(context: Context) {
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance()
@@ -25,22 +25,24 @@ object WorkManagerScheduler {
 
         val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
         val minutes = TimeUnit.MILLISECONDS.toMinutes(timeDiff)
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
+        val constraints =
+            Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
 
-        val periodicWorkRequest = PeriodicWorkRequest.Builder(
-            MyWorker::class.java,
-            24,
-            TimeUnit.HOURS
-        )
-            .setInitialDelay(minutes, TimeUnit.MINUTES)
-            .setConstraints(constraints)
-            .build()
+        val periodicWorkRequest =
+            PeriodicWorkRequest.Builder(
+                MyWorker::class.java,
+                24,
+                TimeUnit.HOURS,
+            )
+                .setInitialDelay(minutes, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             WORKER_NAME,
             ExistingPeriodicWorkPolicy.REPLACE,
-            periodicWorkRequest
+            periodicWorkRequest,
         )
     }
 }
