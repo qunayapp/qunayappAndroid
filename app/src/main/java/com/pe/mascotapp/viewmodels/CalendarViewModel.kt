@@ -1,16 +1,33 @@
 package com.pe.mascotapp.viewmodels
 
+import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.pe.mascotapp.domain.models.Sex
+import com.pe.mascotapp.domain.usecases.GetRemindersWithPetsUseCase
+import com.pe.mascotapp.utils.CalendarUtils
 import com.pe.mascotapp.vistas.adapters.ReminderEntity
 import com.pe.mascotapp.vistas.adapters.ReminderPetsJoinEntity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class CalendarViewModel @Inject constructor() : ViewModel() {
-    fun getReminders(): List<ReminderPetsJoinEntity> {
+class CalendarViewModel @Inject constructor(
+    private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
+) : ViewModel() {
+    private var originalReminders = listOf<ReminderPetsJoinEntity>()
+    private var getRemindersJob: Job? = null
+    private val _listReminders = MutableLiveData<List<ReminderPetsJoinEntity>>()
+    val listReminders: LiveData<List<ReminderPetsJoinEntity>> = _listReminders
+    val remindersIsEmpty: ObservableBoolean = ObservableBoolean(true)
+/*    fun getReminders(): List<ReminderPetsJoinEntity> {
 
         return listOf(
             ReminderPetsJoinEntity(
@@ -34,7 +51,7 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
                     "08/04/2024",
                     "11:05",
                     "13:05",
-                    true,
+                    null,
                     "Clinica Delgado, calle tal",
                     null,
                     true,
@@ -97,5 +114,20 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
                 )))
 
         //return reminder
+    }*/
+
+    fun getReminders(pageNumber: Int,filterDate: LocalDate) {
+        if (pageNumber == 0) originalReminders = listOf()
+        getRemindersJob?.cancel()
+        getRemindersJob = getRemindersWithPetsUseCase(pageNumber)
+            .onEach { reminders ->
+                if (pageNumber != 0 && reminders.isEmpty()) return@onEach
+                originalReminders = originalReminders + reminders.map {
+                    ReminderPetsJoinEntity(it)
+                }
+                remindersIsEmpty.set(originalReminders.isEmpty())
+                _listReminders.postValue(originalReminders)
+            }
+            .launchIn(viewModelScope)
     }
 }

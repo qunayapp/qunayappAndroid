@@ -20,6 +20,7 @@ import com.pe.mascotapp.vistas.ReminderActivity
 import com.pe.mascotapp.vistas.adapters.CalendarReminderAdapter
 import com.pe.mascotapp.vistas.adapters.DayCalendarEntity
 import com.pe.mascotapp.vistas.adapters.DaysAdapter
+import com.pe.mascotapp.vistas.adapters.ReminderAdapter
 import com.pe.mascotapp.vistas.adapters.ReminderPetsJoinEntity
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.internal.Util
@@ -30,7 +31,8 @@ import java.util.Locale
 class CalendarFragment : Fragment() {
     private val calendarViewModel: CalendarViewModel by viewModels()
     lateinit var binding: FragmentCalendarBinding
-    lateinit var selectedDate: LocalDate
+    private val viewModel: CalendarViewModel   by viewModels()
+            lateinit var selectedDate: LocalDate
     lateinit var savedDate: LocalDate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,11 +75,17 @@ class CalendarFragment : Fragment() {
             savedDate = selectedDate
             setWeekView()
             setViewDate(savedDate)
-            setReminderFilterByDate(savedDate)
+            viewModel.getReminders(0, savedDate )
             binding.gpDayVisibility.visibility = View.VISIBLE
             binding.calendarView.visibility = View.GONE
         }
-        setReminderFilterByDate(savedDate)
+        viewModel.getReminders(0, savedDate)
+        viewModel.listReminders.observe(viewLifecycleOwner) {
+            binding.rvReminders.apply {
+                this.adapter = CalendarReminderAdapter(it)
+                this.layoutManager = LinearLayoutManager(context)
+            }
+        }
         return binding.root;
     }
 
@@ -102,7 +110,7 @@ class CalendarFragment : Fragment() {
         val calendarAdapter = DaysAdapter(dayEntities){day, position ->
             savedDate=day
             selectedDate = day
-            setReminderFilterByDate(savedDate)
+            viewModel.getReminders(0, savedDate )
             setViewDate(day)
             setWeekView()
         }
@@ -112,22 +120,6 @@ class CalendarFragment : Fragment() {
         binding.calendarRecyclerView.setAdapter(calendarAdapter)
     }
 
-    private fun setReminderFilterByDate(filterDate:LocalDate){
-        val listFilter  = calendarViewModel.getReminders().onEach {
-            it.reminder.isActivated =
-                (filterDate == CalendarUtils.convertStringFormatToLocalDate(
-                    it.reminder.startDate,
-                    CalendarUtils.CONST_FORMAT
-                ) || filterDate == CalendarUtils.convertStringFormatToLocalDate(
-                    it.reminder.endDate,
-                    CalendarUtils.CONST_FORMAT
-                ))
-        }
-        binding.rvReminders.apply {
-            this.adapter = CalendarReminderAdapter(listFilter)
-            this.layoutManager = LinearLayoutManager(context)
-        }
-    }
 
 
 

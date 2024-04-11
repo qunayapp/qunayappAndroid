@@ -115,6 +115,7 @@ class ReminderViewModel
                 getPetUseCase().onEach { pets ->
                     _listPets.postValue(pets.map { it.toPetEntity() })
                 }.launchIn(viewModelScope)
+            setData()
         }
 
         private fun setData() {

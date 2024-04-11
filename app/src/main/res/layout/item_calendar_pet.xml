@@ -33,7 +33,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtInitDate"
-            android:text="@{reminder.endHour}"
+            android:text="@{reminder.endDate}"
             tools:text="13:50" />
 
         <androidx.cardview.widget.CardView
