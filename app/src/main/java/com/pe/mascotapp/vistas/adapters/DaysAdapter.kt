@@ -1,9 +1,9 @@
 package com.pe.mascotapp.vistas.adapters
 
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.R
@@ -18,13 +18,38 @@ class DaysAdapter(
 ) : RecyclerView.Adapter<DaysAdapter.DaysViewHolder>() {
 
     private var selectedPosition: Int = RecyclerView.NO_POSITION
-    private var dateSelected :LocalDate = LocalDate.now()
-    class DaysViewHolder( val binding: ItemDayBinding) :
+    private var dateSelected: LocalDate = LocalDate.now()
+
+    class DaysViewHolder(val binding: ItemDayBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(date: DayCalendarEntity) {
             binding.cellDayText.text = if (date == null) "" else
                 date.day.dayOfMonth.toString()
-            binding.cellDayLetter.text =     if (date == null) "" else CalendarUtils.getAbbreviatedDayName(date.day, Locale("es", "ES")).first().toString().toUpperCase()
+            binding.cellDayLetter.text =
+                if (date == null) "" else CalendarUtils.getAbbreviatedDayName(
+                    date.day,
+                    Locale("es", "ES")
+                ).first().toString().toUpperCase()
+            val  finalCounter = minOf(date.counter, 3)
+            repeat(finalCounter) {
+                val imageView = ImageView(binding.root.context).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                       15,
+                        15// Set your image width
+                        // Set your image height
+                    )
+                    setImageResource(R.drawable.ic_rectangle_border_28)
+                    setImageTintList(ContextCompat.getColorStateList(context, if (date.isSelected) R.color.white else  R.color.black ))
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    setPadding(
+                        2,
+                        2,
+                        2,
+                        2
+                    )
+                }
+                binding.llCounter.addView(imageView)
+            }
             if (date.isSelected) {
                 binding.parentView.setBackgroundResource(R.drawable.ic_rectangle_border_28)
                 binding.cellDayText.setTextColor(
@@ -39,8 +64,13 @@ class DaysAdapter(
                         R.color.white
                     )
                 )
-            }else{
-                binding.parentView.setBackgroundColor(ContextCompat.getColor(binding.parentView.context, R.color.white))
+            } else {
+                binding.parentView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.parentView.context,
+                        R.color.white
+                    )
+                )
                 binding.cellDayLetter.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
@@ -86,6 +116,8 @@ class DaysAdapter(
 }
 
 class DayCalendarEntity(
-   var  day: LocalDate,
-    var isSelected: Boolean,
+    val day: LocalDate,
+    val isSelected: Boolean,
+    val counter: Int
+
 )

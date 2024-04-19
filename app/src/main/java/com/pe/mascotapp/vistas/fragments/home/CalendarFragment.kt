@@ -57,7 +57,6 @@ class CalendarFragment : Fragment() {
             launchCreateReminder.launch(intent)
         }
         setViewDate(selectedDate)
-        setWeekView()
         binding.icCalLeft.setOnClickListener {
             previousWeekAction()
         }
@@ -75,12 +74,15 @@ class CalendarFragment : Fragment() {
             savedDate = selectedDate
             setWeekView()
             setViewDate(savedDate)
-            viewModel.getReminders(0, savedDate )
+            viewModel.getFilterReminders( savedDate )
             binding.gpDayVisibility.visibility = View.VISIBLE
             binding.calendarView.visibility = View.GONE
         }
         viewModel.getReminders(0, savedDate)
         viewModel.listReminders.observe(viewLifecycleOwner) {
+            setWeekView()
+        }
+        viewModel.listFilteredReminders.observe(viewLifecycleOwner){
             binding.rvReminders.apply {
                 this.adapter = CalendarReminderAdapter(it)
                 this.layoutManager = LinearLayoutManager(context)
@@ -106,11 +108,13 @@ class CalendarFragment : Fragment() {
     }
     private fun setWeekView() {
         val days: ArrayList<LocalDate> = CalendarUtils.daysInWeekArray(selectedDate)
-        val dayEntities =  ArrayList(days.map { DayCalendarEntity(it,it==savedDate) })
+        val dayCounts: Map<LocalDate?, Int> = viewModel.originalReminders.groupingBy { CalendarUtils.convertStringFormatToLocalDate(it.reminder.startDate, CalendarUtils.SECONDARY_FORMAT) }.eachCount()
+        val dayEntities =  ArrayList(days.map {
+            DayCalendarEntity(it,it==savedDate, dayCounts[it]?:0 ) })
         val calendarAdapter = DaysAdapter(dayEntities){day, position ->
             savedDate=day
             selectedDate = day
-            viewModel.getReminders(0, savedDate )
+            viewModel.getFilterReminders(savedDate )
             setViewDate(day)
             setWeekView()
         }

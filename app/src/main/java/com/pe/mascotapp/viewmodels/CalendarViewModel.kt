@@ -22,10 +22,12 @@ import javax.inject.Inject
 class CalendarViewModel @Inject constructor(
     private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
 ) : ViewModel() {
-    private var originalReminders = listOf<ReminderPetsJoinEntity>()
+    var originalReminders = listOf<ReminderPetsJoinEntity>()
     private var getRemindersJob: Job? = null
     private val _listReminders = MutableLiveData<List<ReminderPetsJoinEntity>>()
     val listReminders: LiveData<List<ReminderPetsJoinEntity>> = _listReminders
+    private val _listFilteredReminders= MutableLiveData<List<ReminderPetsJoinEntity>>()
+    val listFilteredReminders: LiveData<List<ReminderPetsJoinEntity>> = _listFilteredReminders
     val remindersIsEmpty: ObservableBoolean = ObservableBoolean(true)
 /*    fun getReminders(): List<ReminderPetsJoinEntity> {
 
@@ -129,5 +131,15 @@ class CalendarViewModel @Inject constructor(
                 _listReminders.postValue(originalReminders)
             }
             .launchIn(viewModelScope)
+    }
+
+    fun getFilterReminders(filterDate: LocalDate) {
+        val filteredReminders = originalReminders.filter { reminder ->
+                    // Add your condition here, for example:
+                    filterDate == CalendarUtils.convertStringFormatToLocalDate(reminder.reminder.startDate, CalendarUtils.SECONDARY_FORMAT) || filterDate == CalendarUtils.convertStringFormatToLocalDate(reminder.reminder.endDate, CalendarUtils.SECONDARY_FORMAT)
+                }
+
+        _listFilteredReminders.postValue(filteredReminders)
+
     }
 }

@@ -13,6 +13,7 @@ import java.util.Locale
 class CalendarUtils {
     companion object {
         const val CONST_FORMAT = "dd/MM/yyyy"
+        const val SECONDARY_FORMAT = "d 'de' MMM 'de' yyyy"
         fun getTime(
             year: Int,
             month: Int,
@@ -132,9 +133,17 @@ class CalendarUtils {
             calendar.set(Calendar.DAY_OF_MONTH, localDate.dayOfMonth)
             return calendar
         }
-        fun convertStringFormatToLocalDate(dateString: String,format:String):LocalDate{
-            val dateFormatter = DateTimeFormatter.ofPattern(format)
-            return  LocalDate.parse(dateString, dateFormatter)
+        fun convertStringFormatToLocalDate(dateString: String,format:String):LocalDate?{
+            if (dateString.isBlank()) {
+                return null
+            }
+            val dateFormatter = DateTimeFormatter.ofPattern(format,Locale("es", "ES"))
+            return  try {
+               LocalDate.parse(dateString, dateFormatter)
+
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 
