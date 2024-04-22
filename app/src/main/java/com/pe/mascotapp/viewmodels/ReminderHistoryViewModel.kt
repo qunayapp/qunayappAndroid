@@ -1,6 +1,5 @@
 package com.pe.mascotapp.viewmodels
 
-import android.util.Log
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,63 +20,75 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ReminderHistoryViewModel @Inject constructor(
-    private val getPetsUseCase: GetPetsUseCase,
-    private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
-    private val updateReminderUseCase: UpdateReminderUseCase
-) : ViewModel() {
+class ReminderHistoryViewModel
+    @Inject
+    constructor(
+        private val getPetsUseCase: GetPetsUseCase,
+        private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
+        private val updateReminderUseCase: UpdateReminderUseCase,
+    ) : ViewModel() {
+        val remindersIsEmpty: ObservableBoolean = ObservableBoolean(true)
 
-    val remindersIsEmpty: ObservableBoolean = ObservableBoolean(true)
+        private var getPetsJob: Job? = null
+        private var getRemindersJob: Job? = null
+        private var originalReminders = listOf<ReminderPetsJoinEntity>()
 
-    private var getPetsJob: Job? = null
-    private var getRemindersJob: Job? = null
-    private var originalReminders = listOf<ReminderPetsJoinEntity>()
+        private val _listPets = MutableLiveData<List<TabAnimalEntity>>()
+        val listPets: LiveData<List<TabAnimalEntity>> = _listPets
 
-    private val _listPets = MutableLiveData<List<TabAnimalEntity>>()
-    val listPets: LiveData<List<TabAnimalEntity>> = _listPets
+        private val _listReminders = MutableLiveData<List<ReminderPetsJoinEntity>>()
+        val listReminders: LiveData<List<ReminderPetsJoinEntity>> = _listReminders
 
-    private val _listReminders = MutableLiveData<List<ReminderPetsJoinEntity>>()
-    val listReminders: LiveData<List<ReminderPetsJoinEntity>> = _listReminders
+        init {
+            remindersIsEmpty.set(true)
+        }
 
-    init {
-        remindersIsEmpty.set(true)
-    }
+        fun getAnimalTabs() {
+            getPetsJob?.cancel()
+            getPetsJob =
+                getPetsUseCase()
+                    .onEach { pets ->
+                        var listTempPets = listOf(TabAnimalEntity(null, true, "Todos", ""))
+                        listTempPets = listTempPets +
+                            pets.map {
+                                TabAnimalEntity(it.petId, false, it.name, it.image)
+                            }
+                        _listPets.postValue(listTempPets)
+                    }
+                    .launchIn(viewModelScope)
+        }
 
-    fun getAnimalTabs() {
-        getPetsJob?.cancel()
-        getPetsJob = getPetsUseCase()
-            .onEach { pets ->
-                var listTempPets = listOf(TabAnimalEntity(null, true, "Todos", ""))
-                listTempPets = listTempPets + pets.map {
-                    TabAnimalEntity(it.petId, false, it.name, it.image)
+        fun getReminders(pageNumber: Int) {
+            getRemindersJob?.cancel()
+            getRemindersJob =
+                getRemindersWithPetsUseCase(pageNumber)
+                    .onEach { reminders ->
+                        if (pageNumber == 0) {
+                            originalReminders = listOf()
+                        }
+                        if (pageNumber != 0 && reminders.isEmpty()) {
+                            return@onEach
+                        }
+                        originalReminders = originalReminders + reminders.map { ReminderPetsJoinEntity(it) }
+                        remindersIsEmpty.set(originalReminders.isEmpty())
+                        _listReminders.postValue(originalReminders)
+                    }
+                    .launchIn(viewModelScope)
+        }
+
+        fun updateReminder(reminderEntity: ReminderEntity) {
+            viewModelScope.launch(Dispatchers.IO) {
+                updateReminderUseCase.invoke(reminderEntity.toReminder())
+            }
+        }
+
+        fun filterPets(id: Long?) {
+            val filterList =
+                if (id != null) {
+                    originalReminders.filter { it.pets.firstOrNull { it.petId == id } != null }
+                } else {
+                    originalReminders
                 }
-                _listPets.postValue(listTempPets)
-            }
-            .launchIn(viewModelScope)
-    }
-
-    fun getReminders(pageNumber: Int) {
-        if (pageNumber == 0) originalReminders = listOf()
-        getRemindersJob?.cancel()
-        getRemindersJob = getRemindersWithPetsUseCase(pageNumber)
-            .onEach { reminders ->
-                if (pageNumber != 0 && reminders.isEmpty()) return@onEach
-                originalReminders = originalReminders + reminders.map { ReminderPetsJoinEntity(it) }
-                remindersIsEmpty.set(originalReminders.isEmpty())
-                _listReminders.postValue(originalReminders)
-            }
-            .launchIn(viewModelScope)
-    }
-
-    fun updateReminder(reminderEntity: ReminderEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            updateReminderUseCase.invoke(reminderEntity.toReminder())
+            _listReminders.postValue(filterList)
         }
     }
-
-    fun filterPets(id: Long?) {
-        val filterList = if (id != null) originalReminders.filter { it.pets.firstOrNull { it.petId == id } != null }
-        else originalReminders
-        _listReminders.postValue(filterList)
-    }
-}

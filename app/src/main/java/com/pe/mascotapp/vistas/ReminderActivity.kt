@@ -26,7 +26,10 @@ import com.pe.mascotapp.vistas.adapters.CategoryReminderAdapter
 import com.pe.mascotapp.vistas.adapters.ImageGalleryAdapter
 import com.pe.mascotapp.vistas.adapters.OptionViewInterface
 import com.pe.mascotapp.vistas.adapters.PetAdapter
+import com.pe.mascotapp.vistas.adapters.ReminderPetsJoinEntity
+import com.pe.mascotapp.vistas.adapters.TypeOption
 import com.pe.mascotapp.vistas.adapters.VaccineFieldAdapter
+import com.pe.mascotapp.vistas.adapters.mapValueTextOption
 import com.pe.mascotapp.vistas.dialogs.DialogOption
 import com.pe.mascotapp.vistas.entities.VaccineFieldEntity
 import dagger.hilt.android.AndroidEntryPoint
@@ -154,10 +157,26 @@ class ReminderActivity : AppCompatActivity() {
 
         binding = ActivityReminderBinding.inflate(layoutInflater)
         binding.reminderViewModel = viewModel
-
+        val reminderPetsJoinEntity = intent.getParcelableExtra<ReminderPetsJoinEntity>("BUNDLE_REMINDER")
+        reminderPetsJoinEntity?.let {
+            binding.nameReminder.setText(it.reminder.title)
+            binding.edtDescription.setText(it.reminder.description)
+            binding.tvDateStart.text = it.reminder.startDate
+            binding.tvHourStart.text = it.reminder.startHour
+            binding.tvRepeat.text = "${it.reminder.repeatOption.mapValueTextOption()} ${it.reminder.countRepeatOption}"
+            binding.tvAddDuration.text =
+                when (it.reminder.durationTypeRepeat) {
+                    TypeOption.COUNTER -> " ${it.reminder.countRepeatOption} veces"
+                    TypeOption.TEXT -> "Para siempre"
+                    TypeOption.DATE -> it.reminder.durationRepeat
+                    null -> "+ Anadir Duracion"
+                }
+            binding.tvAlarm.text = "${it.reminder.alarm} ${it.reminder.alarmOption.mapValueTextOption()}"
+            viewModel.enableForm.set(true)
+        }
+        viewModel.initValues(intent.getParcelableExtra("BUNDLE_REMINDER"))
         viewModel.getSelectCategories()
         viewModel.getPets()
-
         checkPermission()
 
         alarmEventHelper.createChannel()
