@@ -5,14 +5,25 @@ import com.pe.mascotapp.domain.models.ReminderWithPets
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetRemindersWithPetsUseCase @Inject constructor(
-    private val reminderPetJoinRepository: ReminderPetJoinRepository
-) {
-    operator fun invoke(pageNumber: Int? = null): Flow<List<ReminderWithPets>> {
-        pageNumber?.let {
-            return reminderPetJoinRepository.getReminderPet(30,pageNumber)
+class GetRemindersWithPetsUseCase
+    @Inject
+    constructor(
+        private val reminderPetJoinRepository: ReminderPetJoinRepository,
+    ) {
+        operator fun invoke(pageNumber: Int? = null): Flow<List<ReminderWithPets>> {
+            pageNumber?.let {
+                return reminderPetJoinRepository.getReminderPet(30, pageNumber)
+            }
+            return reminderPetJoinRepository.getAllReminders()
         }
-        return reminderPetJoinRepository.getAllReminders()
     }
-}
 
+class DeleteReminderWithPets
+    @Inject
+    constructor(
+        private val reminderPetJoinRepository: ReminderPetJoinRepository,
+    ) {
+        operator fun invoke(reminderId: Long) {
+            reminderPetJoinRepository.deleteReminder(reminderId)
+        }
+    }

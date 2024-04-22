@@ -269,6 +269,24 @@ enum class ValueTextOption {
     DAYS,
 }
 
+fun ValueTextOption.mapValueTextOption(): String {
+    return when (this) {
+        ValueTextOption.DONT_REPEAT -> "No Repetir"
+        ValueTextOption.ALL_DAYS -> "Cada dia"
+        ValueTextOption.MONDAY_FRIDAY -> ""
+        ValueTextOption.ALL_WEEKS -> "Cada semana"
+        ValueTextOption.ALL_MONTHS -> "Cada mes"
+        ValueTextOption.ALL_YEARS -> "Cada año"
+        ValueTextOption.MINUTES_15 -> ""
+        ValueTextOption.MINUTES_30 -> ""
+        ValueTextOption.MINUTES_HOUR -> ""
+        ValueTextOption.FOR_EVER -> "Para siempre"
+        ValueTextOption.MINUTES -> "minutos"
+        ValueTextOption.HOUR -> "horas"
+        ValueTextOption.DAYS -> "dias"
+    }
+}
+
 data class TextOption(
     val name: String,
     val value: ValueTextOption,

@@ -1,6 +1,8 @@
 package com.pe.mascotapp.vistas.entities
 
+import android.os.Parcelable
 import com.pe.mascotapp.R
+import kotlinx.parcelize.Parcelize
 
 enum class CATEGORYID {
     VACCINE,
@@ -12,85 +14,94 @@ enum class CATEGORYID {
     WALK,
     TAKESHOWER,
     WATERFOOD,
-    OTHERS
+    OTHERS,
 }
 
 sealed class CategoryReminderEntity(
     open val categoryId: CATEGORYID,
     open var isSelected: Boolean,
     open val name: String,
-    open val image: Int
-) {
+    open val image: Int,
+) : Parcelable {
+    @Parcelize
     class VaccineReminder : CategoryReminderEntity(
         CATEGORYID.VACCINE,
         false,
         "Vacuna",
-        R.drawable.ic_vaccine
+        R.drawable.ic_vaccine,
     )
 
+    @Parcelize
     class Deworming : CategoryReminderEntity(
         CATEGORYID.DEWORNING,
         false,
         "Desparasitación",
-        R.drawable.ic_bacterias
+        R.drawable.ic_bacterias,
     )
 
+    @Parcelize
     class VetReminder : CategoryReminderEntity(
         CATEGORYID.VET,
         false,
         "Veterinario",
-        R.drawable.ic_vet
+        R.drawable.ic_vet,
     )
 
+    @Parcelize
     class AnalysisReminder : CategoryReminderEntity(
         CATEGORYID.ANALYSIS,
         false,
         "Análisis",
-        R.drawable.ic_analysis
+        R.drawable.ic_analysis,
     )
 
+    @Parcelize
     class MedicineReminder : CategoryReminderEntity(
         CATEGORYID.MEDICINE,
         false,
         "Medicina",
-        R.drawable.ic_medicine
+        R.drawable.ic_medicine,
     )
 
+    @Parcelize
     class DentalReminder : CategoryReminderEntity(
         CATEGORYID.DENTAL,
         false,
         "Profilaxis Dental",
-        R.drawable.ic_dental_prophylaxis
+        R.drawable.ic_dental_prophylaxis,
     )
 
+    @Parcelize
     class WalkReminder : CategoryReminderEntity(
         CATEGORYID.WALK,
         false,
         "Paseo",
-        R.drawable.ic_walk
+        R.drawable.ic_walk,
     )
 
+    @Parcelize
     class TakeShowerReminder : CategoryReminderEntity(
         CATEGORYID.TAKESHOWER,
         false,
         "Baño y Corte",
-        R.drawable.ic_take_shower
+        R.drawable.ic_take_shower,
     )
 
+    @Parcelize
     class WaterFoodReminder : CategoryReminderEntity(
         CATEGORYID.WATERFOOD,
         false,
         "Agua y Comida",
-        R.drawable.ic_water_food
+        R.drawable.ic_water_food,
     )
 
+    @Parcelize
     class OthersReminder : CategoryReminderEntity(
         CATEGORYID.OTHERS,
         false,
         "Otros",
-        R.drawable.ic_others
+        R.drawable.ic_others,
     )
-
 
     companion object {
         fun getReminder(categoryId: CATEGORYID): CategoryReminderEntity {
@@ -119,7 +130,7 @@ sealed class CategoryReminderEntity(
                 WalkReminder(),
                 TakeShowerReminder(),
                 WaterFoodReminder(),
-                OthersReminder()
+                OthersReminder(),
             )
         }
     }

@@ -3,7 +3,6 @@ package com.pe.mascotapp.vistas.fragments.home
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +19,8 @@ import com.pe.mascotapp.vistas.adapters.ReminderAdapter
 import com.pe.mascotapp.vistas.adapters.TabAnimalAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class ReminderFragment : Fragment() {
-
     private val viewModel: ReminderHistoryViewModel by viewModels()
     var pageNumber: Int = 0
 
@@ -35,24 +32,37 @@ class ReminderFragment : Fragment() {
             }
         }
 
+    private val launchUpdateReminder =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                pageNumber = 0
+                viewModel.getReminders(pageNumber)
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
         binding.reminderViewModel = viewModel
         binding.rvAnimalsReminder.apply {
-            this.adapter = TabAnimalAdapter(listOf()) {
-                viewModel.filterPets(it)
-            }
+            this.adapter =
+                TabAnimalAdapter(listOf()) {
+                    viewModel.filterPets(it)
+                }
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         }
         binding.rvReminders.apply {
-            this.adapter = ReminderAdapter(listOf()) {
-                Log.e("quack", it.isActivated.toString())
-                viewModel.updateReminder(it)
-            }
+            this.adapter =
+                ReminderAdapter(listOf(), {
+                    viewModel.updateReminder(it)
+                }, {
+                    val intent = Intent(activity, ReminderActivity::class.java)
+                    intent.putExtra("BUNDLE_REMINDER", it)
+                    launchUpdateReminder.launch(intent)
+                })
             this.layoutManager = LinearLayoutManager(context)
         }
         binding.btnAddNew.setOnClickListener {
@@ -64,12 +74,14 @@ class ReminderFragment : Fragment() {
             launchCreateReminder.launch(intent)
         }
 
-        binding.nsvReminders.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
-            if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
-                pageNumber++
-                viewModel.getReminders(pageNumber)
-            }
-        })
+        binding.nsvReminders.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
+                if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
+                    pageNumber++
+                    viewModel.getReminders(pageNumber)
+                }
+            },
+        )
         viewModel.listPets.observe(viewLifecycleOwner) {
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).tabAnimals = it
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).notifyDataSetChanged()

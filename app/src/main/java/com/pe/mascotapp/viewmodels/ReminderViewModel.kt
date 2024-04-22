@@ -1,7 +1,6 @@
 package com.pe.mascotapp.viewmodels
 
 import android.net.Uri
-import android.util.Log
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,10 +10,12 @@ import com.pe.mascotapp.domain.models.Pet
 import com.pe.mascotapp.domain.models.ReminderPetJoin
 import com.pe.mascotapp.domain.models.ReminderWithPets
 import com.pe.mascotapp.domain.models.Sex
+import com.pe.mascotapp.domain.usecases.DeleteReminderWithPets
 import com.pe.mascotapp.domain.usecases.GetPetsUseCase
 import com.pe.mascotapp.domain.usecases.InsertPetUseCase
 import com.pe.mascotapp.domain.usecases.InsertReminderUseCase
 import com.pe.mascotapp.domain.usecases.InsertReminderWithPetsUseCase
+import com.pe.mascotapp.domain.usecases.UpdateReminderUseCase
 import com.pe.mascotapp.utils.CalendarUtils
 import com.pe.mascotapp.vistas.adapters.CalendarOptionNormal
 import com.pe.mascotapp.vistas.adapters.CalendarSimple
@@ -41,9 +42,11 @@ class ReminderViewModel
     @Inject
     constructor(
         val insertReminderWithPetsUseCase: InsertReminderWithPetsUseCase,
+        val updateReminderUseCase: UpdateReminderUseCase,
         val insertReminderUseCase: InsertReminderUseCase,
         val insertPetUseCase: InsertPetUseCase,
         val getPetUseCase: GetPetsUseCase,
+        val deleteReminderWithPets: DeleteReminderWithPets,
     ) : ViewModel() {
         private val _categoriesReminder = MutableLiveData<List<CategoryReminderEntity>>()
         val categoriesReminder: LiveData<List<CategoryReminderEntity>> = _categoriesReminder
@@ -53,9 +56,9 @@ class ReminderViewModel
 
         private var getPetsJob: Job? = null
 
-        private val reminderEntity: ReminderEntity = ReminderEntity()
+        private var reminderEntity: ReminderEntity = ReminderEntity()
 
-        private val reminderPetsJoin: ReminderPetsJoinEntity = ReminderPetsJoinEntity(ReminderEntity(), listOf())
+        private var reminderPetsJoin: ReminderPetsJoinEntity = ReminderPetsJoinEntity(ReminderEntity(), listOf())
 
         val listVaccines = mutableListOf(VaccineFieldEntity())
 
@@ -85,12 +88,33 @@ class ReminderViewModel
         private val _reminderWithPets = MutableLiveData<ReminderWithPets>()
         val reminderWithPets: LiveData<ReminderWithPets> = _reminderWithPets
 
+        enum class ActionReminder {
+            UPDATE,
+            CREATE,
+        }
+
+        private var action: ActionReminder = ActionReminder.CREATE
+
         init {
             enableForm.set(false)
         }
 
+        fun initValues(reminderPetsJoinEntity: ReminderPetsJoinEntity?) {
+            reminderPetsJoinEntity?.let {
+                action = ActionReminder.UPDATE
+                this.reminderPetsJoin = it
+                this.reminderEntity = it.reminder
+            }
+        }
+
         fun getSelectCategories() {
-            _categoriesReminder.postValue(CategoryReminderEntity.getCategories())
+            val categories = CategoryReminderEntity.getCategories()
+            if (action == ActionReminder.UPDATE) {
+                reminderPetsJoin.reminder.categoryReminder.let { category ->
+                    categories.firstOrNull { category?.name == it.name }?.isSelected = true
+                }
+            }
+            _categoriesReminder.postValue(categories)
         }
 
         fun selectAnimalEntity() {
@@ -113,7 +137,16 @@ class ReminderViewModel
             getPetsJob?.cancel()
             getPetsJob =
                 getPetUseCase().onEach { pets ->
-                    _listPets.postValue(pets.map { it.toPetEntity() })
+                    _listPets.postValue(
+                        pets.map {
+                            val petEntity = it.toPetEntity()
+                            petEntity.isSelected =
+                                reminderPetsJoin.pets.let {
+                                    it.firstOrNull { it.name == petEntity.name } != null
+                                }
+                            petEntity
+                        },
+                    )
                 }.launchIn(viewModelScope)
             setData()
         }
@@ -157,7 +190,6 @@ class ReminderViewModel
                         ),
                     )
                 pets.forEach {
-                    Log.e("quack", "Asdf")
                     insertPetUseCase(
                         Pet(
                             image = it.image,
@@ -324,19 +356,34 @@ class ReminderViewModel
             viewModelScope.launch {
                 try {
                     _loading.postValue(true)
-                    val reminderId = insertReminderUseCase(reminderEntity.toReminder())
-                    reminderEntity.reminderId = reminderId
-                    reminderPetsJoin.reminder = reminderEntity
-                    reminderPetsJoin.pets.forEach {
-                        insertReminderWithPetsUseCase(ReminderPetJoin(reminderId, it.petId ?: 0))
+                    if (action == ActionReminder.UPDATE) {
+                        updateReminderUseCase(reminderPetsJoin.reminder.toReminder())
+                        reminderPetsJoin.reminder.reminderId?.let { deleteReminderWithPets(it) }
+                        reminderPetsJoin.pets.forEach {
+                            insertReminderWithPetsUseCase(ReminderPetJoin(reminderPetsJoin.reminder.reminderId ?: 0, it.petId ?: 0))
+                        }
+                        _reminderWithPets.postValue(
+                            ReminderWithPets(
+                                reminderPetsJoin.reminder.toReminder(),
+                                reminderPetsJoin.pets.map { it.toPet() },
+                            ),
+                        )
+                        _loading.postValue(false)
+                    } else {
+                        val reminderId = insertReminderUseCase(reminderEntity.toReminder())
+                        reminderEntity.reminderId = reminderId
+                        reminderPetsJoin.reminder = reminderEntity
+                        reminderPetsJoin.pets.forEach {
+                            insertReminderWithPetsUseCase(ReminderPetJoin(reminderId, it.petId ?: 0))
+                        }
+                        _reminderWithPets.postValue(
+                            ReminderWithPets(
+                                reminderPetsJoin.reminder.toReminder(),
+                                reminderPetsJoin.pets.map { it.toPet() },
+                            ),
+                        )
+                        _loading.postValue(false)
                     }
-                    _reminderWithPets.postValue(
-                        ReminderWithPets(
-                            reminderPetsJoin.reminder.toReminder(),
-                            reminderPetsJoin.pets.map { it.toPet() },
-                        ),
-                    )
-                    _loading.postValue(false)
                 } catch (e: Exception) {
                     _showErrorDialog.postValue(e.localizedMessage)
                 }

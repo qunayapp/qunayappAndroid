@@ -27,4 +27,7 @@ interface ReminderPetJoinDao {
 
     @Query("SELECT * FROM reminderpetjoin LIMIT 30 OFFSET :pageNumber")
     fun getReminders(pageNumber: Int): Flow<List<ReminderPetJoin>>
+
+    @Query("DELETE FROM reminderpetjoin WHERE reminderId = :reminderId")
+    fun deleteReminder(reminderId: Long)
 }

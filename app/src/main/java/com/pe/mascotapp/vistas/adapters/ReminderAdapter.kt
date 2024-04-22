@@ -1,7 +1,7 @@
 package com.pe.mascotapp.vistas.adapters
 
 import android.graphics.PorterDuff
-import android.util.Log
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -14,14 +14,20 @@ import com.pe.mascotapp.extentions.changeTintColor
 import com.pe.mascotapp.vistas.entities.CATEGORYID
 import com.pe.mascotapp.vistas.entities.CategoryReminderEntity
 import com.pe.mascotapp.vistas.entities.PetEntity
+import kotlinx.parcelize.Parcelize
 
-class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>, val updateReminder: (ReminderEntity) -> Unit) :
+class ReminderAdapter(
+    var reminders: List<ReminderPetsJoinEntity>,
+    val updateReminder: (ReminderEntity) -> Unit,
+    val navigateEditReminder: (ReminderPetsJoinEntity) -> Unit,
+) :
     RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
     class ReminderViewHolder(private val binding: ItemReminderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
             reminderPets: ReminderPetsJoinEntity,
             updateReminder: (ReminderEntity) -> Unit,
+            navigateEditReminder: (ReminderPetsJoinEntity) -> Unit,
         ) {
             binding.reminderPets = reminderPets
             binding.ivReminder.setImageDrawable(
@@ -32,10 +38,12 @@ class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>, val updateRem
                     )
                 },
             )
+            binding.ivEditReminder.setOnClickListener {
+                navigateEditReminder(reminderPets)
+            }
             handleState(reminderPets.reminder.isActivated)
             binding.swReminder.setOnCheckedChangeListener { _, isChecked ->
                 reminderPets.reminder.isActivated = isChecked
-                Log.e("quack", reminderPets.reminder.isActivated.toString())
                 updateReminder(reminderPets.reminder)
                 handleState(reminderPets.reminder.isActivated)
             }
@@ -119,14 +127,15 @@ class ReminderAdapter(var reminders: List<ReminderPetsJoinEntity>, val updateRem
         holder: ReminderViewHolder,
         position: Int,
     ) {
-        holder.bind(reminders[position], updateReminder)
+        holder.bind(reminders[position], updateReminder, navigateEditReminder)
     }
 }
 
+@Parcelize
 class ReminderPetsJoinEntity(
     var reminder: ReminderEntity,
     var pets: List<PetEntity>,
-) {
+) : Parcelable {
     constructor(reminder: ReminderWithPets) : this(
         reminder.reminder.toReminderEntity(),
         reminder.pets.map { it.toPetEntity() },
@@ -143,6 +152,7 @@ class ReminderPetsJoinEntity(
 
 }
 
+@Parcelize
 class ReminderEntity(
     var reminderId: Long? = null,
     var title: String = "",
@@ -161,7 +171,7 @@ class ReminderEntity(
     var times: Int = 0,
     var durationTypeRepeat: TypeOption? = null,
     var durationRepeat: String? = null,
-) {
+) : Parcelable {
     fun toReminder(): Reminder {
         return Reminder(
             reminderId = reminderId,
