@@ -138,6 +138,7 @@ class ReminderViewModel
             getPetsJob?.cancel()
             getPetsJob =
                 getPetUseCase().onEach { pets ->
+                    if (pets.isEmpty()) setData()
                     _listPets.postValue(
                         pets.map {
                             val petEntity = it.toPetEntity()
@@ -149,7 +150,6 @@ class ReminderViewModel
                         },
                     )
                 }.launchIn(viewModelScope)
-            setData()
         }
 
         private fun setData() {

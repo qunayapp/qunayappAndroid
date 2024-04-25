@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.databinding.ActivityReminderBinding
 import com.pe.mascotapp.notifications.AlarmEventHelper
+import com.pe.mascotapp.utils.CalendarUtils
 import com.pe.mascotapp.viewmodels.ReminderViewModel
 import com.pe.mascotapp.vistas.adapters.CategoryReminderAdapter
 import com.pe.mascotapp.vistas.adapters.ImageGalleryAdapter
@@ -161,7 +162,7 @@ class ReminderActivity : AppCompatActivity() {
         reminderPetsJoinEntity?.let {
             binding.nameReminder.setText(it.reminder.title)
             binding.edtDescription.setText(it.reminder.description)
-            binding.tvDateStart.text = it.reminder.startDate
+            binding.tvDateStart.text =  CalendarUtils.getFormatDate(CalendarUtils.stringToDate(it.reminder.startDate,CalendarUtils.CONST_FORMAT))
             binding.tvHourStart.text = it.reminder.startHour
             binding.tvRepeat.text = "${it.reminder.repeatOption.mapValueTextOption()}  ${it.reminder?.countRepeatOption ?: ""}"
             binding.tvAddDuration.text =
