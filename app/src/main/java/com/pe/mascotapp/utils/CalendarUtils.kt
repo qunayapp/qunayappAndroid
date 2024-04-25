@@ -39,6 +39,16 @@ class CalendarUtils {
             return sdf.format(date)
         }
 
+        fun getFormatDate4(date: Date): String {
+            val sdf = SimpleDateFormat(CONST_FORMAT, Locale("es", "ES"))
+            return sdf.format(date.time)
+        }
+
+        fun parseDate(dateString: String): Date {
+            val format = SimpleDateFormat("HH:mm dd/MM/yyyy", Locale("es", "ES"))
+            return format.parse(dateString) ?: Date()
+        }
+
         fun convertirFechaATime(fechaString: String): Date? {
             val formato = SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("es", "ES"))
             return try {

@@ -129,6 +129,7 @@ class CalendarViewModel @Inject constructor(
                 }
                 remindersIsEmpty.set(originalReminders.isEmpty())
                 _listReminders.postValue(originalReminders)
+                getFilterReminders(filterDate)
             }
             .launchIn(viewModelScope)
     }
@@ -136,8 +137,8 @@ class CalendarViewModel @Inject constructor(
     fun getFilterReminders(filterDate: LocalDate) {
         val filteredReminders = originalReminders.filter { reminder ->
                     // Add your condition here, for example:
-                    filterDate == CalendarUtils.convertStringFormatToLocalDate(reminder.reminder.startDate, CalendarUtils.SECONDARY_FORMAT) || filterDate == CalendarUtils.convertStringFormatToLocalDate(reminder.reminder.endDate, CalendarUtils.SECONDARY_FORMAT)
-                }
+                    filterDate == CalendarUtils.convertStringFormatToLocalDate(reminder.reminder.startDate, CalendarUtils.CONST_FORMAT)
+                }.sortedBy { CalendarUtils.parseDate( "${it.reminder.startHour} ${it.reminder.startDate}") }
 
         _listFilteredReminders.postValue(filteredReminders)
 

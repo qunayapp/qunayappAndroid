@@ -113,7 +113,7 @@
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/icDate"
                     app:layout_constraintTop_toBottomOf="@+id/txtPetName"
-                    android:text="@{reminder.startHour+ '-' +reminder.startDate}"
+                    android:text="@{reminder.startHour+ ' '+'-'+' ' +reminder.startDate}"
                     tools:text="11:35 am - 15/18/21" />
 
                 <ImageView

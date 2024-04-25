@@ -151,8 +151,7 @@ class AlarmEventHelper(private val applicationContext: Context) {
                 dateTempReminder?.let {
                     Log.d("MyWorker", alarm.toString())
                     val title =
-                        "Recuerda que despues de $alarm ${reminder.reminder.alarmOption} " +
-                            reminder.reminder.startHour + " " + reminder.reminder.title + " " +
+                        "Recuerda que en $alarm ${reminder.reminder.alarmOption} , a las ${reminder.reminder.startHour}, tienes " + reminder.reminder.title + " de " +
                             reminder.pets.joinToString(",") { it.name }
                     val description = reminder.reminder.description
                     scheduleNotification(reminder.reminder.reminderId?.toInt() ?: 0, title, description, it)

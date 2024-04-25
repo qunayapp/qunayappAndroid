@@ -262,7 +262,7 @@ class ReminderViewModel
 
         fun getStartDateSelected(): String? {
             return (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
-                reminderEntity.startDate = CalendarUtils.getFormatDate2(it)
+                reminderEntity.startDate = CalendarUtils.getFormatDate4(it)
                 CalendarUtils.getFormatDate(it)
             }
         }

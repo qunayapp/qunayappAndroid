@@ -108,7 +108,7 @@ class CalendarFragment : Fragment() {
     }
     private fun setWeekView() {
         val days: ArrayList<LocalDate> = CalendarUtils.daysInWeekArray(selectedDate)
-        val dayCounts: Map<LocalDate?, Int> = viewModel.originalReminders.groupingBy { CalendarUtils.convertStringFormatToLocalDate(it.reminder.startDate, CalendarUtils.SECONDARY_FORMAT) }.eachCount()
+        val dayCounts: Map<LocalDate?, Int> = viewModel.originalReminders.groupingBy { CalendarUtils.convertStringFormatToLocalDate(it.reminder.startDate, CalendarUtils.CONST_FORMAT) }.eachCount()
         val dayEntities =  ArrayList(days.map {
             DayCalendarEntity(it,it==savedDate, dayCounts[it]?:0 ) })
         val calendarAdapter = DaysAdapter(dayEntities){day, position ->
