@@ -165,6 +165,7 @@ class ReminderEntity(
     var times: Int = 0,
     var durationTypeRepeat: TypeOption? = null,
     var durationRepeat: String? = null,
+    var vaccines: List<String> = listOf(),
 ) : Parcelable {
     fun toReminder(): Reminder {
         return Reminder(
@@ -186,6 +187,7 @@ class ReminderEntity(
             startHour = this.startHour,
             times = this.times,
             countRepeatOption = this.countRepeatOption,
+            vaccines = this.vaccines,
         )
     }
 }

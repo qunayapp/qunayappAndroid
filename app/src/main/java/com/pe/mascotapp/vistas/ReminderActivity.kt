@@ -163,7 +163,7 @@ class ReminderActivity : AppCompatActivity() {
             binding.edtDescription.setText(it.reminder.description)
             binding.tvDateStart.text = it.reminder.startDate
             binding.tvHourStart.text = it.reminder.startHour
-            binding.tvRepeat.text = "${it.reminder.repeatOption.mapValueTextOption()} ${it.reminder.countRepeatOption}"
+            binding.tvRepeat.text = "${it.reminder.repeatOption.mapValueTextOption()}  ${it.reminder?.countRepeatOption ?: ""}"
             binding.tvAddDuration.text =
                 when (it.reminder.durationTypeRepeat) {
                     TypeOption.COUNTER -> " ${it.reminder.countRepeatOption} veces"
