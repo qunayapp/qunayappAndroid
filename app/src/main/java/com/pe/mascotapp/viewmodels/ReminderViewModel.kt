@@ -60,7 +60,7 @@ class ReminderViewModel
 
         private var reminderPetsJoin: ReminderPetsJoinEntity = ReminderPetsJoinEntity(ReminderEntity(), listOf())
 
-        val listVaccines = mutableListOf(VaccineFieldEntity())
+        var listVaccines = mutableListOf(VaccineFieldEntity())
 
         val enableForm: ObservableBoolean = ObservableBoolean(false)
 
@@ -104,6 +104,7 @@ class ReminderViewModel
                 action = ActionReminder.UPDATE
                 this.reminderPetsJoin = it
                 this.reminderEntity = it.reminder
+                listVaccines = it.reminder.vaccines.map { VaccineFieldEntity(it) }.toMutableList()
             }
         }
 
@@ -357,6 +358,10 @@ class ReminderViewModel
                 try {
                     _loading.postValue(true)
                     if (action == ActionReminder.UPDATE) {
+                        reminderPetsJoin.reminder.vaccines =
+                            listVaccines.mapNotNull {
+                                it.nameSelected.ifEmpty { null }
+                            }
                         updateReminderUseCase(reminderPetsJoin.reminder.toReminder())
                         reminderPetsJoin.reminder.reminderId?.let { deleteReminderWithPets(it) }
                         reminderPetsJoin.pets.forEach {
@@ -370,6 +375,10 @@ class ReminderViewModel
                         )
                         _loading.postValue(false)
                     } else {
+                        reminderEntity.vaccines =
+                            listVaccines.mapNotNull {
+                                it.nameSelected.ifEmpty { null }
+                            }
                         val reminderId = insertReminderUseCase(reminderEntity.toReminder())
                         reminderEntity.reminderId = reminderId
                         reminderPetsJoin.reminder = reminderEntity

@@ -32,6 +32,7 @@ data class Reminder(
     val times: Int,
     val durationTypeRepeat: TypeOption?,
     val durationRepeat: String?,
+    val vaccines: List<String>,
 ) {
     fun alarmsPassed(): Boolean {
         return countRepeatOption == times
@@ -56,6 +57,7 @@ data class Reminder(
             this.times,
             this.durationTypeRepeat,
             this.durationRepeat,
+            this.vaccines,
         )
     }
 }

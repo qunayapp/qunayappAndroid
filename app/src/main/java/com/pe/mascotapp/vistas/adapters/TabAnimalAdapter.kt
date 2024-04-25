@@ -10,12 +10,14 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.TabAnimalBinding
 import com.pe.mascotapp.vistas.entities.TabAnimalEntity
 
-class TabAnimalAdapter(var tabAnimals: List<TabAnimalEntity>, val onClickTab: (id:Long?) -> Unit) :
+class TabAnimalAdapter(var tabAnimals: List<TabAnimalEntity>, val onClickTab: (id: Long?) -> Unit) :
     RecyclerView.Adapter<TabAnimalAdapter.TabAnimalViewHolder>() {
-
     private var positionSelected = 0
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabAnimalViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): TabAnimalViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = TabAnimalBinding.inflate(layoutInflater, parent, false)
         return TabAnimalViewHolder(binding)
@@ -23,7 +25,10 @@ class TabAnimalAdapter(var tabAnimals: List<TabAnimalEntity>, val onClickTab: (i
 
     override fun getItemCount(): Int = tabAnimals.size
 
-    override fun onBindViewHolder(holder: TabAnimalViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: TabAnimalViewHolder,
+        position: Int,
+    ) {
         val animal = tabAnimals[position]
         holder.bind(animal)
         holder.itemView.setOnClickListener {
@@ -44,15 +49,16 @@ class TabAnimalAdapter(var tabAnimals: List<TabAnimalEntity>, val onClickTab: (i
             val background =
                 if (animal.isSelected) R.drawable.ic_tab_selected else R.drawable.ic_tab_normal
             val textColor = if (animal.isSelected) R.color.white else R.color.third
-            binding.llTab.background = ResourcesCompat.getDrawable(
-                binding.root.resources,
-                background,
-                binding.root.context.theme
-            )
+            binding.llTab.background =
+                ResourcesCompat.getDrawable(
+                    binding.root.resources,
+                    background,
+                    binding.root.context.theme,
+                )
             Glide.with(binding.root.context)
                 .load(animal.image)
-                .placeholder(R.drawable.perro1)
-                .error(R.drawable.perro1)
+                .placeholder(R.drawable.ic_qunay_default)
+                .error(R.drawable.ic_qunay_default)
                 .into(binding.ivTabAnimal)
             if (animal.isSelected) {
                 binding.ivTabAnimal.strokeColor =
@@ -63,4 +69,3 @@ class TabAnimalAdapter(var tabAnimals: List<TabAnimalEntity>, val onClickTab: (i
         }
     }
 }
-

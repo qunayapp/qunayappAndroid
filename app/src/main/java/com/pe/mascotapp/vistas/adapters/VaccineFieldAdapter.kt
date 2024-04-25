@@ -12,30 +12,35 @@ import com.pe.mascotapp.vistas.entities.VaccineFieldEntity
 class VaccineFieldAdapter(
     private val vaccineFields: List<VaccineFieldEntity>,
     var addVaccineField: () -> Unit = {},
-    var removeVaccine: (position: Int) -> Unit = {}
+    var removeVaccine: (position: Int) -> Unit = {},
 ) :
     RecyclerView.Adapter<VaccineFieldAdapter.VaccineFieldAdapterViewHolder>() {
-
     class VaccineFieldAdapterViewHolder(private val binding: ItemFieldVaccineBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(vaccineField: VaccineFieldEntity, isFirstItem: Boolean, actionVaccineField: (position: Int?) -> Unit) {
+        fun bind(
+            vaccineField: VaccineFieldEntity,
+            isFirstItem: Boolean,
+            actionVaccineField: (position: Int?) -> Unit,
+        ) {
             binding.tvTitleField.isVisible = isFirstItem
-            val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-                itemView.context,
-                R.layout.simple_dropdown_item_1line,
-                listOf(
-                    "Cuadruple",
-                    "Quintuple",
-                    "Sextuple",
-                    "Distemper canino o moquillo",
-                    "Parvovirus",
-                    "Parainfluenza",
-                    "Coronavirus",
-                    "Antirrabica",
-                    "Leptospirosis",
-                    "Tos de las perras(KC)"
+            if (vaccineField.nameSelected.isNotEmpty()) binding.autoService.setText(vaccineField.nameSelected)
+            val adapter: ArrayAdapter<String> =
+                ArrayAdapter<String>(
+                    itemView.context,
+                    R.layout.simple_dropdown_item_1line,
+                    listOf(
+                        "Cuadruple",
+                        "Quintuple",
+                        "Sextuple",
+                        "Distemper canino o moquillo",
+                        "Parvovirus",
+                        "Parainfluenza",
+                        "Coronavirus",
+                        "Antirrabica",
+                        "Leptospirosis",
+                        "Tos de las perras(KC)",
+                    ),
                 )
-            )
             binding.autoService.setAdapter(adapter)
             binding.autoService.setOnItemClickListener { parent, _, position, _ ->
                 vaccineField.nameSelected = parent.getItemAtPosition(position).toString()
@@ -48,7 +53,10 @@ class VaccineFieldAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VaccineFieldAdapterViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): VaccineFieldAdapterViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemFieldVaccineBinding.inflate(layoutInflater, parent, false)
         return VaccineFieldAdapterViewHolder(binding)
@@ -56,13 +64,16 @@ class VaccineFieldAdapter(
 
     override fun getItemCount(): Int = vaccineFields.size
 
-    override fun onBindViewHolder(holder: VaccineFieldAdapterViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: VaccineFieldAdapterViewHolder,
+        position: Int,
+    ) {
         holder.bind(vaccineFields[position], position == 0, actionVaccineField = { actionVaccineField(it) })
     }
 
     private fun actionVaccineField(position: Int?) {
         position?.let {
-            if (position!=-1) removeVaccine(it)
+            if (position != -1) removeVaccine(it)
         } ?: apply {
             addVaccineField()
         }
