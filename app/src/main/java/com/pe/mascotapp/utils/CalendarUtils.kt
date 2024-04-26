@@ -3,9 +3,9 @@ package com.pe.mascotapp.utils
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.Month
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.Month
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -14,11 +14,12 @@ class CalendarUtils {
     companion object {
         const val CONST_FORMAT = "dd/MM/yyyy"
         const val SECONDARY_FORMAT = "d 'de' MMM 'de' yyyy"
+
         fun getTime(
             year: Int,
             month: Int,
             day: Int,
-        ): Date  {
+        ): Date {
             val calendar = Calendar.getInstance()
             calendar.set(year, month, day)
             return calendar.time
@@ -49,10 +50,14 @@ class CalendarUtils {
             return format.parse(dateString) ?: Date()
         }
 
-        fun stringToDate(dateString: String,format: String): Date {
+        fun stringToDate(
+            dateString: String,
+            format: String,
+        ): Date {
             val format = SimpleDateFormat(format, Locale("es", "ES"))
             return format.parse(dateString) ?: Date()
         }
+
         fun convertirFechaATime(fechaString: String): Date? {
             val formato = SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("es", "ES"))
             return try {
@@ -63,17 +68,21 @@ class CalendarUtils {
             }
         }
 
-        fun formatMonthYear(localDate: LocalDate, locale: Locale): String {
+        fun formatMonthYear(
+            localDate: LocalDate,
+            locale: Locale,
+        ): String {
             val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
             return localDate.format(formatter)
         }
 
-        fun getAbbreviatedDayName(localDate: LocalDate, locale: Locale): String {
+        fun getAbbreviatedDayName(
+            localDate: LocalDate,
+            locale: Locale,
+        ): String {
             val formatter = DateTimeFormatter.ofPattern("EEE", locale)
             return localDate.format(formatter)
         }
-
-
 
         fun fechaCumplidaHoy(fecha: Date): Boolean {
             val formato = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
@@ -90,7 +99,7 @@ class CalendarUtils {
             hourString: String,
         ): Date {
             try {
-                val dateFormat = SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("es", "ES"))
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES"))
                 val hourFormat = SimpleDateFormat("HH:mm", Locale("es", "ES"))
 
                 val date = dateFormat.parse(dateString)
@@ -147,20 +156,22 @@ class CalendarUtils {
             calendar.set(Calendar.DAY_OF_MONTH, localDate.dayOfMonth)
             return calendar
         }
-        fun convertStringFormatToLocalDate(dateString: String,format:String):LocalDate?{
+
+        fun convertStringFormatToLocalDate(
+            dateString: String,
+            format: String,
+        ): LocalDate?  {
             if (dateString.isBlank()) {
                 return null
             }
-            val dateFormatter = DateTimeFormatter.ofPattern(format,Locale("es", "ES"))
-            return  try {
-               LocalDate.parse(dateString, dateFormatter)
-
+            val dateFormatter = DateTimeFormatter.ofPattern(format, Locale("es", "ES"))
+            return try {
+                LocalDate.parse(dateString, dateFormatter)
             } catch (e: Exception) {
                 null
             }
         }
     }
-
 }
 
 fun Date.addDay(days: Int): Date? {
