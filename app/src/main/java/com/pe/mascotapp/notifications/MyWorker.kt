@@ -21,6 +21,7 @@ import com.pe.mascotapp.utils.getDayOfWeek
 import com.pe.mascotapp.utils.getMonthYear
 import com.pe.mascotapp.vistas.ReminderActivity
 import com.pe.mascotapp.vistas.adapters.ValueTextOption
+import com.pe.mascotapp.vistas.adapters.mapValueTextOption
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.coroutineScope
@@ -151,7 +152,7 @@ class AlarmEventHelper(private val applicationContext: Context) {
                 dateTempReminder?.let {
                     Log.d("MyWorker", alarm.toString())
                     val title =
-                        "Recuerda que en $alarm ${reminder.reminder.alarmOption} , a las ${reminder.reminder.startHour}, tienes " + reminder.reminder.title + " de " +
+                        "Recuerda que en $alarm ${reminder.reminder.alarmOption.mapValueTextOption()} , a las ${reminder.reminder.startHour}, tienes " + reminder.reminder.title + " de " +
                             reminder.pets.joinToString(",") { it.name }
                     val description = reminder.reminder.description
                     scheduleNotification(reminder.reminder.reminderId?.toInt() ?: 0, title, description, it)
