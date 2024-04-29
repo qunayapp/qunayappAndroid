@@ -1,5 +1,6 @@
 package com.pe.mascotapp.utils
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -36,7 +37,7 @@ class CalendarUtils {
             return sdf.format(date)
         }
 
-        fun convertirFechaATime(fechaString: String): Date? {
+        fun stringToDate(fechaString: String): Date? {
             val formato = SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("es", "ES"))
             return try {
                 formato.parse(fechaString)
@@ -82,6 +83,7 @@ class CalendarUtils {
 
                 return dateCalendar.time
             } catch (e: Exception) {
+                e.printStackTrace()
                 return Calendar.getInstance().time
             }
         }
@@ -93,6 +95,39 @@ fun Date.addDay(days: Int): Date? {
     calendar.time = this
     return try {
         calendar.add(Calendar.DAY_OF_YEAR, days) // Suma un día a la fecha
+        calendar.time
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+fun Date.inDates(
+    startDate: Date?,
+    endDate: Date?,
+): Boolean {
+    if (startDate == null) {
+        Log.e("Date", "fecha de inicio es null")
+        return false
+    }
+    return (this.after(startDate) || this == startDate) && (endDate == null || (this.before(endDate) || this == endDate))
+}
+
+fun Date.addMonth(months: Int): Date? {
+    return try {
+        val calendar = Calendar.getInstance()
+        calendar.time = this
+        val originalDay = calendar.get(Calendar.DAY_OF_MONTH)
+        calendar.add(Calendar.MONTH, months)
+        // Verificar si la fecha resultante está en el siguiente mes
+        // y si el día original era el último día del mes
+        val lastDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        if (originalDay == calendar.getActualMinimum(Calendar.DAY_OF_MONTH) &&
+            calendar.get(Calendar.DAY_OF_MONTH) > lastDayOfMonth
+        ) {
+            // Ajustar la fecha para que sea el último día del mes siguiente
+            calendar.set(Calendar.DAY_OF_MONTH, lastDayOfMonth)
+        }
         calendar.time
     } catch (e: Exception) {
         e.printStackTrace()
