@@ -29,7 +29,7 @@ data class Reminder(
     val listImages: List<String>,
     val repeatOption: ValueTextOption = ValueTextOption.DONT_REPEAT,
     val countRepeatOption: Int?,
-    val times: Int,
+    var times: Int,
     val durationTypeRepeat: TypeOption?,
     val durationRepeat: String?,
     val vaccines: List<String>,
