@@ -64,6 +64,11 @@ class CalendarUtils {
             }
         }
 
+        fun toSimpleString(date: Date): String {
+            val format = SimpleDateFormat("dd/MM/yyy")
+            return format.format(date)
+        }
+
         fun convertirFechaATime(fechaString: String): Date? {
             val formato = SimpleDateFormat("dd 'de' MMM 'de' yyyy", Locale("es", "ES"))
             return try {
@@ -167,7 +172,7 @@ class CalendarUtils {
         fun convertStringFormatToLocalDate(
             dateString: String,
             format: String,
-        ): LocalDate?  {
+        ): LocalDate? {
             if (dateString.isBlank()) {
                 return null
             }
@@ -201,7 +206,8 @@ fun Date.inDates(
         Log.e("Date", "fecha de inicio es null")
         return false
     }
-    return (this.after(startDate) || this == startDate) && (endDate == null || (this.before(endDate) || this == endDate))
+    return (this.date >= startDate.date && this.month >= startDate.month && this.year >= startDate.year) &&
+        (endDate == null || (this.date <= endDate.date && this.month <= endDate.month && this.year <= endDate.year))
 }
 
 fun Date.addMonth(months: Int): Date? {

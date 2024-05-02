@@ -24,7 +24,6 @@ import com.pe.mascotapp.utils.getMonthYear
 import com.pe.mascotapp.utils.inDates
 import com.pe.mascotapp.vistas.ReminderActivity
 import com.pe.mascotapp.vistas.adapters.ValueTextOption
-import com.pe.mascotapp.vistas.adapters.mapValueTextOption
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.coroutineScope
@@ -78,7 +77,6 @@ class AlarmEventHelper(private val applicationContext: Context) {
 
             reminder.reminder.alarm.let { alarm ->
                 Log.d("MyWorker", "repeat Option: " + reminder.reminder.repeatOption.toString())
-
                 val dateTempReminder =
                     when (reminder.reminder.repeatOption) {
                         ValueTextOption.DONT_REPEAT -> {
@@ -112,9 +110,10 @@ class AlarmEventHelper(private val applicationContext: Context) {
                             reminder.reminder.countRepeatOption?.let {
                                 endReminder = startReminder?.addDay(7 * it)
                             }
-                            val dayOfWeekAlarm = startEvent.getDayOfWeek()
-                            val dayOfWeekToday = today.getDayOfWeek()
-                            if (startReminder != null && today.inDates(startReminder, endReminder) && dayOfWeekAlarm == dayOfWeekToday) {
+                            if (startReminder != null &&
+                                today.inDates(startReminder, endReminder) &&
+                                startReminder.getDayOfWeek() == today.getDayOfWeek()
+                            ) {
                                 Log.d("MyWorker", "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString())
                                 today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
                             } else {
@@ -130,9 +129,12 @@ class AlarmEventHelper(private val applicationContext: Context) {
                             reminder.reminder.countRepeatOption?.let {
                                 endReminder = startReminder?.addMonth(it)
                             }
-                            val dayOfAlarm = startEvent.getDayOfMonth()
-                            val dayOfToday = today.getDayOfMonth()
-                            if (startReminder != null && today.inDates(startReminder, endReminder) && dayOfAlarm == dayOfToday) {
+                            if (startReminder != null &&
+                                today.inDates(
+                                    startReminder,
+                                    endReminder,
+                                ) && startReminder.getDayOfMonth() == today.getDayOfMonth()
+                            ) {
                                 Log.d("MyWorker", "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString())
                                 today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
                             } else {
@@ -148,15 +150,10 @@ class AlarmEventHelper(private val applicationContext: Context) {
                             reminder.reminder.countRepeatOption?.let {
                                 endReminder = startReminder?.addMonth(it * 12)
                             }
-                            val dayOfAlarm = startEvent.getDayOfMonth()
-                            val monthOfAlarm = startEvent.getMonthYear()
-                            val dayOfToday = today.getDayOfMonth()
-                            val monthOfToday = today.getMonthYear()
                             if (startReminder != null &&
-                                today.inDates(
-                                    startReminder,
-                                    endReminder,
-                                ) && dayOfAlarm == dayOfToday && monthOfAlarm == monthOfToday
+                                today.inDates(startReminder, endReminder) &&
+                                startReminder.getDayOfMonth() == today.getDayOfMonth() &&
+                                startReminder.getMonthYear() == today.getMonthYear()
                             ) {
                                 Log.d("MyWorker", "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString())
                                 today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
@@ -173,10 +170,13 @@ class AlarmEventHelper(private val applicationContext: Context) {
                     Log.d("MyWorker", " alarma : " + alarm.toString())
                     Log.d("MyWorker", " reminder hora y minutos : " + it.hours.toString() + " : " + it.minutes.toString())
                     Log.d("MyWorker", " evento hora y minutos : " + reminder.reminder.startHour)
+                    val event: Date = getDateAlarm(reminder.reminder.alarmOption, it, alarm) ?: Calendar.getInstance().time
                     val title =
-                        "Recuerda que tienes un recordatorio a las " +
-                            reminder.reminder.startHour + " " + reminder.reminder.title + " " +
-                            reminder.pets.joinToString(",") { it.name }
+                        "Recuerda que tienes un evento el ${CalendarUtils.toSimpleString(
+                            event,
+                        )} a la hora ${reminder.reminder.startHour} - ${reminder.reminder.title} ${reminder.pets.joinToString(
+                            ",",
+                        ) { it.name }}"
                     val description = reminder.reminder.description
                     scheduleNotification(reminder.reminder.reminderId?.toInt() ?: 0, title, description, it)
                 }
@@ -199,7 +199,7 @@ class AlarmEventHelper(private val applicationContext: Context) {
             }
 
             ValueTextOption.DAYS -> {
-                dateTempReminder.addHours(alarm)
+                dateTempReminder.addDay(alarm)
             }
 
             else -> dateTempReminder.addMinutes(alarm)

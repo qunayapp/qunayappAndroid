@@ -64,6 +64,10 @@ class ReminderViewModel
 
         val enableForm: ObservableBoolean = ObservableBoolean(false)
 
+        val enableVaccines: ObservableBoolean = ObservableBoolean(false)
+
+        val enableButton: ObservableBoolean = ObservableBoolean(false)
+
         private val _listOptionsRepeat = MutableLiveData<List<OptionViewInterface>>()
         val listOptionsRepeat: LiveData<List<OptionViewInterface>> = _listOptionsRepeat
 
@@ -105,6 +109,9 @@ class ReminderViewModel
                 this.reminderPetsJoin = it
                 this.reminderEntity = it.reminder
                 listVaccines = it.reminder.vaccines.map { VaccineFieldEntity(it) }.toMutableList()
+                enableForm.set(true)
+                enableButton.set(true)
+                validateVaccines()
             }
         }
 
@@ -125,6 +132,7 @@ class ReminderViewModel
 
         fun setCategoryReminder() {
             reminderEntity.categoryReminder = categoriesReminder.value?.firstOrNull { it.isSelected }
+            validateVaccines()
             enableForm()
         }
 
@@ -132,6 +140,15 @@ class ReminderViewModel
             val atLeastPetIsSelected = reminderPetsJoin.pets.isNotEmpty()
             val atLeastCategoryIsSelected = reminderEntity.categoryReminder != null
             enableForm.set(atLeastPetIsSelected && atLeastCategoryIsSelected)
+        }
+
+        fun validateVaccines(): Boolean {
+            enableVaccines.set(reminderEntity.categoryReminder is CategoryReminderEntity.VaccineReminder)
+            return if (enableVaccines.get()) {
+                listVaccines.firstOrNull { it.nameSelected.isNotEmpty() } != null
+            } else {
+                true
+            }
         }
 
         fun getPets() {
@@ -336,24 +353,32 @@ class ReminderViewModel
             reminderEntity.listImages = images.map { it.toString() }
         }
 
-        fun createReminder() {
+        fun validateForm(): String {
             if (reminderEntity.title.isEmpty()) {
-                _showErrorDialog.postValue("Llena el nombre")
-                return
+                enableButton.set(false)
+                return "Llena el nombre"
             }
             if (reminderEntity.categoryReminder == null) {
-                _showErrorDialog.postValue("Selecciona una categoria")
-                return
+                enableButton.set(false)
+                return "Selecciona una categoria"
             }
             if (reminderEntity.startDate.isEmpty()) {
-                _showErrorDialog.postValue("Selecciona fecha de inicio")
-                return
+                return "Selecciona fecha de inicio"
             }
-            if (listVaccines.firstOrNull()?.nameSelected?.isEmpty() == true) {
-                _showErrorDialog.postValue("Selecciona vacunas")
-                return
+            if (!validateVaccines()) {
+                enableButton.set(false)
+                return "Selecciona vacunas"
             }
+            enableButton.set(true)
+            return ""
+        }
 
+        fun createReminder() {
+            val error = validateForm()
+            if (error.isNotEmpty()) {
+                _showErrorDialog.postValue(error)
+                return
+            }
             viewModelScope.launch {
                 try {
                     _loading.postValue(true)

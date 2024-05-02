@@ -51,14 +51,14 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
             binding.tvCounter.text = option.counter.toString()
             binding.tvCounter.text = if (option.isSelected) option.counter.toString() else "0"
             binding.reduce.setOnClickListener {
-                optionClick(adapterPosition)
                 if (option.counter > 0) option.counter -= 1
                 binding.tvCounter.text = option.counter.toString()
+                optionClick(adapterPosition)
             }
             binding.add.setOnClickListener {
-                optionClick(adapterPosition)
                 option.counter += 1
                 binding.tvCounter.text = option.counter.toString()
+                optionClick(adapterPosition)
             }
             val bg = if (adapterPosition % 2 == 0) R.color.white else R.color.gray100
             binding.llOption.setBackgroundColor(ContextCompat.getColor(binding.root.context, bg))
@@ -222,6 +222,10 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
             if (tempPosition != -1) {
                 options[tempPosition].isSelected = false
                 notifyItemChanged(tempPosition)
+            }
+        } else {
+            if (positionOptionTextSelected != -1) {
+                notifyItemChanged(positionOptionTextSelected)
             }
         }
     }
