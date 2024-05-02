@@ -119,10 +119,15 @@ class ReminderActivity : AppCompatActivity() {
         vaccineAdapter.addVaccineField = {
             viewModel.listVaccines.add(VaccineFieldEntity())
             vaccineAdapter.notifyItemInserted(viewModel.listVaccines.size)
+            viewModel.validateForm()
         }
         vaccineAdapter.removeVaccine = {
             viewModel.listVaccines.removeAt(it)
             vaccineAdapter.notifyItemRemoved(it)
+            viewModel.validateForm()
+        }
+        vaccineAdapter.validateSelected = {
+            viewModel.validateVaccines()
         }
         binding.rvVaccineFields.apply {
             layoutManager = LinearLayoutManager(context)
@@ -174,9 +179,8 @@ class ReminderActivity : AppCompatActivity() {
                     null -> "+ Anadir Duracion"
                 }
             binding.tvAlarm.text = "${it.reminder.alarm} ${it.reminder.alarmOption.mapValueTextOption()}"
-            viewModel.enableForm.set(true)
+            viewModel.initValues(it)
         }
-        viewModel.initValues(intent.getParcelableExtra("BUNDLE_REMINDER"))
         viewModel.getSelectCategories()
         viewModel.getPets()
         checkPermission()
@@ -226,6 +230,7 @@ class ReminderActivity : AppCompatActivity() {
                     count: Int,
                 ) {
                     viewModel.setNameReminder(s.toString())
+                    viewModel.validateForm()
                 }
             },
         )
@@ -267,36 +272,56 @@ class ReminderActivity : AppCompatActivity() {
 
     private fun setUpObservables() {
         viewModel.listPets.observe(this) {
-            binding.rvAnimals.adapter = PetAdapter(it) { viewModel.selectAnimalEntity() }
+            binding.rvAnimals.adapter =
+                PetAdapter(it) {
+                    viewModel.selectAnimalEntity()
+                    viewModel.validateForm()
+                }
         }
         viewModel.categoriesReminder.observe(this) {
-            binding.rvCategories.adapter = CategoryReminderAdapter(it) { viewModel.setCategoryReminder() }
+            binding.rvCategories.adapter =
+                CategoryReminderAdapter(it) {
+                    viewModel.setCategoryReminder()
+                    viewModel.validateForm()
+                }
         }
         viewModel.listOptionsRepeat.observe(this) { options ->
             showDialogOptions(options) {
                 viewModel.getOptionRepeat()?.let { binding.tvRepeat.text = it }
+                viewModel.validateForm()
             }
         }
         viewModel.listDurationRepeat.observe(this) { options ->
             showDialogOptions(options) {
                 viewModel.getDurationRepeat()?.let { binding.tvAddDuration.text = it }
+                viewModel.validateForm()
             }
         }
         viewModel.listAlarms.observe(this) { options ->
             showDialogOptions(options) {
-                binding.tvAlarm.text = viewModel.getAlarms()
+                viewModel.getAlarms()?.let {
+                    binding.tvAlarm.text = it
+                }
+                viewModel.validateForm()
             }
         }
         viewModel.optionStartHour.observe(this) { options ->
             showDialogOptions(options) {
-                viewModel.getStartHourSelected()?.let { binding.tvHourStart.text = it }
+                viewModel.getStartHourSelected()?.let {
+                    binding.tvHourStart.text = it
+                    viewModel.validateForm()
+                }
             }
         }
         viewModel.optionStartDate.observe(this) { options ->
             showDialogOptions(options) {
-                viewModel.getStartDateSelected()?.let { binding.tvDateStart.text = it }
+                viewModel.getStartDateSelected()?.let {
+                    binding.tvDateStart.text = it
+                    viewModel.validateForm()
+                }
             }
         }
+
         viewModel.showErrorDialog.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }

@@ -55,13 +55,18 @@ class CalendarUtils {
             dateString: String,
             format: String,
         ): Date? {
-            val formato = SimpleDateFormat(format, Locale("es", "ES"))
+            val simpleFormat = SimpleDateFormat(format, Locale("es", "ES"))
             return try {
-                formato.parse(dateString)
+                simpleFormat.parse(dateString)
             } catch (e: Exception) {
                 e.printStackTrace()
                 null
             }
+        }
+
+        fun toSimpleString(date: Date): String {
+            val format = SimpleDateFormat("dd/MM/yyy")
+            return format.format(date)
         }
 
         fun convertirFechaATime(fechaString: String): Date? {
@@ -167,7 +172,7 @@ class CalendarUtils {
         fun convertStringFormatToLocalDate(
             dateString: String,
             format: String,
-        ): LocalDate?  {
+        ): LocalDate? {
             if (dateString.isBlank()) {
                 return null
             }
@@ -201,7 +206,23 @@ fun Date.inDates(
         Log.e("Date", "fecha de inicio es null")
         return false
     }
-    return (this.after(startDate) || this == startDate) && (endDate == null || (this.before(endDate) || this == endDate))
+    val isBetweenYear = this.year >= startDate.year && this.year <= (endDate?.year ?: this.year)
+    if (!isBetweenYear) {
+        return false
+    }
+    if (this.year == startDate.year && this.month < startDate.month) {
+        return false
+    }
+    if (this.year == (endDate?.year ?: this.year) && this.month > (endDate?.month ?: this.month)) {
+        return false
+    }
+    if (this.month == startDate.month && this.date < startDate.date) {
+        return false
+    }
+    if (this.month == (endDate?.month ?: this.month) && this.date > (endDate?.date ?: this.date)) {
+        return false
+    }
+    return true
 }
 
 fun Date.addMonth(months: Int): Date? {

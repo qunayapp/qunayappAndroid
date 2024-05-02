@@ -13,6 +13,7 @@ class VaccineFieldAdapter(
     private val vaccineFields: List<VaccineFieldEntity>,
     var addVaccineField: () -> Unit = {},
     var removeVaccine: (position: Int) -> Unit = {},
+    var validateSelected: () -> Unit = {},
 ) :
     RecyclerView.Adapter<VaccineFieldAdapter.VaccineFieldAdapterViewHolder>() {
     class VaccineFieldAdapterViewHolder(private val binding: ItemFieldVaccineBinding) :
@@ -21,6 +22,7 @@ class VaccineFieldAdapter(
             vaccineField: VaccineFieldEntity,
             isFirstItem: Boolean,
             actionVaccineField: (position: Int?) -> Unit,
+            validateSelected: () -> Unit = {},
         ) {
             binding.tvTitleField.isVisible = isFirstItem
             if (vaccineField.nameSelected.isNotEmpty()) binding.autoService.setText(vaccineField.nameSelected)
@@ -44,6 +46,7 @@ class VaccineFieldAdapter(
             binding.autoService.setAdapter(adapter)
             binding.autoService.setOnItemClickListener { parent, _, position, _ ->
                 vaccineField.nameSelected = parent.getItemAtPosition(position).toString()
+                validateSelected()
             }
             binding.tvActionField.text = if (isFirstItem) "+agregar" else "-remover"
             binding.tvActionField.setOnClickListener {
@@ -68,7 +71,9 @@ class VaccineFieldAdapter(
         holder: VaccineFieldAdapterViewHolder,
         position: Int,
     ) {
-        holder.bind(vaccineFields[position], position == 0, actionVaccineField = { actionVaccineField(it) })
+        holder.bind(vaccineFields[position], position == 0, actionVaccineField = {
+            actionVaccineField(it)
+        }, validateSelected = { validateSelected() })
     }
 
     private fun actionVaccineField(position: Int?) {

@@ -162,7 +162,7 @@
 					android:background="@color/white"
 					android:paddingHorizontal="48dp"
 					android:paddingVertical="25dp"
-					android:visibility="@{reminderViewModel.enableForm}"
+					android:visibility="@{reminderViewModel.enableVaccines &amp;&amp; reminderViewModel.enableForm}"
 					tools:listitem="@layout/item_field_vaccine" />
 
 				<LinearLayout
@@ -319,6 +319,7 @@
 				android:layout_height="60dp"
 				android:background="@color/red"
 				android:text="@string/accept"
+				android:enabled="@{reminderViewModel.enableButton}"
 				android:textColor="@color/white"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
