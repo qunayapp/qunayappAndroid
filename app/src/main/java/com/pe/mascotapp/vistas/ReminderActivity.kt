@@ -162,7 +162,8 @@ class ReminderActivity : AppCompatActivity() {
         reminderPetsJoinEntity?.let {
             binding.nameReminder.setText(it.reminder.title)
             binding.edtDescription.setText(it.reminder.description)
-            binding.tvDateStart.text =  CalendarUtils.getFormatDate(CalendarUtils.stringToDate(it.reminder.startDate,CalendarUtils.CONST_FORMAT))
+            binding.tvDateStart.text = CalendarUtils.stringToDate(it.reminder.startDate,CalendarUtils.CONST_FORMAT)
+                    ?.let { it1 -> CalendarUtils.getFormatDate(it1) }
             binding.tvHourStart.text = it.reminder.startHour
             binding.tvRepeat.text = "${it.reminder.repeatOption.mapValueTextOption()}  ${it.reminder?.countRepeatOption ?: ""}"
             binding.tvAddDuration.text =

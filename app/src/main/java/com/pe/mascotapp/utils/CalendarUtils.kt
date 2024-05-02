@@ -1,5 +1,6 @@
 package com.pe.mascotapp.utils
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -53,7 +54,7 @@ class CalendarUtils {
         fun stringToDate(
             dateString: String,
             format: String,
-        ): Date {
+        ): Date? {
             val formato = SimpleDateFormat(format, Locale("es", "ES"))
             return try {
                 formato.parse(dateString)
