@@ -216,10 +216,13 @@ fun Date.inDates(
     if (this.year == (endDate?.year ?: this.year) && this.month > (endDate?.month ?: this.month)) {
         return false
     }
-    if (this.month == startDate.month && this.date < startDate.date) {
+    if (this.year == startDate.year && this.month == startDate.month && this.date < startDate.date) {
         return false
     }
-    if (this.month == (endDate?.month ?: this.month) && this.date > (endDate?.date ?: this.date)) {
+    if (this.year == (endDate?.year ?: this.year) &&
+        this.month == (endDate?.month ?: this.month) &&
+        this.date > (endDate?.date ?: this.date)
+    ) {
         return false
     }
     return true
