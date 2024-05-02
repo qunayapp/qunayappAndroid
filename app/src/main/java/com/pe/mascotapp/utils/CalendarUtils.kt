@@ -206,8 +206,23 @@ fun Date.inDates(
         Log.e("Date", "fecha de inicio es null")
         return false
     }
-    return (this.date >= startDate.date && this.month >= startDate.month && this.year >= startDate.year) &&
-        (endDate == null || (this.date <= endDate.date && this.month <= endDate.month && this.year <= endDate.year))
+    val isBetweenYear = this.year >= startDate.year && this.year <= (endDate?.year ?: this.year)
+    if (!isBetweenYear) {
+        return false
+    }
+    if (this.year == startDate.year && this.month < startDate.month) {
+        return false
+    }
+    if (this.year == (endDate?.year ?: this.year) && this.month > (endDate?.month ?: this.month)) {
+        return false
+    }
+    if (this.month == startDate.month && this.date < startDate.date) {
+        return false
+    }
+    if (this.month == (endDate?.month ?: this.month) && this.date > (endDate?.date ?: this.date)) {
+        return false
+    }
+    return true
 }
 
 fun Date.addMonth(months: Int): Date? {
