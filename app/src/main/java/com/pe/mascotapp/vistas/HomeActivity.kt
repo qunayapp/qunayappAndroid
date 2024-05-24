@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commitNow
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -134,55 +135,30 @@ class HomeActivity : AppCompatActivity() {
             true
         }
 
-
+    private var currentFragment: Fragment? = null
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             var selectedFragment: Fragment? = null
-            /*val menuItem1 = menuHome!!.menu.findItem(R.id.nav_home)
-            val newIcon1 = menuItem1.icon
-            val menuItem2 = menuHome!!.menu.findItem(R.id.nav_config)
-            val newIcon2 = menuItem2.icon
-            //val menuItem4 = menuHome!!.menu.findItem(R.id.nav_toximetro)
-            //val newIcon4 = menuItem4.icon
-            //Utils.dump("item: " + item.itemId)*/
             when (item.itemId) {
-                R.id.nav_home -> {
-                    selectedFragment = HomeFragment.newInstance()
-                    //title = R.string.menu_camera;
-
+                R.id.nav_home -> selectedFragment = HomeFragment.newInstance()
+                R.id.nav_calendar -> selectedFragment = CalendarFragment.newInstance()
+                R.id.nav_pet -> selectedFragment = PetsFragment.newInstance()
+                R.id.nav_notification -> selectedFragment = ReminderFragment.newInstance()
+                else -> {
+                    // Handle the case when none of the cases match
                 }
-
-                R.id.nav_history -> {
-
-                }
-
-                R.id.nav_calendar -> {
-                    selectedFragment = CalendarFragment.newInstance()
-                }
-
-                R.id.nav_pet -> {
-                    selectedFragment = PetsFragment.newInstance()
-                }
-
-                R.id.nav_notification -> {
-                    selectedFragment = ReminderFragment.newInstance()
-                    //title = R.string.menu_gallery;
-                }
-
             }
-            selectedFragment?.let {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainer, selectedFragment)
-                    .commit()
+            // Check if the new fragment is different from the current fragment
+            if (selectedFragment != null && currentFragment != null &&  !selectedFragment::class.simpleName.equals(currentFragment?.javaClass?.simpleName))  {
+                supportFragmentManager.commitNow {
+                    replace(R.id.fragmentContainer, selectedFragment)
+                }
+                // Update the current fragment
+                currentFragment = selectedFragment
             }
 
             //setTitle(getString(title));
             drawer_layout!!.closeDrawer(GravityCompat.START)
-            /*val transaction =
-                supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentContainer, selectedFragment!!)
-            transaction.commit()*/
             true
         }
 
@@ -191,6 +167,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        println("yoelkilll")
         menuHome = findViewById<BottomNavigationView>(R.id.menuHome)
         rcvHome = findViewById<RecyclerView>(R.id.rcvHome)
         rcvHomeService = findViewById<RecyclerView>(R.id.rcvHomeService)
@@ -428,10 +405,12 @@ class HomeActivity : AppCompatActivity() {
     fun startMenu(savedInstanceState: Bundle?) {
 
         if (savedInstanceState == null) {
+            val selectedFragment = HomeFragment.newInstance()
             val transaction =
                 supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragmentContainer, HomeFragment.newInstance())
+            transaction.replace(R.id.fragmentContainer, selectedFragment)
             transaction.commit()
+            currentFragment = selectedFragment
             //toolTitle!!.text = "Hola, " + "Usuario"
             //menuHome!!.selectedItemId = R.id.nav_home
             //navigationView!!.setCheckedItem(R.id.nav_menu_principal)
