@@ -12,7 +12,7 @@ class GetRemindersWithPetsUseCase
     ) {
         operator fun invoke(pageNumber: Int? = null): Flow<List<ReminderWithPets>> {
             pageNumber?.let {
-                return reminderPetJoinRepository.getReminderPet(30, pageNumber)
+                return reminderPetJoinRepository.getReminderPet(10, pageNumber)
             }
             return reminderPetJoinRepository.getAllReminders()
         }

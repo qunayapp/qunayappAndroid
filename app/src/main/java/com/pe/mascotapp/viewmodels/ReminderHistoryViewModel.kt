@@ -58,6 +58,10 @@ class ReminderHistoryViewModel
                     .launchIn(viewModelScope)
         }
 
+        fun cancelReminder(){
+            getRemindersJob?.cancel()
+        }
+
         fun getReminders(pageNumber: Int) {
             getRemindersJob?.cancel()
             getRemindersJob =
@@ -69,7 +73,7 @@ class ReminderHistoryViewModel
                         if (pageNumber != 0 && reminders.isEmpty()) {
                             return@onEach
                         }
-                        originalReminders = originalReminders + reminders.map { ReminderPetsJoinEntity(it) }
+                        originalReminders = reminders.map { ReminderPetsJoinEntity(it) }
                         remindersIsEmpty.set(originalReminders.isEmpty())
                         _listReminders.postValue(originalReminders)
                     }
@@ -77,6 +81,7 @@ class ReminderHistoryViewModel
         }
 
         fun updateReminder(reminderEntity: ReminderEntity) {
+            getRemindersJob?.cancel()
             viewModelScope.launch(Dispatchers.IO) {
                 updateReminderUseCase.invoke(reminderEntity.toReminder())
             }

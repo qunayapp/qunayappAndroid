@@ -23,11 +23,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class ReminderFragment : Fragment() {
     private val viewModel: ReminderHistoryViewModel by viewModels()
     var pageNumber: Int = 0
+    lateinit var binding : FragmentReminderfragmentBinding
 
     private val launchCreateReminder =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 pageNumber = 0
+                (binding.rvReminders.adapter as ReminderAdapter).clearList()
                 viewModel.getReminders(pageNumber)
             }
         }
@@ -36,16 +38,37 @@ class ReminderFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 pageNumber = 0
+                (binding.rvReminders.adapter as ReminderAdapter).clearList()
                 viewModel.getReminders(pageNumber)
             }
         }
+
+    override fun onPause() {
+        binding.nsvReminders.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { _, _, _, _, _ -> },
+        )
+        viewModel.cancelReminder()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        binding.nsvReminders.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
+                if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
+                    if ((binding.rvReminders.adapter as ReminderAdapter).reminders.isNotEmpty()) pageNumber++
+                    viewModel.getReminders(pageNumber)
+                }
+            },
+        )
+        super.onResume()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
+        binding = FragmentReminderfragmentBinding.inflate(inflater, container, false)
         binding.reminderViewModel = viewModel
         binding.rvAnimalsReminder.apply {
             this.adapter =
@@ -56,7 +79,7 @@ class ReminderFragment : Fragment() {
         }
         binding.rvReminders.apply {
             this.adapter =
-                ReminderAdapter(listOf(), {
+                ReminderAdapter(mutableListOf(), {
                     viewModel.updateReminder(it)
                 }, {
                     val intent = Intent(activity, ReminderActivity::class.java)
@@ -74,21 +97,12 @@ class ReminderFragment : Fragment() {
             launchCreateReminder.launch(intent)
         }
 
-        binding.nsvReminders.setOnScrollChangeListener(
-            NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
-                if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
-                    pageNumber++
-                    viewModel.getReminders(pageNumber)
-                }
-            },
-        )
         viewModel.listPets.observe(viewLifecycleOwner) {
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).tabAnimals = it
             (binding.rvAnimalsReminder.adapter as TabAnimalAdapter).notifyDataSetChanged()
         }
         viewModel.listReminders.observe(viewLifecycleOwner) {
-            (binding.rvReminders.adapter as ReminderAdapter).reminders = it
-            (binding.rvReminders.adapter as ReminderAdapter).notifyDataSetChanged()
+            (binding.rvReminders.adapter as ReminderAdapter).addItems(it)
         }
         viewModel.getAnimalTabs()
         pageNumber = 0

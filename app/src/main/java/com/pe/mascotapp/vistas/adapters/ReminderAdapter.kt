@@ -17,7 +17,7 @@ import com.pe.mascotapp.vistas.entities.PetEntity
 import kotlinx.parcelize.Parcelize
 
 class ReminderAdapter(
-    var reminders: List<ReminderPetsJoinEntity>,
+    var reminders: MutableList<ReminderPetsJoinEntity>,
     val updateReminder: (ReminderEntity) -> Unit,
     val navigateEditReminder: (ReminderPetsJoinEntity) -> Unit,
 ) :
@@ -42,7 +42,9 @@ class ReminderAdapter(
                 navigateEditReminder(reminderPets)
             }
             handleState(reminderPets.reminder.isActivated)
+            binding.swReminder.isChecked = reminderPets.reminder.isActivated
             binding.swReminder.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked == reminderPets.reminder.isActivated) return@setOnCheckedChangeListener
                 reminderPets.reminder.isActivated = isChecked
                 updateReminder(reminderPets.reminder)
                 handleState(reminderPets.reminder.isActivated)
@@ -62,7 +64,6 @@ class ReminderAdapter(
                 iconColor = R.color.plomoRegular
                 backgroundIconColor = R.color.plomoDark
             }
-            binding.swReminder.isChecked = isActivated
             binding.clHeader.changeTintColor(
                 ContextCompat.getColor(
                     binding.root.context,
@@ -110,6 +111,15 @@ class ReminderAdapter(
                 ),
             )
         }
+    }
+    fun addItems(newItems: List<ReminderPetsJoinEntity>) {
+        reminders.addAll(newItems)
+        notifyItemRangeInserted(reminders.size - newItems.size, newItems.size)
+    }
+
+    fun clearList() {
+        reminders.clear()
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
