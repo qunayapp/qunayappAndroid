@@ -34,6 +34,7 @@ import com.pe.mascotapp.vistas.adapters.mapValueTextOption
 import com.pe.mascotapp.vistas.dialogs.DialogOption
 import com.pe.mascotapp.vistas.entities.VaccineFieldEntity
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.ArrayList
 
 @AndroidEntryPoint
 class ReminderActivity : AppCompatActivity() {
@@ -42,7 +43,7 @@ class ReminderActivity : AppCompatActivity() {
         const val MY_CHANNEL_NAME = "MySuperChannel"
         const val TYPE_MEDIA = "image/*"
         const val GRID_CATEGORIES = 5
-        const val GRID_IMAGES = 4
+        const val GRID_IMAGES = 3
         const val REQUEST_CODE_PERMISSION = 10001
     }
 
@@ -52,7 +53,9 @@ class ReminderActivity : AppCompatActivity() {
 
     private val viewModel: ReminderViewModel by viewModels()
 
-    private val imageGalleryAdapter = ImageGalleryAdapter(listOf())
+    private val imageGalleryAdapter = ImageGalleryAdapter(ArrayList()){
+        images.removeAt(it)
+    }
 
     private val pickImageFromGalleryLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -67,16 +70,15 @@ class ReminderActivity : AppCompatActivity() {
     private fun setUpAlarmHelper(): AlarmEventHelper {
         return AlarmEventHelper(applicationContext)
     }
-
+    val images = mutableListOf<Uri>()
     private fun addImages(dataImages: Intent) {
-        val images = mutableListOf<Uri>()
         val data: Intent = dataImages
         data.clipData?.itemCount?.let { itemCount ->
             for (i in 0 until itemCount) {
                 data.clipData?.getItemAt(i)?.let { images.add(it.uri) }
             }
         }
-        imageGalleryAdapter.images = images
+        imageGalleryAdapter.images = images.toCollection(ArrayList())
         imageGalleryAdapter.notifyDataSetChanged()
         viewModel.addImages(images)
     }
@@ -127,7 +129,7 @@ class ReminderActivity : AppCompatActivity() {
             viewModel.validateForm()
         }
         vaccineAdapter.validateSelected = {
-            viewModel.validateVaccines()
+            viewModel.validateForm()
         }
         binding.rvVaccineFields.apply {
             layoutManager = LinearLayoutManager(context)
@@ -167,11 +169,8 @@ class ReminderActivity : AppCompatActivity() {
         reminderPetsJoinEntity?.let {
             binding.nameReminder.setText(it.reminder.title)
             binding.edtDescription.setText(it.reminder.description)
-            binding.tvDateStart.text =
-                CalendarUtils.stringToDate(it.reminder.startDate, CalendarUtils.CONST_FORMAT)?.let {
-                        it1 ->
-                    CalendarUtils.getFormatDate(it1)
-                }
+            binding.tvDateStart.text = CalendarUtils.stringToDate(it.reminder.startDate,CalendarUtils.CONST_FORMAT)
+                    ?.let { it1 -> CalendarUtils.getFormatDate(it1) }
             binding.tvHourStart.text = it.reminder.startHour
             binding.tvRepeat.text = "${it.reminder.repeatOption.mapValueTextOption()}  ${it.reminder?.countRepeatOption ?: ""}"
             binding.tvAddDuration.text =
@@ -279,6 +278,7 @@ class ReminderActivity : AppCompatActivity() {
                 PetAdapter(it) {
                     viewModel.selectAnimalEntity()
                     viewModel.validateForm()
+                    binding.txtCounter.text = "(${it.filter {  it.isSelected }.size})"
                 }
         }
         viewModel.categoriesReminder.observe(this) {

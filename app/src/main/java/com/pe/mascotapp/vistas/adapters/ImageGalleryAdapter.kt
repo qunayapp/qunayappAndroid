@@ -6,18 +6,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.pe.mascotapp.databinding.ItemImageBinding
+import java.time.LocalDate
 
 class ImageGalleryAdapter(
-    var images: List<Uri>
+    var images: ArrayList<Uri>,
+    val itemOnClick: (position: Int) -> Unit = { _ -> }
 ) :
     RecyclerView.Adapter<ImageGalleryAdapter.ImageGalleryAdapterViewHolder>() {
 
-    class ImageGalleryAdapterViewHolder(private val binding: ItemImageBinding) :
+    class ImageGalleryAdapterViewHolder( val binding: ItemImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(image: Uri) {
             Glide.with(binding.root.context)
                 .load(image)
                 .into(binding.ivImage)
+            binding.ivDelete.bringToFront()
         }
     }
 
@@ -31,6 +34,12 @@ class ImageGalleryAdapter(
 
     override fun onBindViewHolder(holder: ImageGalleryAdapterViewHolder, position: Int) {
         holder.bind(images[position])
+        holder.binding.ivDelete.setOnClickListener {
+            val positionD= holder.adapterPosition
+            images.removeAt(positionD)
+            itemOnClick( positionD)
+            notifyItemRemoved(positionD)
+        }
     }
 
 }

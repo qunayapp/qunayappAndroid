@@ -43,15 +43,32 @@
 					android:background="@color/backgroundBanner"
 					android:orientation="vertical"
 					android:paddingBottom="16dp">
-
+                   <androidx.constraintlayout.widget.ConstraintLayout
+					   android:layout_width="wrap_content"
+					   android:layout_height="wrap_content"
+					   android:layout_gravity="center"
+					   android:layout_marginTop="26dp">
 					<TextView
+						android:id="@+id/tvTittle"
 						style="@style/WorkSans_Regular_Bold16"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_gravity="center"
-						android:layout_marginTop="26dp"
-						android:text="@string/select_animal" />
-
+						android:text="@string/select_animal"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toTopOf="parent"
+						app:layout_constraintBottom_toBottomOf="parent"/>
+					   <TextView
+						   android:layout_marginStart="4dp"
+						   android:id="@+id/txtCounter"
+						   style="@style/WorkSans_Regular_Bold16"
+						   android:layout_width="wrap_content"
+						   android:layout_height="wrap_content"
+						   android:text="(0)"
+						   app:layout_constraintStart_toEndOf="@+id/tvTittle"
+						   app:layout_constraintTop_toTopOf="parent"
+						   android:textColor="@color/verdeclaroq"
+						   app:layout_constraintBottom_toBottomOf="parent"/>
+				   </androidx.constraintlayout.widget.ConstraintLayout>
 					<androidx.recyclerview.widget.RecyclerView
 						android:id="@+id/rvAnimals"
 						android:layout_width="match_parent"
@@ -262,6 +279,7 @@
 
 					<androidx.recyclerview.widget.RecyclerView
 						android:id="@+id/rvImages"
+						android:layout_marginTop="8dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content" />
 

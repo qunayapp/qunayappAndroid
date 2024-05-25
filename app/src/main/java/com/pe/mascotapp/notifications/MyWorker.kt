@@ -171,12 +171,12 @@ class AlarmEventHelper(private val applicationContext: Context) {
                     Log.d("MyWorker", " reminder hora y minutos : " + it.hours.toString() + " : " + it.minutes.toString())
                     Log.d("MyWorker", " evento hora y minutos : " + reminder.reminder.startHour)
                     val event: Date = getDateAlarm(reminder.reminder.alarmOption, it, alarm) ?: Calendar.getInstance().time
-                    val title =
-                        "Recuerda que tienes un evento el ${CalendarUtils.toSimpleString(
+                    val title = "Recuerda que tienes un evento el ${CalendarUtils.toSimpleString(
                             event,
                         )} a la hora ${reminder.reminder.startHour} - ${reminder.reminder.title} ${reminder.pets.joinToString(
                             ",",
                         ) { it.name }}"
+
                     val description = reminder.reminder.description
                     scheduleNotification(reminder.reminder.reminderId?.toInt() ?: 0, title, description, it)
                 }
