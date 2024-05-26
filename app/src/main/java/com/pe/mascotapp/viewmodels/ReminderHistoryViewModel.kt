@@ -87,13 +87,4 @@ class ReminderHistoryViewModel
             }
         }
 
-        fun filterPets(id: Long?) {
-            val filterList =
-                if (id != null) {
-                    originalReminders.filter { it.pets.firstOrNull { it.petId == id } != null }
-                } else {
-                    originalReminders
-                }
-            _listReminders.postValue(filterList)
-        }
     }

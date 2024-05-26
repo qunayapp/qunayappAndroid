@@ -1,6 +1,7 @@
 package com.pe.mascotapp.vistas.adapters
 
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -17,9 +18,13 @@ import com.pe.mascotapp.extentions.getTime
 import com.pe.mascotapp.utils.CalendarUtils
 import java.util.Date
 
-class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf()) :
+class OptionFieldAdapter(
+    private val options: List<OptionViewInterface> = listOf(),
+    private var positionOptionTextSelected: Int = -1,
+    private var availableMultipleSelect:Boolean = false
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var positionOptionTextSelected = -1
+
 
     class OptionTextViewHolder(private val binding: ItemOptionTextBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -87,7 +92,11 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
             lisOfViewNoCalendarHour.forEach { it.isVisible = false }
 
             binding.llOption.setOnClickListener {
-                listOf(binding.llAddSchedule, binding.tpHourSelect, binding.calendarView).forEach { it.isVisible = !it.isVisible }
+                listOf(
+                    binding.llAddSchedule,
+                    binding.tpHourSelect,
+                    binding.calendarView
+                ).forEach { it.isVisible = !it.isVisible }
                 binding.ivArrow.rotation = if (binding.gpHourCalendar.isVisible) 0f else 90f
                 option.date = Date(binding.calendarView.date)
                 option.hour = binding.tpHourSelect.getTime()
@@ -121,6 +130,10 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
                     binding.llOption,
                 )
             lisOfViewNoCalendarHour.forEach { it.isVisible = !it.isVisible }
+            binding.calendarView.setOnDateChangeListener(null)
+            option.date?.time?.let {
+                binding.calendarView.date = it
+            }
             binding.calendarView.setOnDateChangeListener { _, year, month, day ->
                 option.date = CalendarUtils.getTime(year, month, day)
             }
@@ -134,10 +147,18 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
             binding.llOption.setBackgroundColor(ContextCompat.getColor(binding.root.context, bg))
 
             val listOfViewsNoNormal =
-                listOf(binding.line1, binding.line2, binding.line3, binding.calendarView, binding.llAddSchedule, binding.tpHourSelect)
+                listOf(
+                    binding.line1,
+                    binding.line2,
+                    binding.line3,
+                    binding.calendarView,
+                    binding.llAddSchedule,
+                    binding.tpHourSelect
+                )
             listOfViewsNoNormal.forEach { it.isVisible = false }
 
-            binding.tvNameOption.text = if (option.isSelected) option.date?.let { CalendarUtils.getFormatDate3(it) } else option.name
+            binding.tvNameOption.text =
+                if (option.isSelected) option.date?.let { CalendarUtils.getFormatDate3(it) } else option.name
 
             binding.llOption.setOnClickListener {
                 binding.line1.isVisible = !binding.line1.isVisible
@@ -158,10 +179,28 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
         }
     }
 
-    class ScheduleViewHolder(private val binding: ItemOptionSheduleBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ScheduleViewHolder(private val binding: ItemOptionSheduleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(option: ScheduleOption) {
             binding.tvTitleSchedule.text = option.name
-            option.hour = "${String.format("%02d", binding.tpSelect.hour)}:${String.format("%02d", binding.tpSelect.minute)}"
+            option.hour = option.hour ?: "${String.format("%02d", binding.tpSelect.hour)}:${
+                String.format(
+                    "%02d",
+                    binding.tpSelect.minute
+                )
+            }"
+            binding.tpSelect.setOnTimeChangedListener(null)
+            option.hour?.let {
+                try {
+                    it.trim()
+                    val hour = it.split(":").first()
+                    val minute = it.split(":")[1]
+                    binding.tpSelect.hour = hour.toInt()
+                    binding.tpSelect.minute = minute.toInt()
+                }catch (e:Exception){
+                    Log.e("quack","Error")
+                }
+            }
             binding.tpSelect.setOnTimeChangedListener { _, hourOfDay, minute ->
                 option.hour = "${String.format("%02d", hourOfDay)}:${String.format("%02d", minute)}"
             }
@@ -173,7 +212,8 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
         viewType: Int,
     ): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val dataBinding: ViewBinding = DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
+        val dataBinding: ViewBinding =
+            DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
         return when (viewType) {
             R.layout.item_option_text -> OptionTextViewHolder(dataBinding as ItemOptionTextBinding)
             R.layout.item_option_calendar -> OptionCalendarViewHolder(dataBinding as ItemOptionCalendarBinding)
@@ -203,7 +243,11 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
                     is CalendarHourOption -> holder.bindCalendarHour(option) { updateOption(position) }
                     is CalendarSimple -> holder.bindSimpleCalendar(option)
 
-                    is CalendarOptionNormal -> holder.bindNormalCalendar(option) { updateOption(position) }
+                    is CalendarOptionNormal -> holder.bindNormalCalendar(option) {
+                        updateOption(
+                            position
+                        )
+                    }
                 }
             }
 
@@ -214,6 +258,11 @@ class OptionFieldAdapter(private val options: List<OptionViewInterface> = listOf
     }
 
     private fun updateOption(positionSelected: Int) {
+        if (availableMultipleSelect){
+            options[positionSelected].isSelected = true
+            notifyItemChanged(positionSelected)
+            return
+        }
         if (positionSelected != positionOptionTextSelected) {
             val tempPosition = positionOptionTextSelected
             positionOptionTextSelected = positionSelected

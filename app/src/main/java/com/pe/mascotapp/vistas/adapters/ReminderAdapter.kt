@@ -18,6 +18,7 @@ import kotlinx.parcelize.Parcelize
 
 class ReminderAdapter(
     var reminders: MutableList<ReminderPetsJoinEntity>,
+    var totalReminders : MutableList<ReminderPetsJoinEntity>,
     val updateReminder: (ReminderEntity) -> Unit,
     val navigateEditReminder: (ReminderPetsJoinEntity) -> Unit,
 ) :
@@ -42,6 +43,7 @@ class ReminderAdapter(
                 navigateEditReminder(reminderPets)
             }
             handleState(reminderPets.reminder.isActivated)
+            binding.swReminder.setOnCheckedChangeListener(null)
             binding.swReminder.isChecked = reminderPets.reminder.isActivated
             binding.swReminder.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked == reminderPets.reminder.isActivated) return@setOnCheckedChangeListener
@@ -114,11 +116,13 @@ class ReminderAdapter(
     }
     fun addItems(newItems: List<ReminderPetsJoinEntity>) {
         reminders.addAll(newItems)
+        totalReminders.addAll(newItems)
         notifyItemRangeInserted(reminders.size - newItems.size, newItems.size)
     }
 
     fun clearList() {
         reminders.clear()
+        totalReminders.clear()
         notifyDataSetChanged()
     }
 
@@ -129,6 +133,18 @@ class ReminderAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemReminderBinding.inflate(layoutInflater, parent, false)
         return ReminderViewHolder(binding)
+    }
+
+    fun filterPets(id: Long?) {
+        val filterList =
+            if (id != null) {
+                totalReminders.filter { it.pets.firstOrNull { it.petId == id } != null }
+            } else {
+                totalReminders
+            }
+        reminders.clear()
+        reminders.addAll(filterList)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = reminders.size
@@ -173,8 +189,9 @@ class ReminderEntity(
     val location: String = "",
     var categoryReminder: CategoryReminderEntity? = null,
     var isActivated: Boolean = true,
-    var alarm: Int = 15,
-    var alarmOption: ValueTextOption = ValueTextOption.MINUTES,
+    var alarmInMinutes: Int = 15,
+    var alarmInHours: Int = 0,
+    var alarmInDays:Int = 0,
     var listImages: List<String> = listOf(),
     var repeatOption: ValueTextOption = ValueTextOption.DONT_REPEAT,
     var countRepeatOption: Int? = null,
@@ -193,8 +210,9 @@ class ReminderEntity(
             categoryReminder = this.categoryReminder?.categoryId ?: CATEGORYID.OTHERS,
             isActivated = this.isActivated,
             alarms = arrayListOf(),
-            alarm = this.alarm,
-            alarmOption = this.alarmOption,
+            alarmInMinutes = this.alarmInMinutes,
+            alarmInHours = this.alarmInHours,
+            alarmInDays = this.alarmInDays,
             dateAlarms = arrayListOf(),
             listImages = this.listImages,
             repeatOption = this.repeatOption,

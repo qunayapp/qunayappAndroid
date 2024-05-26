@@ -33,28 +33,28 @@ import java.util.Date
 
 @HiltWorker
 class MyWorker
-    @AssistedInject
-    constructor(
-        @Assisted appContext: Context,
-        @Assisted workerParams: WorkerParameters,
-        private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
-    ) : CoroutineWorker(appContext, workerParams) {
-        override suspend fun doWork(): Result =
-            coroutineScope {
-                try {
-                    Log.d("MyWorker", "Run work manager")
-                    val alarmHelper = AlarmEventHelper(applicationContext)
-                    alarmHelper.createChannel()
-                    getRemindersWithPetsUseCase.invoke().onEach { reminders ->
-                        alarmHelper.setAlarmPeriod(reminders)
-                    }
-                    return@coroutineScope Result.success()
-                } catch (e: Exception) {
-                    Log.d("MyWorker", "exception in doWork ${e.message}")
-                    return@coroutineScope Result.failure()
+@AssistedInject
+constructor(
+    @Assisted appContext: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
+) : CoroutineWorker(appContext, workerParams) {
+    override suspend fun doWork(): Result =
+        coroutineScope {
+            try {
+                Log.d("MyWorker", "Run work manager")
+                val alarmHelper = AlarmEventHelper(applicationContext)
+                alarmHelper.createChannel()
+                getRemindersWithPetsUseCase.invoke().onEach { reminders ->
+                    alarmHelper.setAlarmPeriod(reminders)
                 }
+                return@coroutineScope Result.success()
+            } catch (e: Exception) {
+                Log.d("MyWorker", "exception in doWork ${e.message}")
+                return@coroutineScope Result.failure()
             }
-    }
+        }
+}
 
 class AlarmEventHelper(private val applicationContext: Context) {
     fun createChannel() {
@@ -74,135 +74,167 @@ class AlarmEventHelper(private val applicationContext: Context) {
     fun setAlarmPeriod(reminders: List<ReminderWithPets>) {
         reminders.forEach { reminder ->
             Log.d("MyWorker", "reminder id " + reminder.reminder.reminderId)
-
-            reminder.reminder.alarm.let { alarm ->
-                Log.d("MyWorker", "repeat Option: " + reminder.reminder.repeatOption.toString())
-                val dateTempReminder =
-                    when (reminder.reminder.repeatOption) {
-                        ValueTextOption.DONT_REPEAT -> {
-                            val dateTemp = CalendarUtils.joinDateAndHour(reminder.reminder.startDate, reminder.reminder.startHour)
-                            val dateAlarm = getDateAlarm(reminder.reminder.alarmOption, dateTemp, -alarm)
-                            Log.d("MyWorker", "dont repeat " + dateAlarm?.hours.toString() + " : " + dateAlarm?.minutes.toString())
-                            if (dateAlarm != null && CalendarUtils.fechaCumplidaHoy(dateTemp)) dateAlarm else null
-                        }
-
-                        ValueTextOption.ALL_DAYS -> {
-                            val today = Calendar.getInstance().time
-                            val startEvent = CalendarUtils.joinDateAndHour(reminder.reminder.startDate, reminder.reminder.startHour)
-                            val startReminder = getDateAlarm(reminder.reminder.alarmOption, startEvent, -alarm)
-                            var endReminder: Date? = null
-                            reminder.reminder.countRepeatOption?.let {
-                                endReminder = startReminder?.addDay(it)
-                            }
-                            if (startReminder != null && today.inDates(startReminder, endReminder)) {
-                                Log.d("MyWorker", "all_days " + startReminder.hours.toString() + " : " + startReminder.minutes.toString())
-                                today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
-                            } else {
-                                null
-                            }
-                        }
-
-                        ValueTextOption.ALL_WEEKS -> {
-                            val today = Calendar.getInstance().time
-                            val startEvent = CalendarUtils.joinDateAndHour(reminder.reminder.startDate, reminder.reminder.startHour)
-                            val startReminder = getDateAlarm(reminder.reminder.alarmOption, startEvent, -alarm)
-                            var endReminder: Date? = null
-                            reminder.reminder.countRepeatOption?.let {
-                                endReminder = startReminder?.addDay(7 * it)
-                            }
-                            if (startReminder != null &&
-                                today.inDates(startReminder, endReminder) &&
-                                startReminder.getDayOfWeek() == today.getDayOfWeek()
-                            ) {
-                                Log.d("MyWorker", "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString())
-                                today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
-                            } else {
-                                null
-                            }
-                        }
-
-                        ValueTextOption.ALL_MONTHS -> {
-                            val today = Calendar.getInstance().time
-                            val startEvent = CalendarUtils.joinDateAndHour(reminder.reminder.startDate, reminder.reminder.startHour)
-                            val startReminder = getDateAlarm(reminder.reminder.alarmOption, startEvent, -alarm)
-                            var endReminder: Date? = null
-                            reminder.reminder.countRepeatOption?.let {
-                                endReminder = startReminder?.addMonth(it)
-                            }
-                            if (startReminder != null &&
-                                today.inDates(
-                                    startReminder,
-                                    endReminder,
-                                ) && startReminder.getDayOfMonth() == today.getDayOfMonth()
-                            ) {
-                                Log.d("MyWorker", "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString())
-                                today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
-                            } else {
-                                null
-                            }
-                        }
-
-                        ValueTextOption.ALL_YEARS -> {
-                            val today = Calendar.getInstance().time
-                            val startEvent = CalendarUtils.joinDateAndHour(reminder.reminder.startDate, reminder.reminder.startHour)
-                            val startReminder = getDateAlarm(reminder.reminder.alarmOption, startEvent, -alarm)
-                            var endReminder: Date? = null
-                            reminder.reminder.countRepeatOption?.let {
-                                endReminder = startReminder?.addMonth(it * 12)
-                            }
-                            if (startReminder != null &&
-                                today.inDates(startReminder, endReminder) &&
-                                startReminder.getDayOfMonth() == today.getDayOfMonth() &&
-                                startReminder.getMonthYear() == today.getMonthYear()
-                            ) {
-                                Log.d("MyWorker", "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString())
-                                today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
-                            } else {
-                                null
-                            }
-                        }
-
-                        else -> null
+            val alarm =
+                reminder.reminder.alarmInMinutes + reminder.reminder.alarmInHours * 60 + reminder.reminder.alarmInDays * 60 * 24
+            Log.d("MyWorker", "repeat Option: " + reminder.reminder.repeatOption.toString())
+            val dateTempReminder =
+                when (reminder.reminder.repeatOption) {
+                    ValueTextOption.DONT_REPEAT -> {
+                        val dateTemp = CalendarUtils.joinDateAndHour(
+                            reminder.reminder.startDate,
+                            reminder.reminder.startHour
+                        )
+                        var dateAlarm = dateTemp.addMinutes(-reminder.reminder.alarmInMinutes)
+                        dateAlarm = dateAlarm?.addHours(-reminder.reminder.alarmInHours)
+                        dateAlarm = dateAlarm?.addDay(-reminder.reminder.alarmInDays)
+                        Log.d(
+                            "MyWorker",
+                            "dont repeat " + dateAlarm?.hours.toString() + " : " + dateAlarm?.minutes.toString()
+                        )
+                        if (dateAlarm != null && CalendarUtils.fechaCumplidaHoy(dateTemp)) dateAlarm else null
                     }
-                Log.d("MyWorker", "fecha es diferente de null:" + (dateTempReminder != null).toString())
 
-                dateTempReminder?.let {
-                    Log.d("MyWorker", " alarma : " + alarm.toString())
-                    Log.d("MyWorker", " reminder hora y minutos : " + it.hours.toString() + " : " + it.minutes.toString())
-                    Log.d("MyWorker", " evento hora y minutos : " + reminder.reminder.startHour)
-                    val event: Date = getDateAlarm(reminder.reminder.alarmOption, it, alarm) ?: Calendar.getInstance().time
-                    val title = "Recuerda que tienes un evento el ${CalendarUtils.toSimpleString(
-                            event,
-                        )} a la hora ${reminder.reminder.startHour} - ${reminder.reminder.title} ${reminder.pets.joinToString(
-                            ",",
-                        ) { it.name }}"
+                    ValueTextOption.ALL_DAYS -> {
+                        val today = Calendar.getInstance().time
+                        val startEvent = CalendarUtils.joinDateAndHour(
+                            reminder.reminder.startDate,
+                            reminder.reminder.startHour
+                        )
+                        var startReminder = startEvent.addMinutes(-reminder.reminder.alarmInMinutes)
+                        startReminder = startReminder?.addHours(-reminder.reminder.alarmInHours)
+                        startReminder = startReminder?.addDay(-reminder.reminder.alarmInDays)
+                        var endReminder: Date? = null
+                        reminder.reminder.countRepeatOption?.let {
+                            endReminder = startReminder?.addDay(it)
+                        }
+                        if (startReminder != null && today.inDates(startReminder, endReminder)) {
+                            Log.d(
+                                "MyWorker",
+                                "all_days " + startReminder.hours.toString() + " : " + startReminder.minutes.toString()
+                            )
+                            today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
+                        } else {
+                            null
+                        }
+                    }
 
-                    val description = reminder.reminder.description
-                    scheduleNotification(reminder.reminder.reminderId?.toInt() ?: 0, title, description, it)
+                    ValueTextOption.ALL_WEEKS -> {
+                        val today = Calendar.getInstance().time
+                        val startEvent = CalendarUtils.joinDateAndHour(
+                            reminder.reminder.startDate,
+                            reminder.reminder.startHour
+                        )
+                        var startReminder = startEvent.addMinutes(-reminder.reminder.alarmInMinutes)
+                        startReminder = startReminder?.addHours(-reminder.reminder.alarmInHours)
+                        startReminder = startReminder?.addDay(-reminder.reminder.alarmInDays)
+                        var endReminder: Date? = null
+                        reminder.reminder.countRepeatOption?.let {
+                            endReminder = startReminder?.addDay(7 * it)
+                        }
+                        if (startReminder != null &&
+                            today.inDates(startReminder, endReminder) &&
+                            startReminder.getDayOfWeek() == today.getDayOfWeek()
+                        ) {
+                            Log.d(
+                                "MyWorker",
+                                "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString()
+                            )
+                            today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
+                        } else {
+                            null
+                        }
+                    }
+
+                    ValueTextOption.ALL_MONTHS -> {
+                        val today = Calendar.getInstance().time
+                        val startEvent = CalendarUtils.joinDateAndHour(
+                            reminder.reminder.startDate,
+                            reminder.reminder.startHour
+                        )
+                        var startReminder = startEvent.addMinutes(-reminder.reminder.alarmInMinutes)
+                        startReminder = startReminder?.addHours(-reminder.reminder.alarmInHours)
+                        startReminder = startReminder?.addDay(-reminder.reminder.alarmInDays)
+                        var endReminder: Date? = null
+                        reminder.reminder.countRepeatOption?.let {
+                            endReminder = startReminder?.addMonth(it)
+                        }
+                        if (startReminder != null &&
+                            today.inDates(
+                                startReminder,
+                                endReminder,
+                            ) && startReminder.getDayOfMonth() == today.getDayOfMonth()
+                        ) {
+                            Log.d(
+                                "MyWorker",
+                                "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString()
+                            )
+                            today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
+                        } else {
+                            null
+                        }
+                    }
+
+                    ValueTextOption.ALL_YEARS -> {
+                        val today = Calendar.getInstance().time
+                        val startEvent = CalendarUtils.joinDateAndHour(
+                            reminder.reminder.startDate,
+                            reminder.reminder.startHour
+                        )
+                        var startReminder = startEvent.addMinutes(-reminder.reminder.alarmInMinutes)
+                        startReminder = startReminder?.addHours(-reminder.reminder.alarmInHours)
+                        startReminder = startReminder?.addDay(-reminder.reminder.alarmInDays)
+                        var endReminder: Date? = null
+                        reminder.reminder.countRepeatOption?.let {
+                            endReminder = startReminder?.addMonth(it * 12)
+                        }
+                        if (startReminder != null &&
+                            today.inDates(startReminder, endReminder) &&
+                            startReminder.getDayOfMonth() == today.getDayOfMonth() &&
+                            startReminder.getMonthYear() == today.getMonthYear()
+                        ) {
+                            Log.d(
+                                "MyWorker",
+                                "all_weeks " + startReminder.hours.toString() + " : " + startReminder.minutes.toString()
+                            )
+                            today.establecerHoraEnFechaActual("${startReminder.hours}:${startReminder.minutes}")
+                        } else {
+                            null
+                        }
+                    }
+
+                    else -> null
                 }
-            }
-        }
-    }
+            Log.d("MyWorker", "fecha es diferente de null:" + (dateTempReminder != null).toString())
 
-    private fun getDateAlarm(
-        alarmOption: ValueTextOption,
-        dateTempReminder: Date,
-        alarm: Int,
-    ): Date? {
-        return when (alarmOption) {
-            ValueTextOption.MINUTES -> {
-                dateTempReminder.addMinutes(alarm)
-            }
+            dateTempReminder?.let {
+                Log.d("MyWorker", " alarma : " + alarm.toString())
+                Log.d(
+                    "MyWorker",
+                    " reminder hora y minutos : " + it.hours.toString() + " : " + it.minutes.toString()
+                )
+                Log.d("MyWorker", " evento hora y minutos : " + reminder.reminder.startHour)
+                var dateEvent = it.addMinutes(reminder.reminder.alarmInMinutes)
+                dateEvent = dateEvent?.addHours(reminder.reminder.alarmInHours)
+                dateEvent = dateEvent?.addMinutes(reminder.reminder.alarmInDays)
+                val event: Date = dateEvent ?: Calendar.getInstance().time
+                val title = "Recuerda que tienes un evento el ${
+                    CalendarUtils.toSimpleString(
+                        event,
+                    )
+                } a la hora ${reminder.reminder.startHour} - ${reminder.reminder.title} ${
+                    reminder.pets.joinToString(
+                        ",",
+                    ) { it.name }
+                }"
 
-            ValueTextOption.HOUR -> {
-                dateTempReminder.addHours(alarm)
+                val description = reminder.reminder.description
+                scheduleNotification(
+                    reminder.reminder.reminderId?.toInt() ?: 0,
+                    title,
+                    description,
+                    it
+                )
             }
-
-            ValueTextOption.DAYS -> {
-                dateTempReminder.addDay(alarm)
-            }
-
-            else -> dateTempReminder.addMinutes(alarm)
         }
     }
 
@@ -222,7 +254,8 @@ class AlarmEventHelper(private val applicationContext: Context) {
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
             )
 
-        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager =
+            applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.time, pendingIntent)
     }
 }

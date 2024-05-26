@@ -180,7 +180,7 @@ class ReminderActivity : AppCompatActivity() {
                     TypeOption.DATE -> it.reminder.durationRepeat
                     null -> "+ Anadir Duracion"
                 }
-            binding.tvAlarm.text = "${it.reminder.alarm} ${it.reminder.alarmOption.mapValueTextOption()}"
+            binding.tvAlarm.text ="${it.reminder.alarmInMinutes} minutos ${it.reminder.alarmInHours} horas ${it.reminder.alarmInDays} dias"
             viewModel.initValues(it)
         }
         viewModel.getSelectCategories()
@@ -301,7 +301,7 @@ class ReminderActivity : AppCompatActivity() {
             }
         }
         viewModel.listAlarms.observe(this) { options ->
-            showDialogOptions(options) {
+            showDialogOptions(options, true) {
                 viewModel.getAlarms()?.let {
                     binding.tvAlarm.text = it
                 }
@@ -343,12 +343,13 @@ class ReminderActivity : AppCompatActivity() {
 
     private fun showDialogOptions(
         listOptions: List<OptionViewInterface>,
+        availableMultipleSelect: Boolean = false,
         callBackOptions: () -> Unit,
     ) {
         val dialogOptions = DialogOption()
         dialogOptions.setListOptions(listOptions)
-        dialogOptions.setCanAddOtherContainer(false)
         dialogOptions.setCallBackOptions { callBackOptions() }
+        dialogOptions.setAvailableMultipleSelect(availableMultipleSelect)
         dialogOptions.show(supportFragmentManager, DialogOption::class.java.simpleName)
     }
 }

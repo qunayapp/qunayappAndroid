@@ -5,10 +5,7 @@ import com.pe.mascotapp.domain.models.ReminderWithPets
 import kotlinx.coroutines.flow.Flow
 
 interface ReminderPetJoinRepository {
-    fun getReminderPet(
-        limit: Int,
-        pageNumber: Int,
-    ): Flow<List<ReminderWithPets>>
+    fun getReminderPet(): Flow<List<ReminderWithPets>>
 
     fun insertReminderPet(reminder: ReminderPetJoin)
 

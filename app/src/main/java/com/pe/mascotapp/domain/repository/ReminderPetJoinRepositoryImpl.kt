@@ -12,11 +12,8 @@ class ReminderPetJoinRepositoryImpl
     constructor(
         private val reminderPetJoinDao: ReminderPetJoinDao,
     ) : ReminderPetJoinRepository {
-        override fun getReminderPet(
-            limit: Int,
-            pageNumber: Int,
-        ): Flow<List<ReminderWithPets>> {
-            return reminderPetJoinDao.getReminderPet(limit, limit * pageNumber)
+        override fun getReminderPet(): Flow<List<ReminderWithPets>> {
+            return reminderPetJoinDao.getReminderPet()
         }
 
         override fun insertReminderPet(reminder: ReminderPetJoin) {

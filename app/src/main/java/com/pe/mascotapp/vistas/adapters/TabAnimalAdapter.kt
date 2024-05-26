@@ -10,7 +10,7 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.databinding.TabAnimalBinding
 import com.pe.mascotapp.vistas.entities.TabAnimalEntity
 
-class TabAnimalAdapter(var tabAnimals: List<TabAnimalEntity>, val onClickTab: (id: Long?) -> Unit) :
+class TabAnimalAdapter(var tabAnimals: MutableList<TabAnimalEntity>, val onClickTab: (id: Long?) -> Unit) :
     RecyclerView.Adapter<TabAnimalAdapter.TabAnimalViewHolder>() {
     private var positionSelected = 0
 

@@ -14,20 +14,20 @@ import com.pe.mascotapp.vistas.adapters.OptionViewInterface
 class DialogOption : DialogFragment() {
     private var listOptions = listOf<OptionViewInterface>()
 
-    private var canAddOtherContainer: Boolean = false
-
     private var callBackOptions: () -> Unit = {}
+
+    private var availableMultipleSelect = false
 
     fun setListOptions(listOptions: List<OptionViewInterface>) {
         this.listOptions = listOptions
     }
 
-    fun setCanAddOtherContainer(canAddOtherContainer: Boolean) {
-        this.canAddOtherContainer = canAddOtherContainer
-    }
-
     fun setCallBackOptions(callBackOptions: () -> Unit) {
         this.callBackOptions = callBackOptions
+    }
+
+    fun setAvailableMultipleSelect(availableMultipleSelect: Boolean) {
+        this.availableMultipleSelect = availableMultipleSelect
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,8 @@ class DialogOption : DialogFragment() {
     ): View {
         val binding = DialogOptionBinding.inflate(inflater, container, false)
         binding.rvRvOptions.layoutManager = LinearLayoutManager(binding.root.context)
-        binding.rvRvOptions.adapter = OptionFieldAdapter(listOptions)
+        val positionOptionTextSelected = listOptions.indexOfFirst { it.isSelected }
+        binding.rvRvOptions.adapter = OptionFieldAdapter(listOptions, positionOptionTextSelected, availableMultipleSelect)
         binding.tvAccept.setOnClickListener {
             callBackOptions()
             this.dismiss()
