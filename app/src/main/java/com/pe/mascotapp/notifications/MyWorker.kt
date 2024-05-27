@@ -74,9 +74,7 @@ class AlarmEventHelper(private val applicationContext: Context) {
     fun setAlarmPeriod(reminders: List<ReminderWithPets>) {
         reminders.forEach { reminder ->
             Log.d("MyWorker", "reminder id " + reminder.reminder.reminderId)
-            val alarm =
-                reminder.reminder.alarmInMinutes + reminder.reminder.alarmInHours * 60 + reminder.reminder.alarmInDays * 60 * 24
-            Log.d("MyWorker", "repeat Option: " + reminder.reminder.repeatOption.toString())
+            if (!reminder.reminder.isActivated) return@forEach
             val dateTempReminder =
                 when (reminder.reminder.repeatOption) {
                     ValueTextOption.DONT_REPEAT -> {
@@ -207,7 +205,6 @@ class AlarmEventHelper(private val applicationContext: Context) {
             Log.d("MyWorker", "fecha es diferente de null:" + (dateTempReminder != null).toString())
 
             dateTempReminder?.let {
-                Log.d("MyWorker", " alarma : " + alarm.toString())
                 Log.d(
                     "MyWorker",
                     " reminder hora y minutos : " + it.hours.toString() + " : " + it.minutes.toString()
