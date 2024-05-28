@@ -50,12 +50,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAgregar"
-            style="@style/Widget.Button.Primary"
+            android:background="@drawable/ic_rectangle_border_28"
+            android:fontFamily="@font/worksans_regular"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="40dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:text="@string/plus_add_new"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
