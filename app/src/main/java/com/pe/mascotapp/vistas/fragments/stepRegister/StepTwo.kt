@@ -12,6 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -58,6 +61,12 @@ class StepTwo:Fragment() {
     ): View? {
         //return super.onCreateView(inflater, container, savedInstanceState)
         var view: View = inflater.inflate(R.layout.fragment_register_two, container,false)
+        val composeView = view.findViewById<ComposeView>(R.id.composeView)
+        composeView.setContent {
+            Column {
+                Text(text = "Hola")
+            }
+        }
         imgPet = view.findViewById<ImageView>(R.id.imgPet)
         txtAgregarFoto = view.findViewById<TextView>(R.id.txtAgregarFoto)
         //autoRaza = view.findViewById<AutoCompleteTextView>(R.id.autoRaza)
