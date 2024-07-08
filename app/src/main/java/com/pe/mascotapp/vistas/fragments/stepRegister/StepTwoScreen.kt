@@ -75,6 +75,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
@@ -82,6 +83,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -363,8 +365,9 @@ fun StepTwoScreen() {
                         .height(58.dp)
                         .padding(horizontal = 77.dp),
                     onClick = { /*TODO*/ },
-                    name = "siguiente"
-                )
+                    content = {
+                        Text(text = "siguiente", style = buttonTitleStyle.copy(fontSize = 20.sp))
+                    })
 
                 Button(
                     modifier = Modifier
@@ -386,7 +389,7 @@ fun StepTwoScreen() {
 @Composable
 fun PrimaryButton(
     modifier: Modifier,
-    name: String,
+    content: @Composable () -> Unit,
     shape: Shape = RoundedCornerShape(60.dp),
     onClick: () -> Unit
 ) {
@@ -398,7 +401,7 @@ fun PrimaryButton(
             colorMediumBlue
         )
     ) {
-        Text(text = name, style = buttonTitleStyle)
+        content.invoke()
     }
 }
 
@@ -448,13 +451,8 @@ fun Step(modifier: Modifier = Modifier, isCompete: Boolean) {
 }
 
 @Composable
-fun CircularName(pet: PetEntity, currentPage: Int, page: Int, totalItems: Int = 0, show: Boolean) {
-    var normalSize = 154.dp
-    when (currentPage) {
-        page -> normalSize = 154.dp
-        page - 1 -> normalSize = 134.dp
-        page - 2 -> normalSize = 125.dp
-    }
+fun CircularName(pet: PetEntity, currentPage: Int, page: Int, totalItems: Int = 0, show: Boolean, size: Dp = 154.dp) {
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -473,7 +471,7 @@ fun CircularName(pet: PetEntity, currentPage: Int, page: Int, totalItems: Int = 
             } + fadeOut()) {
             Box(
                 modifier = Modifier
-                    .size(normalSize)
+                    .size(size)
                     .clip(CircleShape)
                     .background(Color(pet.color)),
                 contentAlignment = Alignment.Center
@@ -659,13 +657,19 @@ fun ViewPagerPets(listPets: List<PetEntity>) {
             ) { page ->
                 val show =
                     pagerState.currentPage == page || pagerState.currentPage + 1 == page || pagerState.currentPage + 2 == page
-
+                var normalSize = 154.dp
+                when (pagerState.currentPage) {
+                    page -> normalSize = 154.dp
+                    page - 1 -> normalSize = 134.dp
+                    page - 2 -> normalSize = 125.dp
+                }
                 CircularName(
                     pet = listPets[page],
                     pagerState.currentPage,
                     page,
                     listPets.size,
-                    show
+                    show,
+                    normalSize
                 )
             }
             ElevatedButton(

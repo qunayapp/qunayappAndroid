@@ -13,9 +13,19 @@ val workSansFontFamily = FontFamily(
     Font(R.font.worksans_light, FontWeight.Light)
 )
 
+val caprasimoFontFamily = FontFamily(
+    Font(R.font.caprasimo_regular, FontWeight.Bold),
+)
+
 val bigTitleStyle = TextStyle(
     fontFamily = workSansFontFamily,
     fontSize = 70.sp,
+    fontWeight = FontWeight.Bold
+)
+
+val caprasimoTitleStyle = TextStyle(
+    fontFamily = caprasimoFontFamily,
+    fontSize = 24.sp,
     fontWeight = FontWeight.Bold
 )
 
@@ -61,6 +71,7 @@ val colorDisabled = Color(0xFFC7C7C7)
 val colorPrimary = Color(0xFF203E6C)
 val colorMediumBlue = Color(0xFF2A6BAF)
 val skyBlue = Color(0xFF48A7D3)
+val colorHeader = Color(0xFFE0EFF4)
 val colorLightGray = Color(0xFFE9E9E9)
 val colorYellow = Color(0xFFF2C953)
 val colorCyan =Color(0xFFE4EFF3)

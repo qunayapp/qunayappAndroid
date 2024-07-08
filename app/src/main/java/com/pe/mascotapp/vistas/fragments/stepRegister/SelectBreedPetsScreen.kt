@@ -1,30 +1,55 @@
 package com.pe.mascotapp.vistas.fragments.stepRegister
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.ContentAlpha
 import com.pe.mascotapp.boldTitleStyle
+import com.pe.mascotapp.buttonTitleStyle
+import com.pe.mascotapp.caprasimoTitleStyle
+import com.pe.mascotapp.colorHeader
 import com.pe.mascotapp.colorPrimary
+import com.pe.mascotapp.colorYellow
 import com.pe.mascotapp.skyBlue
 import com.pe.mascotapp.titleStyle
 
@@ -54,12 +79,39 @@ fun SelectBreedPetsScreen() {
         index.add(initial.uppercaseChar().toString())
         indexedList.addAll(words.map { BreedPet(BreedCategory.TYPE, it) })
     }
-    Scaffold { paddingValues ->
-        Column {
+    Scaffold(
+        topBar = {
             Row(
                 modifier = Modifier
-                    .weight(3F)
-                    .padding(paddingValues)
+                    .background(colorHeader)
+                    .fillMaxWidth()
+                    .padding(start = 29.dp, end = 9.dp, top = 24.dp, bottom = 11.dp)
+            ) {
+                Text(
+                    text = "Selecciona su raza",
+                    style = caprasimoTitleStyle.copy(color = colorPrimary)
+                )
+            }
+        }
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 30.dp, end = 30.dp, top = 11.dp, bottom = 26.dp)
+            ) {
+                SearchAppBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(Color(0XFFF2F2F2))
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .weight(2F)
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -67,9 +119,6 @@ fun SelectBreedPetsScreen() {
                         .padding(start = 29.dp),
                     verticalArrangement = Arrangement.spacedBy(25.dp)
                 ) {
-                    item {
-                        Divider()
-                    }
                     items(indexedList) {
                         BreedPetItem(it)
                         Divider(modifier = Modifier.padding(top = 25.dp))
@@ -80,7 +129,7 @@ fun SelectBreedPetsScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     items(index) {
-                        Text(text = it)
+                        Text(text = it, style = boldTitleStyle.copy(color = colorYellow))
                     }
                 }
             }
@@ -105,7 +154,8 @@ fun SelectBreedPetsScreen() {
                     .fillMaxWidth()
                     .height(57.69.dp),
                 onClick = { /*TODO*/ },
-                name = "Continuar",
+                content = {
+                    Text(text = "Continuar", style = buttonTitleStyle.copy(fontSize = 27.sp)) },
                 shape = RoundedCornerShape(0.dp)
             )
         }
@@ -233,3 +283,57 @@ val catsBreed =
             "Scottish Terrier"
         )
     )
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchAppBar(changeState: () -> Unit = { }, modifier: Modifier) {
+    var text by remember {
+        mutableStateOf("")
+    }
+    Surface(
+        modifier =
+        Modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        color = MaterialTheme.colorScheme.background,
+    ) {
+        TextField(
+            singleLine = true,
+            modifier = modifier,
+            value = text,
+            onValueChange = {
+                text = it
+            },
+            placeholder = {
+                Text(
+                    text = "Buscar",
+                    modifier = Modifier.alpha(ContentAlpha.medium),
+                )
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+            },
+            trailingIcon =
+            {
+                IconButton(onClick = {
+                    if (text.isNotEmpty()) {
+                        text = ""
+                        return@IconButton
+                    }
+                    changeState()
+                }) {
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = "close icon")
+                }
+            },
+            colors =
+            TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+            ),
+        )
+    }
+}
