@@ -1,5 +1,6 @@
 package com.pe.mascotapp.domain.models
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.pe.mascotapp.vistas.entities.PetEntity

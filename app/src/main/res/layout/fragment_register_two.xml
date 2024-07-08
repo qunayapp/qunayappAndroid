@@ -8,12 +8,12 @@
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeView"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
     </androidx.compose.ui.platform.ComposeView>
     <ScrollView
         android:orientation="vertical"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="MissingConstraints">

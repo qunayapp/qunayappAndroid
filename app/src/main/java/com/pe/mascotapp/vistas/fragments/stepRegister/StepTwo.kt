@@ -3,9 +3,6 @@ package com.pe.mascotapp.vistas.fragments.stepRegister
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
-import android.graphics.Paint.Align
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -31,23 +28,24 @@ import java.util.Date
 import java.util.TimeZone
 
 
-class StepTwo:Fragment() {
+class StepTwo : Fragment() {
 
     lateinit var onEditTextChanged: OnEditTextChanged;
-    var imgPet: ImageView?= null
-    var txtAgregarFoto:TextView ?= null
-    var txtStepTitle : TextView ?= null
-    var edtNombre: TextInputLayout?= null
-    var edtRaza:TextInputLayout ?= null
-    var edtTextRaza:TextInputEditText ?= null
-    var lnlDynamically:LinearLayout ?= null
+    var imgPet: ImageView? = null
+    var txtAgregarFoto: TextView? = null
+    var txtStepTitle: TextView? = null
+    var edtNombre: TextInputLayout? = null
+    var edtRaza: TextInputLayout? = null
+    var edtTextRaza: TextInputEditText? = null
+    var lnlDynamically: LinearLayout? = null
     private val pickImage = 100
     private val razaSelected = 200
-    private var imageUri: Uri?= null
+    private var imageUri: Uri? = null
+
     //var autoRaza:AutoCompleteTextView?= null
     var radioGroup: RadioGroup? = null
-    var radioButton: RadioButton?= null
-    var edtFecha: TextInputEditText?= null
+    var radioButton: RadioButton? = null
+    var edtFecha: TextInputEditText? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -60,7 +58,7 @@ class StepTwo:Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         //return super.onCreateView(inflater, container, savedInstanceState)
-        var view: View = inflater.inflate(R.layout.fragment_register_two, container,false)
+        var view: View = inflater.inflate(R.layout.fragment_register_two, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.composeView)
         composeView.setContent {
             Column {
@@ -86,21 +84,24 @@ class StepTwo:Fragment() {
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build()
         edtFecha!!.setOnClickListener {
-            datePicker.show(requireActivity().supportFragmentManager,datePicker.toString())
+            datePicker.show(requireActivity().supportFragmentManager, datePicker.toString())
         }
         radioGroup = view.findViewById<RadioGroup>(R.id.radioGroup)
 
         radioGroup!!.setOnCheckedChangeListener { group, checkedId -> // checkedId is the RadioButton selected
             val rb = view.findViewById(checkedId) as RadioButton
             //rb.setTextColor(context?.let { ContextCompat.getColorStateList(it, R.color.verdeq) })
-            onEditTextChanged.onTextChanged(rb.text.toString(),2,"radioGroup")
+            onEditTextChanged.onTextChanged(rb.text.toString(), 2, "radioGroup")
         }
 
         imgPet!!.setOnClickListener {
             ImagePicker.with(this)
-                .crop()	    			//Crop image(Optional), Check Customization for more option
-                .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                .crop()                    //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(
+                    1080,
+                    1080
+                )    //Final image resolution will be less than 1080 x 1080(Optional)
                 .start(pickImage)
             //val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             //startActivityForResult(gallery,pickImage)
@@ -108,9 +109,12 @@ class StepTwo:Fragment() {
 
         txtAgregarFoto!!.setOnClickListener {
             ImagePicker.with(this)
-                .crop()	    			//Crop image(Optional), Check Customization for more option
-                .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                .crop()                    //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(
+                    1080,
+                    1080
+                )    //Final image resolution will be less than 1080 x 1080(Optional)
                 .start(pickImage)
             //val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             //startActivityForResult(gallery,pickImage)
@@ -154,7 +158,7 @@ class StepTwo:Fragment() {
 
         edtNombre!!.editText!!.doOnTextChanged { text, start, before, count ->
             Utils.dump(text.toString())
-            onEditTextChanged.onTextChanged(text.toString(),2,"edtNombre")
+            onEditTextChanged.onTextChanged(text.toString(), 2, "edtNombre")
         }
 
         datePicker.addOnPositiveButtonClickListener {
@@ -167,16 +171,16 @@ class StepTwo:Fragment() {
             //        "${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}"
 
             var mes = ""
-            if ((calendar.get(Calendar.MONTH)+1) < 10){
+            if ((calendar.get(Calendar.MONTH) + 1) < 10) {
                 mes = "0" + (calendar.get(Calendar.MONTH) + 1)
-            }else{
-                mes = (calendar.get(Calendar.MONTH) + 1 ).toString()
+            } else {
+                mes = (calendar.get(Calendar.MONTH) + 1).toString()
             }
 
             var dia = "00";
-            if (calendar.get(Calendar.DAY_OF_MONTH) < 10){
+            if (calendar.get(Calendar.DAY_OF_MONTH) < 10) {
                 dia = "0" + calendar.get(Calendar.DAY_OF_MONTH)
-            }else{
+            } else {
                 dia = calendar.get(Calendar.DAY_OF_MONTH).toString()
             }
 
@@ -185,7 +189,7 @@ class StepTwo:Fragment() {
 
             edtFecha!!.setText(txtFecha)
             //fechaNacimiento = "" + dia + "/" + mes + "/" + calendar.get(Calendar.YEAR)
-            onEditTextChanged.onTextChanged(txtFecha,3,"edtFecha")
+            onEditTextChanged.onTextChanged(txtFecha, 3, "edtFecha")
 
         }
 
@@ -195,39 +199,40 @@ class StepTwo:Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == pickImage){
+        if (resultCode == Activity.RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
             imgPet!!.setImageURI(imageUri)
-            onEditTextChanged.onImageChange(2,imageUri!!)
+            onEditTextChanged.onImageChange(2, imageUri!!)
 
         }
 
-        if (resultCode == Activity.RESULT_OK && requestCode == razaSelected){
+        if (resultCode == Activity.RESULT_OK && requestCode == razaSelected) {
 
             val result = data?.getSerializableExtra("selected") as ArrayList<Raza>
             lnlDynamically!!.removeAllViews()
 
             var selected = ""
-            for (item in result){
+            for (item in result) {
 
-                if(result.last().id === item.id){
+                if (result.last().id === item.id) {
                     selected += item.nombre
-                }else{
+                } else {
                     selected += item.nombre + ";"
                 }
 
-                val child = LayoutInflater.from(context).inflate(R.layout.raza_selected_holder,null)
+                val child =
+                    LayoutInflater.from(context).inflate(R.layout.raza_selected_holder, null)
                 val txtRazaSelected = child.findViewById<TextView>(R.id.txtRazaSelected)
                 txtRazaSelected.text = item.nombre
                 lnlDynamically!!.addView(child)
             }
-            onEditTextChanged.onTextChanged(selected,2,"autoRaza")
+            onEditTextChanged.onTextChanged(selected, 2, "autoRaza")
         }
     }
 
 
     companion object {
-        fun newInstance(text: String) : StepTwo {
+        fun newInstance(text: String): StepTwo {
             val stepTwo = StepTwo()
             val args = Bundle()
             args.putString("title", text)
@@ -237,3 +242,4 @@ class StepTwo:Fragment() {
     }
 
 }
+

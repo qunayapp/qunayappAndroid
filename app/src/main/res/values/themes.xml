@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Mascotapp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimary">@color/verdeclaroq</item>
         <item name="colorPrimaryVariant">@color/verdepastelq</item>
         <item name="colorOnPrimary">@color/negroq</item>
