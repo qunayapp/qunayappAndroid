@@ -40,6 +40,9 @@
             android:name=".vistas.reminder.RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".vistas.fragments.stepRegister.SelectBreedActivity"
+            android:exported="false" />
+        <activity
             android:name=".vistas.DetailServiceActivity"
             android:exported="false" />
         <activity

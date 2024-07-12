@@ -33,12 +33,13 @@ data class Pet(
 }
 
 enum class Sex {
-    FEMALE, MALE;
+    FEMALE, MALE, NONE;
 
     fun toSpanish(): String {
         return when (this) {
             FEMALE -> "Hembra"
             MALE -> "Macho"
+            NONE -> "Ninguno"
         }
     }
 }

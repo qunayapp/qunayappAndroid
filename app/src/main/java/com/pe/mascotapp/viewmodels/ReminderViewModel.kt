@@ -216,7 +216,7 @@ constructor(
                         image = it.image,
                         name = it.name,
                         specie = it.specie,
-                        weight = it.weight,
+                        weight = it.weight ?: 0.0,
                         sex = it.sex,
                         raza = it.raza,
                         birthdate = it.birthdate,
@@ -266,7 +266,7 @@ constructor(
     fun getStartDateSelected(): String? {
         (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
             reminderEntity.startDate = CalendarUtils.getFormatDate4(it)
-             return CalendarUtils.getFormatDate(it)
+            return CalendarUtils.getFormatDate(it)
         }
         reminderEntity.startDate = CalendarUtils.getFormatDate4(Calendar.getInstance().time)
         return CalendarUtils.getFormatDate(Calendar.getInstance().time)
@@ -326,19 +326,22 @@ constructor(
         var tempString = ""
         options.forEach {
             val temp = (it as CounterOption)
-            when(temp.category){
+            when (temp.category) {
                 ValueTextOption.MINUTES -> {
                     reminderEntity.alarmInMinutes = temp.counter
                     tempString += reminderEntity.alarmInMinutes.toString() + " minutos "
                 }
+
                 ValueTextOption.DAYS -> {
                     reminderEntity.alarmInDays = temp.counter
                     tempString += reminderEntity.alarmInDays.toString() + " dias "
                 }
+
                 ValueTextOption.HOUR -> {
                     reminderEntity.alarmInHours = temp.counter
                     tempString += reminderEntity.alarmInHours.toString() + " horas "
                 }
+
                 else -> {}
             }
         }
@@ -467,15 +470,30 @@ constructor(
         return options
     }
 
-    private fun getTemporalAlarmOptions() : List<OptionViewInterface>{
+    private fun getTemporalAlarmOptions(): List<OptionViewInterface> {
         return listOf(
-            CounterOption("minutos", isSelected = true, category = ValueTextOption.MINUTES, counter = reminderEntity.alarmInMinutes),
-            CounterOption("horas", isSelected = true, category = ValueTextOption.HOUR, counter = reminderEntity.alarmInHours),
-            CounterOption("dias", isSelected = true, category = ValueTextOption.DAYS, counter = reminderEntity.alarmInDays),
+            CounterOption(
+                "minutos",
+                isSelected = true,
+                category = ValueTextOption.MINUTES,
+                counter = reminderEntity.alarmInMinutes
+            ),
+            CounterOption(
+                "horas",
+                isSelected = true,
+                category = ValueTextOption.HOUR,
+                counter = reminderEntity.alarmInHours
+            ),
+            CounterOption(
+                "dias",
+                isSelected = true,
+                category = ValueTextOption.DAYS,
+                counter = reminderEntity.alarmInDays
+            ),
         )
     }
 
-    private fun getTemporalDuration():List<OptionViewInterface> {
+    private fun getTemporalDuration(): List<OptionViewInterface> {
         val options = listOf(
             TextOption("Para siempre", ValueTextOption.FOR_EVER),
             CounterOption("Numero de veces"),
@@ -487,11 +505,14 @@ constructor(
             }
             if (it is CounterOption && reminderEntity.durationTypeRepeat == TypeOption.COUNTER) {
                 it.isSelected = true
-                it.counter = reminderEntity.durationRepeat?.toInt()?: 0
+                it.counter = reminderEntity.durationRepeat?.toInt() ?: 0
             }
             if (it is CalendarOptionNormal && reminderEntity.durationTypeRepeat == TypeOption.DATE) {
                 it.isSelected = true
-                it.date = CalendarUtils.stringToDate(reminderEntity.durationRepeat?:"","dd 'de' MMM 'de' yyyy")
+                it.date = CalendarUtils.stringToDate(
+                    reminderEntity.durationRepeat ?: "",
+                    "dd 'de' MMM 'de' yyyy"
+                )
             }
         }
         return options

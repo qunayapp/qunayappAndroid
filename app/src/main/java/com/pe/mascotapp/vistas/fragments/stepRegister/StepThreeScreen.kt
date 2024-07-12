@@ -194,7 +194,7 @@ fun StepThreeScreen() {
                             text = "Tus Mascotas",
                             style = caprasimoTitleStyle.copy(color = colorPrimary)
                         )
-                        ViewPagerPets(listPets)
+                        //ViewPagerPets(listPets)
                     }
                 }
                 Column {

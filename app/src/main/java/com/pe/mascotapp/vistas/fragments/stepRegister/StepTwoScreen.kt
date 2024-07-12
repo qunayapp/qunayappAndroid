@@ -1,5 +1,11 @@
 package com.pe.mascotapp.vistas.fragments.stepRegister
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -21,7 +27,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -32,7 +37,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -43,8 +48,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -57,25 +60,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
@@ -102,91 +102,34 @@ import com.pe.mascotapp.colorYellow
 import com.pe.mascotapp.textFieldTextStyle
 import com.pe.mascotapp.titleStyle
 import com.pe.mascotapp.vistas.entities.PetEntity
-import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun StepTwoScreen() {
     val currentStep = remember { mutableIntStateOf(1) }
 
-    var namePet by remember { mutableStateOf("") }
-
-    var weightPet by remember { mutableStateOf("") }
-
-    var calendarPet by remember { mutableStateOf("") }
-
-    var kindPet by remember {
-        mutableStateOf(KindPet.None)
-    }
-
-    var sexPet by remember {
-        mutableStateOf(SexPet.None)
-    }
-
-    val listPets = listOf(
-        PetEntity(
-            0L,
-            "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
-            "Asdfasdf asdfasdf",
-            "asdfasdf",
-            "asdfasdf",
-            20.0,
-            Sex.MALE,
-            "01/01/2023",
-            false,
-            0xFF48A7D3
-        ),
-        PetEntity(
-            1L,
-            "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
-            "Asdfasdfff ffff",
-            "asdfasdf",
-            "asdfasdf",
-            20.0,
-            Sex.MALE,
-            "01/01/2023",
-            false,
-            0xFF2A6BAF
-        ),
-        PetEntity(
-            2L,
-            "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
-            "fffddf fdfds",
-            "asdfasdf",
-            "asdfasdf",
-            20.0,
-            Sex.MALE,
-            "01/01/2023",
-            false,
-            0xFF48A7D3
-        ),
-        PetEntity(
-            3L,
-            "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
-            "Asdfasdf",
-            "asdfasdf",
-            "asdfasdf",
-            20.0,
-            Sex.MALE,
-            "01/01/2023",
-            false,
-            0xFF6EA6E1
-        ),
-        PetEntity(
-            4L,
-            "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
-            "Asdfasdf",
-            "asdfasdf",
-            "asdfasdf",
-            20.0,
-            Sex.MALE,
-            "01/01/2023",
-            false,
-            0xFF2A6BAF
+    val listPets = remember {
+        mutableStateListOf(
+            PetEntity(
+                null,
+                "",
+                "",
+                KindPet.None.value(),
+                "",
+                -1.0,
+                Sex.NONE,
+                "",
+                false,
+                0xFF48A7D3
+            )
         )
-    )
+    }
 
-    val weightRegex = Regex("^[0-9]+(\\.[0-9]{0,2})?\$")
+    val pagerState = rememberPagerState(pageCount = {
+        listPets.size
+    })
+
     Box(
         Modifier
             .background(Color.White)
@@ -199,13 +142,46 @@ fun StepTwoScreen() {
             contentScale = ContentScale.FillBounds
         )
         Scaffold(
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent,
+            bottomBar = {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    PrimaryButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp)
+                            .height(58.dp)
+                            .padding(horizontal = 77.dp),
+                        onClick = { /*TODO*/ },
+                        content = {
+                            Text(
+                                text = "siguiente",
+                                style = buttonTitleStyle.copy(fontSize = 20.sp)
+                            )
+                        })
+
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(58.dp)
+                            .padding(horizontal = 77.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            Color.Transparent
+                        ),
+                        onClick = { }) {
+                        Text(text = "volver", style = buttonTitleStyle, color = colorPrimary)
+                    }
+                }
+
+            }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
+                    .padding(bottom = 20.dp)
             ) {
                 Column(modifier = Modifier.padding(top = 37.dp)) {
                     Text(
@@ -229,160 +205,156 @@ fun StepTwoScreen() {
                     currentStep = currentStep.intValue
                 )
 
-                ViewPagerPets(listPets)
+                ViewPagerPets(listPets, pagerState)
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 22.dp),
-                    verticalArrangement = Arrangement.spacedBy(18.11.dp)
-                ) {
-                    CustomTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        leadingIcon = painterResource(id = R.drawable.mascotas),
-                        value = namePet,
-                        onValueChange = {
-                            namePet = it
-                        },
-                        label = "¿Cómo se llama tu mascota? "
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(53.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        IconTextButton(
-                            "Perro",
-                            R.drawable.perro,
-                            kindPet == KindPet.Dog,
-                            Modifier
-                                .weight(1F)
-                                .fillMaxHeight()
-                                .width(IntrinsicSize.Max),
-                            onClick = {
-                                kindPet = KindPet.Dog
-                            }
-                        )
-                        IconTextButton(
-                            "Gato",
-                            R.drawable.gato,
-                            kindPet == KindPet.Cat,
-                            Modifier
-                                .weight(1F)
-                                .fillMaxHeight()
-                                .width(IntrinsicSize.Max),
-                            onClick = {
-                                kindPet = KindPet.Cat
-                            }
-                        )
-                        IconTextButton(
-                            "Otro",
-                            R.drawable.llama,
-                            kindPet == KindPet.Other,
-                            Modifier
-                                .weight(1F)
-                                .fillMaxHeight()
-                                .width(IntrinsicSize.Max),
-                            onClick = {
-                                kindPet = KindPet.Other
-                            }
-                        )
-                    }
-
-                    ChipGroup()
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(53.dp),
-                        horizontalArrangement = Arrangement.spacedBy(11.dp)
-                    ) {
-                        IconTextButton(
-                            name = "Macho",
-                            icon = R.drawable.hombre,
-                            isEnabled = sexPet == SexPet.Male,
-                            modifier = Modifier
-                                .weight(1F)
-                                .fillMaxHeight(),
-                            onClick = {
-                                sexPet = SexPet.Male
-                            }
-                        )
-                        IconTextButton(
-                            name = "Hembra",
-                            icon = R.drawable.mujer,
-                            isEnabled = sexPet == SexPet.Female,
-                            modifier = Modifier
-                                .weight(1F)
-                                .fillMaxHeight(),
-                            onClick = {
-                                sexPet = SexPet.Female
-                            }
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(11.dp)
-                    ) {
-                        CustomTextField(
-                            modifier = Modifier
-                                .weight(1F)
-                                .fillMaxHeight(),
-                            leadingIcon = painterResource(id = R.drawable.peso),
-                            value = weightPet,
-                            onValueChange = {
-                                if (weightRegex.matches(it)) {
-                                    weightPet = it
-                                }
-                            },
-                            suffix = "kg",
-                            label = "Peso",
-                            textAlign = TextAlign.End,
-                            keyBoarType = KeyboardType.Decimal
-                        )
-                        CustomTextField(
-                            modifier = Modifier
-                                .weight(1F)
-                                .fillMaxHeight(),
-                            leadingIcon = painterResource(id = R.drawable.edad),
-                            value = calendarPet,
-                            onValueChange = {
-                                calendarPet = it
-                            },
-                            label = "Edad",
-                            keyBoarType = KeyboardType.Text,
-                            visualTransformation = DateTransformation()
-                        )
-                    }
-                }
-                PrimaryButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 44.dp)
-                        .height(58.dp)
-                        .padding(horizontal = 77.dp),
-                    onClick = { /*TODO*/ },
-                    content = {
-                        Text(text = "siguiente", style = buttonTitleStyle.copy(fontSize = 20.sp))
-                    })
-
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(58.dp)
-                        .padding(horizontal = 77.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        Color.Transparent
-                    ),
-                    onClick = { /*TODO*/ }) {
-                    Text(text = "volver", style = buttonTitleStyle, color = colorPrimary)
-                }
+                FormPet(listPets, pagerState)
             }
         }
 
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun FormPet(listPets: MutableList<PetEntity>, pagerState: PagerState) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 22.dp),
+        verticalArrangement = Arrangement.spacedBy(18.11.dp)
+    ) {
+        CustomTextField(
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = painterResource(id = R.drawable.mascotas),
+            value = listPets[pagerState.currentPage].name,
+            onValueChange = {
+                listPets[pagerState.currentPage] = listPets[pagerState.currentPage].copy(name = it)
+            },
+            label = "¿Cómo se llama tu mascota? "
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(53.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            IconTextButton(
+                "Perro",
+                R.drawable.perro,
+                listPets[pagerState.currentPage].specie == KindPet.Dog.value(),
+                Modifier
+                    .weight(1F)
+                    .fillMaxHeight()
+                    .width(IntrinsicSize.Max),
+                onClick = {
+                    listPets[pagerState.currentPage] =
+                        listPets[pagerState.currentPage].copy(specie = KindPet.Dog.value())
+                }
+            )
+            IconTextButton(
+                "Gato",
+                R.drawable.gato,
+                listPets[pagerState.currentPage].specie == KindPet.Cat.value(),
+                Modifier
+                    .weight(1F)
+                    .fillMaxHeight()
+                    .width(IntrinsicSize.Max),
+                onClick = {
+                    listPets[pagerState.currentPage] =
+                        listPets[pagerState.currentPage].copy(specie = KindPet.Cat.value())
+                }
+            )
+            IconTextButton(
+                "Otro",
+                R.drawable.llama,
+                listPets[pagerState.currentPage].specie == KindPet.Other.value(),
+                Modifier
+                    .weight(1F)
+                    .fillMaxHeight()
+                    .width(IntrinsicSize.Max),
+                onClick = {
+                    listPets[pagerState.currentPage] =
+                        listPets[pagerState.currentPage].copy(specie = KindPet.Other.value())
+                }
+            )
+        }
+
+        ChipGroup()
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(53.dp),
+            horizontalArrangement = Arrangement.spacedBy(11.dp)
+        ) {
+            IconTextButton(
+                name = "Macho",
+                icon = R.drawable.hombre,
+                isEnabled = listPets[pagerState.currentPage].sex == Sex.MALE,
+                modifier = Modifier
+                    .weight(1F)
+                    .fillMaxHeight(),
+                onClick = {
+                    listPets[pagerState.currentPage] =
+                        listPets[pagerState.currentPage].copy(sex = Sex.MALE)
+                }
+            )
+            IconTextButton(
+                name = "Hembra",
+                icon = R.drawable.mujer,
+                isEnabled = listPets[pagerState.currentPage].sex == Sex.FEMALE,
+                modifier = Modifier
+                    .weight(1F)
+                    .fillMaxHeight(),
+                onClick = {
+                    listPets[pagerState.currentPage] =
+                        listPets[pagerState.currentPage].copy(sex = Sex.FEMALE)
+                }
+            )
+        }
+        val weightRegex = Regex("^[0-9]+(\\.[0-9]{0,2})?\$")
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(11.dp)
+        ) {
+            CustomTextField(
+                modifier = Modifier
+                    .weight(1F)
+                    .fillMaxHeight(),
+                leadingIcon = painterResource(id = R.drawable.peso),
+                value = if (listPets[pagerState.currentPage].weight >= 0.0) listPets[pagerState.currentPage].weight.toString() else "",
+                onValueChange = {
+                    if (weightRegex.matches(it)) {
+                        listPets[pagerState.currentPage] =
+                            listPets[pagerState.currentPage].copy(weight = it.toDouble())
+                    }
+                },
+                suffix = "kg",
+                label = "Peso",
+                textAlign = TextAlign.End,
+                keyBoarType = KeyboardType.Decimal
+            )
+            CustomTextField(
+                modifier = Modifier
+                    .weight(1F)
+                    .fillMaxHeight(),
+                leadingIcon = painterResource(id = R.drawable.edad),
+                value = listPets[pagerState.currentPage].birthdate.replace("/", ""),
+                onValueChange = {
+                    Log.e("quack", it)
+                    if (!it.contains(".") && !it.contains(",") && !it.contains(" ")) {
+                        listPets[pagerState.currentPage] =
+                            listPets[pagerState.currentPage].copy(birthdate = it)
+                    }
+                },
+                label = "Edad",
+                keyBoarType = KeyboardType.Number,
+                visualTransformation = DateTransformation()
+            )
+        }
     }
 }
 
@@ -451,8 +423,15 @@ fun Step(modifier: Modifier = Modifier, isCompete: Boolean) {
 }
 
 @Composable
-fun CircularName(pet: PetEntity, currentPage: Int, page: Int, totalItems: Int = 0, show: Boolean, size: Dp = 154.dp) {
-
+fun CircularName(
+    pet: PetEntity,
+    currentPage: Int,
+    page: Int,
+    totalItems: Int = 0,
+    show: Boolean,
+    size: Dp = 154.dp,
+    delete: () -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -477,46 +456,51 @@ fun CircularName(pet: PetEntity, currentPage: Int, page: Int, totalItems: Int = 
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = getInitials(pet.name),
+                    text = pet.name.getInitials(),
                     style = bigTitleStyle,
                     color = colorCyan
                 )
             }
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(
-                    onClick = { /* Handle button click */ },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = Color.Red
-                    ),
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .width(40.dp)
-                        .height(40.dp)
-                        .background(colorYellow)
+            if (totalItems > 1) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_trash),
+                    IconButton(
+                        onClick = { delete.invoke() },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = Color.Red
+                        ),
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(7.dp),
-                        contentDescription = "Button Image"
-                    )
+                            .clip(CircleShape)
+                            .width(40.dp)
+                            .height(40.dp)
+                            .background(colorYellow)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_trash),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(7.dp),
+                            contentDescription = "Button Image"
+                        )
+                    }
                 }
             }
-
         }
 
 
     }
 }
 
-fun getInitials(name: String): String {
-    return name.split(" ")
-        .map { it.first().uppercaseChar() }
+fun String.getInitials(): String {
+    val initials = this.trim().split(" ")
+        .map { it.firstOrNull()?.uppercaseChar() ?: "" }
         .joinToString("")
+    if (initials.length >= 2) {
+        return initials.substring(0, 2)
+    }
+    return initials
 }
 
 
@@ -559,6 +543,7 @@ fun CustomTextField(
             cursorColor = colorPrimary,
             focusedBorderColor = colorPrimary,
             unfocusedBorderColor = colorDisabled,
+            focusedLabelColor = colorPrimary,
         ),
         label = { Text(text = label, style = textFieldTextStyle) },
         suffix = { Text(text = suffix ?: "") },
@@ -568,170 +553,6 @@ fun CustomTextField(
         ),
         visualTransformation = visualTransformation
     )
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun ViewPagerPets(listPets: List<PetEntity>) {
-    val pagerState = rememberPagerState(pageCount = {
-        listPets.size
-    })
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val itemWidth = screenWidth / 3
-
-    val scope = rememberCoroutineScope()
-
-    Column(
-        modifier = Modifier
-            .padding(top = 38.dp)
-    )
-    {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center,
-        ) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .zIndex(100F),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                        }
-                    },
-                    modifier = Modifier
-                        .width(66.dp)
-                        .height(99.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_arrow),
-                        modifier = Modifier
-                            .padding(end = 11.13.dp)
-                            .fillMaxSize()
-                            .rotate(180F),
-                        contentDescription = "Button Image"
-                    )
-                }
-            }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .zIndex(100F),
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                        }
-                    },
-                    modifier = Modifier
-                        .width(66.dp)
-                        .height(99.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_arrow),
-                        modifier = Modifier
-                            .padding(start = 11.13.dp)
-                            .fillMaxSize(),
-                        contentDescription = "Button Image"
-                    )
-                }
-            }
-            HorizontalPager(
-                pageSpacing = -(itemWidth * 2) - (itemWidth / 2) + 4.dp,
-                contentPadding = PaddingValues(
-                    start = (itemWidth - 100.dp) / 2,
-                    end = (itemWidth - 100.dp) / 2,
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .zIndex(0F),
-                state = pagerState,
-                beyondBoundsPageCount = 3,
-                reverseLayout = true,
-            ) { page ->
-                val show =
-                    pagerState.currentPage == page || pagerState.currentPage + 1 == page || pagerState.currentPage + 2 == page
-                var normalSize = 154.dp
-                when (pagerState.currentPage) {
-                    page -> normalSize = 154.dp
-                    page - 1 -> normalSize = 134.dp
-                    page - 2 -> normalSize = 125.dp
-                }
-                CircularName(
-                    pet = listPets[page],
-                    pagerState.currentPage,
-                    page,
-                    listPets.size,
-                    show,
-                    normalSize
-                )
-            }
-            ElevatedButton(
-                contentPadding = PaddingValues(),
-                onClick = {
-
-                },
-                colors = ButtonDefaults.buttonColors(
-                    Color(0xFFF9F9F9)
-                ),
-                shape = ButtonDefaults.elevatedShape,
-                modifier = Modifier
-                    .padding(start = 200.dp)
-                    .zIndex(0F)
-                    .width(70.dp)
-                    .height(70.dp)
-                    .shadow(elevation = 20.dp, shape = CircleShape)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "+",
-                        style = boldTitleStyle.copy(fontSize = 28.sp),
-                        color = colorPrimary
-                    )
-                    Text(
-                        text = "Agregar\n" + "mascota",
-                        style = boldTitleStyle.copy(fontSize = 9.sp),
-                        color = colorPrimary,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .height(53.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            repeat(listPets.size) { iteration ->
-                val color =
-                    if (listPets.size - pagerState.currentPage - 1 == iteration)
-                        colorMediumBlue
-                    else Color(0xFFCECECE).copy(
-                        alpha = 0.5f
-                    )
-                Box(
-                    modifier = Modifier
-                        .padding(6.dp)
-                        .clip(CircleShape)
-                        .background(color)
-                        .size(9.dp)
-                )
-            }
-        }
-    }
 }
 
 @Composable
@@ -778,6 +599,7 @@ fun IconTextButton(
 
 @Composable
 fun CustomChip(name: String, delete: (name: String) -> Unit) {
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -804,43 +626,60 @@ fun CustomChip(name: String, delete: (name: String) -> Unit) {
 @Composable
 @Preview
 fun ChipGroup() {
-    var words by remember {
-        mutableStateOf(
-            listOf(
-                "Alaskan Klee Kay",
-                "Alaskan husky",
-                "Alaskan malmute",
-                "Alaskan clasic",
-                "Alaskan husky",
-                "Alaskan husky",
-                "Alaskan husky",
-                "Alaskan husky",
-                "Alaskan husky"
-            )
+    val context = LocalContext.current
+
+    var words = remember {
+        mutableStateListOf<BreedPet>(
         )
     }
-
+    val breedLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            words.clear()
+            words.addAll(
+                result.data
+                    ?.getParcelableArrayExtra("BUNDLE_BREED")
+                    ?.filterIsInstance<BreedPet>()
+                    ?: emptyList()
+            )
+        }
+    }
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(9.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
             .fillMaxWidth(1F)
             .border(
-                border = BorderStroke(width = 1.81.dp, colorPrimary),
+                border = BorderStroke(width = 1.81.dp, colorDisabled),
                 shape = RoundedCornerShape(9.dp)
             )
             .padding(horizontal = 18.dp, vertical = 8.dp)
+            .clickable {
+                breedLauncher.launch(
+                    SelectBreedActivity.newInstance(context as Activity, words)
+                )
+            }
     ) {
         Image(
             painter = painterResource(R.drawable.estrella),
             contentDescription = "",
             modifier = Modifier.height(20.dp)
         )
-        words.forEach { word ->
-            CustomChip(word) {
-                words = words.toMutableList().apply { remove(it) }
+        if (words.isEmpty()) {
+            Text(
+                text = "¿Cuál es su raza?",
+                style = buttonTitleStyle.copy(fontSize = 14.sp, color = colorDisabled),
+            )
+        } else {
+            words.forEach { breed ->
+                CustomChip(breed.name) {
+                    words = words
+                        .apply { removeIf { it.name.equals(breed.name, true) } }
+                }
             }
         }
+
     }
 }
 
@@ -851,11 +690,16 @@ enum class KindPet {
     None
 }
 
-enum class SexPet {
-    Male,
-    Female,
-    None
+
+fun KindPet.value(): String {
+    return when (this) {
+        KindPet.Dog -> "Perro"
+        KindPet.Cat -> "Gato"
+        KindPet.Other -> "Otro"
+        KindPet.None -> "Ninguno"
+    }
 }
+
 
 class DateTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
