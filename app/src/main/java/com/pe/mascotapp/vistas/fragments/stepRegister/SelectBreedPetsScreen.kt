@@ -4,10 +4,7 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Parcelable
-import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,7 +46,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.ContentAlpha
@@ -61,12 +57,11 @@ import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.colorYellow
 import com.pe.mascotapp.skyBlue
 import com.pe.mascotapp.titleStyle
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class BreedPet(
+data class BreedPetEntity(
     val category: BreedCategory,
     val name: String,
     var isSelected: Boolean = false
@@ -78,20 +73,20 @@ enum class BreedCategory {
 }
 
 @Composable
-fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPet>) {
+fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>) {
     val breedPets by remember {
         mutableStateOf((dogBreed.value.plus(catsBreed.value)).sorted())
     }
 
-    val totalItems = remember { mutableStateListOf<BreedPet>() }
+    val totalItems = remember { mutableStateListOf<BreedPetEntity>() }
 
     val index = mutableListOf<String>()
 
     breedPets.groupBy { it.first() }.forEach { (initial, words) ->
-        totalItems.add(BreedPet(BreedCategory.INDEX, initial.uppercaseChar().toString()))
+        totalItems.add(BreedPetEntity(BreedCategory.INDEX, initial.uppercaseChar().toString()))
         index.add(initial.uppercaseChar().toString())
         totalItems.addAll(words.map { item ->
-            BreedPet(BreedCategory.TYPE, item,  listBreed.find { it.name == item } != null)
+            BreedPetEntity(BreedCategory.TYPE, item,  listBreed.find { it.name == item } != null)
         })
     }
     val listState = rememberLazyListState()
@@ -238,7 +233,7 @@ fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPet>) {
 }
 
 @Composable
-fun BreedPetItem(breedPet: BreedPet, onClick: () -> Unit) {
+fun BreedPetItem(breedPet: BreedPetEntity, onClick: () -> Unit) {
     val textStyle =
         if (breedPet.category == BreedCategory.INDEX) boldTitleStyle.copy(fontSize = 20.sp) else titleStyle.copy(
             fontSize = 20.sp

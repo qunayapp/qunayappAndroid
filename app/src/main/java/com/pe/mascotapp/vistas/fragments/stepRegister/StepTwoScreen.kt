@@ -2,7 +2,6 @@ package com.pe.mascotapp.vistas.fragments.stepRegister
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -58,12 +57,9 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -99,9 +95,12 @@ import com.pe.mascotapp.colorLightGray
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.colorYellow
+import com.pe.mascotapp.domain.models.Breed
+import com.pe.mascotapp.skyBlue
 import com.pe.mascotapp.textFieldTextStyle
 import com.pe.mascotapp.titleStyle
 import com.pe.mascotapp.vistas.entities.PetEntity
+import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -111,17 +110,19 @@ fun StepTwoScreen() {
 
     val listPets = remember {
         mutableStateListOf(
-            PetEntity(
-                null,
-                "",
-                "",
-                KindPet.None.value(),
-                "",
-                -1.0,
-                Sex.NONE,
-                "",
-                false,
-                0xFF48A7D3
+            PetWithBreedsEntity(
+                PetEntity(
+                    null,
+                    "",
+                    "",
+                    KindPet.None.value(),
+                    -1.0,
+                    Sex.NONE,
+                    "",
+                    false,
+                    0xFF48A7D3
+                ),
+                listOf()
             )
         )
     }
@@ -216,7 +217,7 @@ fun StepTwoScreen() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FormPet(listPets: MutableList<PetEntity>, pagerState: PagerState) {
+fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) {
 
     Column(
         modifier = Modifier
@@ -227,9 +228,12 @@ fun FormPet(listPets: MutableList<PetEntity>, pagerState: PagerState) {
         CustomTextField(
             modifier = Modifier.fillMaxWidth(),
             leadingIcon = painterResource(id = R.drawable.mascotas),
-            value = listPets[pagerState.currentPage].name,
+            value = listPets[pagerState.currentPage].pet.name,
             onValueChange = {
-                listPets[pagerState.currentPage] = listPets[pagerState.currentPage].copy(name = it)
+                val pet = listPets[pagerState.currentPage].pet
+                listPets[pagerState.currentPage] = listPets[pagerState.currentPage].copy(
+                    pet = pet.copy(name = it)
+                )
             },
             label = "¿Cómo se llama tu mascota? "
         )
@@ -242,45 +246,69 @@ fun FormPet(listPets: MutableList<PetEntity>, pagerState: PagerState) {
             IconTextButton(
                 "Perro",
                 R.drawable.perro,
-                listPets[pagerState.currentPage].specie == KindPet.Dog.value(),
+                listPets[pagerState.currentPage].pet.specie == KindPet.Dog.value(),
                 Modifier
                     .weight(1F)
                     .fillMaxHeight()
                     .width(IntrinsicSize.Max),
                 onClick = {
+                    val pet = listPets[pagerState.currentPage].pet
+                    var breed = listPets[pagerState.currentPage].breeds
+                    if (listPets[pagerState.currentPage].pet.specie != KindPet.Dog.value()) {
+                        breed = emptyList()
+                    }
                     listPets[pagerState.currentPage] =
-                        listPets[pagerState.currentPage].copy(specie = KindPet.Dog.value())
+                        listPets[pagerState.currentPage].copy(
+                            pet = pet.copy(specie = KindPet.Dog.value()),
+                            breeds = breed
+                        )
                 }
             )
             IconTextButton(
                 "Gato",
                 R.drawable.gato,
-                listPets[pagerState.currentPage].specie == KindPet.Cat.value(),
+                listPets[pagerState.currentPage].pet.specie == KindPet.Cat.value(),
                 Modifier
                     .weight(1F)
                     .fillMaxHeight()
                     .width(IntrinsicSize.Max),
                 onClick = {
+                    var breed = listPets[pagerState.currentPage].breeds
+                    if (listPets[pagerState.currentPage].pet.specie != KindPet.Cat.value()) {
+                        breed = emptyList()
+                    }
+                    val pet = listPets[pagerState.currentPage].pet
                     listPets[pagerState.currentPage] =
-                        listPets[pagerState.currentPage].copy(specie = KindPet.Cat.value())
+                        listPets[pagerState.currentPage].copy(
+                            pet = pet.copy(specie = KindPet.Cat.value()),
+                            breeds = breed
+                        )
                 }
             )
             IconTextButton(
                 "Otro",
                 R.drawable.llama,
-                listPets[pagerState.currentPage].specie == KindPet.Other.value(),
+                listPets[pagerState.currentPage].pet.specie == KindPet.Other.value(),
                 Modifier
                     .weight(1F)
                     .fillMaxHeight()
                     .width(IntrinsicSize.Max),
                 onClick = {
+                    val pet = listPets[pagerState.currentPage].pet
+                    var breed = listPets[pagerState.currentPage].breeds
+                    if (listPets[pagerState.currentPage].pet.specie != KindPet.Other.value()) {
+                        breed = emptyList()
+                    }
                     listPets[pagerState.currentPage] =
-                        listPets[pagerState.currentPage].copy(specie = KindPet.Other.value())
+                        listPets[pagerState.currentPage].copy(
+                            pet = pet.copy(specie = KindPet.Other.value()),
+                            breeds = breed
+                        )
                 }
             )
         }
 
-        ChipGroup()
+        ChipGroup(listPets, pagerState)
 
         Row(
             modifier = Modifier
@@ -291,25 +319,27 @@ fun FormPet(listPets: MutableList<PetEntity>, pagerState: PagerState) {
             IconTextButton(
                 name = "Macho",
                 icon = R.drawable.hombre,
-                isEnabled = listPets[pagerState.currentPage].sex == Sex.MALE,
+                isEnabled = listPets[pagerState.currentPage].pet.sex == Sex.MALE,
                 modifier = Modifier
                     .weight(1F)
                     .fillMaxHeight(),
                 onClick = {
+                    val pet = listPets[pagerState.currentPage].pet
                     listPets[pagerState.currentPage] =
-                        listPets[pagerState.currentPage].copy(sex = Sex.MALE)
+                        listPets[pagerState.currentPage].copy(pet = pet.copy(sex = Sex.MALE))
                 }
             )
             IconTextButton(
                 name = "Hembra",
                 icon = R.drawable.mujer,
-                isEnabled = listPets[pagerState.currentPage].sex == Sex.FEMALE,
+                isEnabled = listPets[pagerState.currentPage].pet.sex == Sex.FEMALE,
                 modifier = Modifier
                     .weight(1F)
                     .fillMaxHeight(),
                 onClick = {
+                    val pet = listPets[pagerState.currentPage].pet
                     listPets[pagerState.currentPage] =
-                        listPets[pagerState.currentPage].copy(sex = Sex.FEMALE)
+                        listPets[pagerState.currentPage].copy(pet = pet.copy(sex = Sex.FEMALE))
                 }
             )
         }
@@ -325,11 +355,12 @@ fun FormPet(listPets: MutableList<PetEntity>, pagerState: PagerState) {
                     .weight(1F)
                     .fillMaxHeight(),
                 leadingIcon = painterResource(id = R.drawable.peso),
-                value = if (listPets[pagerState.currentPage].weight >= 0.0) listPets[pagerState.currentPage].weight.toString() else "",
+                value = if (listPets[pagerState.currentPage].pet.weight >= 0.0) listPets[pagerState.currentPage].pet.weight.toString() else "",
                 onValueChange = {
                     if (weightRegex.matches(it)) {
+                        val pet = listPets[pagerState.currentPage].pet
                         listPets[pagerState.currentPage] =
-                            listPets[pagerState.currentPage].copy(weight = it.toDouble())
+                            listPets[pagerState.currentPage].copy(pet = pet.copy(weight = it.toDouble()))
                     }
                 },
                 suffix = "kg",
@@ -342,12 +373,13 @@ fun FormPet(listPets: MutableList<PetEntity>, pagerState: PagerState) {
                     .weight(1F)
                     .fillMaxHeight(),
                 leadingIcon = painterResource(id = R.drawable.edad),
-                value = listPets[pagerState.currentPage].birthdate.replace("/", ""),
+                value = listPets[pagerState.currentPage].pet.birthdate.replace("/", ""),
                 onValueChange = {
                     Log.e("quack", it)
                     if (!it.contains(".") && !it.contains(",") && !it.contains(" ")) {
+                        val pet = listPets[pagerState.currentPage].pet
                         listPets[pagerState.currentPage] =
-                            listPets[pagerState.currentPage].copy(birthdate = it)
+                            listPets[pagerState.currentPage].copy(pet = pet.copy(birthdate = it))
                     }
                 },
                 label = "Edad",
@@ -604,44 +636,38 @@ fun CustomChip(name: String, delete: (name: String) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .height(20.dp)
-            .border(
-                border = BorderStroke(1.dp, Color(0xFF000000)),
-                shape = RoundedCornerShape(6.dp)
-            )
+            .background(skyBlue, shape = RoundedCornerShape(10.dp))
             .padding(4.dp)
             .clickable {
                 delete.invoke(name)
             }
     ) {
-        Image(
+        Icon(
             painter = painterResource(R.drawable.ic_close),
             contentDescription = "",
+            tint = Color.White,
         )
-        Text(text = name, maxLines = 1, overflow = TextOverflow.Ellipsis, style = chipTextStyle)
+        Text(text = name, maxLines = 1, overflow = TextOverflow.Ellipsis, style = chipTextStyle.copy(Color.White))
     }
 }
 
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
-@Preview
-fun ChipGroup() {
+fun ChipGroup(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) {
     val context = LocalContext.current
 
-    var words = remember {
-        mutableStateListOf<BreedPet>(
-        )
-    }
     val breedLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            words.clear()
-            words.addAll(
-                result.data
-                    ?.getParcelableArrayExtra("BUNDLE_BREED")
-                    ?.filterIsInstance<BreedPet>()
-                    ?: emptyList()
+            listPets[pagerState.currentPage] = listPets[pagerState.currentPage].copy(
+                breeds = (
+                        result.data
+                            ?.getParcelableArrayExtra("BUNDLE_BREED")
+                            ?.filterIsInstance<BreedPetEntity>()
+                            ?: emptyList()
+                        )
             )
         }
     }
@@ -656,9 +682,14 @@ fun ChipGroup() {
             )
             .padding(horizontal = 18.dp, vertical = 8.dp)
             .clickable {
-                breedLauncher.launch(
-                    SelectBreedActivity.newInstance(context as Activity, words)
-                )
+                if (listPets[pagerState.currentPage].pet.specie != KindPet.None.value() && listPets[pagerState.currentPage].pet.specie != KindPet.Other.value()) {
+                    breedLauncher.launch(
+                        SelectBreedActivity.newInstance(
+                            context as Activity,
+                            listPets[pagerState.currentPage].breeds
+                        )
+                    )
+                }
             }
     ) {
         Image(
@@ -666,16 +697,16 @@ fun ChipGroup() {
             contentDescription = "",
             modifier = Modifier.height(20.dp)
         )
-        if (words.isEmpty()) {
+        if (listPets[pagerState.currentPage].breeds.isEmpty()) {
             Text(
                 text = "¿Cuál es su raza?",
                 style = buttonTitleStyle.copy(fontSize = 14.sp, color = colorDisabled),
             )
         } else {
-            words.forEach { breed ->
+            listPets[pagerState.currentPage].breeds.forEach { breed ->
                 CustomChip(breed.name) {
-                    words = words
-                        .apply { removeIf { it.name.equals(breed.name, true) } }
+                    listPets[pagerState.currentPage] =
+                        listPets[pagerState.currentPage].copy(breeds = listPets[pagerState.currentPage].breeds.filter { it.name != breed.name })
                 }
             }
         }

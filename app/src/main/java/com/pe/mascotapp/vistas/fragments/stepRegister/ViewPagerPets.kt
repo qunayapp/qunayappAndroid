@@ -1,5 +1,6 @@
 package com.pe.mascotapp.vistas.fragments.stepRegister
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,11 +41,12 @@ import com.pe.mascotapp.boldTitleStyle
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.vistas.entities.PetEntity
+import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ViewPagerPets(listPets: MutableList<PetEntity>, pagerState: PagerState) {
+fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) {
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
@@ -62,7 +64,7 @@ fun ViewPagerPets(listPets: MutableList<PetEntity>, pagerState: PagerState) {
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
-            if (listPets.size > 3) {
+            if (listPets.size > 1) {
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -137,22 +139,26 @@ fun ViewPagerPets(listPets: MutableList<PetEntity>, pagerState: PagerState) {
                     page - 2 -> normalSize = 125.dp
                 }
                 CircularName(
-                    pet = listPets[page],
+                    pet = listPets[page].pet,
                     pagerState.currentPage,
                     page,
                     listPets.size,
                     show,
                     normalSize
                 ) {
-                    listPets.removeAt(page)
+                    scope.launch {
+                        if (page >= 1) {
+                            pagerState.scrollToPage(pagerState.currentPage - 1)
+                        }
+                        listPets.removeAt(page)
+                    }
                 }
             }
             ElevatedButton(
                 contentPadding = PaddingValues(),
                 onClick = {
                     scope.launch {
-                        listPets.add(PetEntity())
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        listPets.add(0, PetWithBreedsEntity(PetEntity(), mutableListOf()))
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -193,7 +199,7 @@ fun ViewPagerPets(listPets: MutableList<PetEntity>, pagerState: PagerState) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (listPets.size > 3) {
+            if (listPets.size > 1) {
                 repeat(listPets.size) { iteration ->
                     val color =
                         if (listPets.size - pagerState.currentPage - 1 == iteration)
