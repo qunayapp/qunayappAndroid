@@ -10,8 +10,15 @@ import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
 import com.pe.mascotapp.R
 import com.pe.mascotapp.interfaces.PrincipalPresentador
+import com.pe.mascotapp.interfaces.RetrofitServiceApp
+import com.pe.mascotapp.interfaces.Servicios
+import com.pe.mascotapp.modelos.SesionUsuario
 import com.pe.mascotapp.utils.Constantes
 import com.pe.mascotapp.utils.Utils
+import okhttp3.internal.Util
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
 class LoginActivity : AppCompatActivity() {
 
@@ -33,8 +40,9 @@ class LoginActivity : AppCompatActivity() {
 
         btnIngresar!!.setOnClickListener {
             if (validarInputs()){
+                getUser()
 
-                val str = "SELECT * FROM usuario WHERE email= '"+ edtEmail!!.editText!!.text.trim() + "'"
+                /*val str = "SELECT * FROM usuario WHERE email= '"+ edtEmail!!.editText!!.text.trim() + "'"
                 val data = presentador.leer(str)
                 val count = data.count
                 Utils.dump("cantidad:" + count)
@@ -68,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }else{
                     Toast.makeText(this,"Usuario no registrado",Toast.LENGTH_LONG).show()
-                }
+                }*/
 
 
 
@@ -77,6 +85,58 @@ class LoginActivity : AppCompatActivity() {
 
         }
     }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun getUser() {
+
+        RetrofitServiceApp().getLoginUser("'prueba@prueba.com'",
+            "'6948e242200a25a5ea5c2fbbadc61f623436ea41f8a37138e4a103a438e10121'"){
+            Toast.makeText(this, "Ingreso", Toast.LENGTH_LONG).show()
+            Utils.dump("INGRESO CON EL SIGUIENTE JSON: " + it)
+
+        }
+
+        /*Thread({
+            runOnUiThread {
+                try {
+                    val call = RetrofitServiceApp().getRetrofit().create(Servicios::class.java)
+                        .getLoginUser(
+                            "prueba@prueba.com",
+                            "6948e242200a25a5ea5c2fbbadc61f623436ea41f8a37138e4a103a438e10121"
+                        ).execute()
+
+                    val puppies = call.body() as SesionUsuario
+                    if (puppies.correo.length > 0) {
+                        Toast.makeText(this, "Ingreso", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, "No", Toast.LENGTH_LONG).show()
+                    }
+
+                }catch (e:Exception){
+                    Utils.dump(e.toString())
+                }
+
+            }
+        }).start()*/
+
+    }
+
+    /*fun getLoginUser(correo:String, encriptado:String) {
+        RetrofitServiceApp().getRetrofit().create(Servicios::class.java).getLoginUser(correo,encriptado).enqueue(object :
+            retrofit2.Callback<SesionUsuario> {
+            override fun onResponse(call: Call<SesionUsuario>, response: Response<SesionUsuario>) {
+                // Procesar respuesta exitosa
+                Utils.dump(response.body().toString())
+            }
+
+            override fun onFailure(call: Call<SesionUsuario>, t: Throwable) {
+                // Procesar error en la petición
+                Utils.dump(t.message.toString())
+            }
+
+        })
+    }*/
+
 
     fun validarInputs(): Boolean{
         if (edtEmail!!.editText!!.text.trim().length == 0){

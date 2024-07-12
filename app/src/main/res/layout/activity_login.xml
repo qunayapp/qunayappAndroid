@@ -115,16 +115,9 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="80dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/face_icon" />
-
-            <ImageView
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/google_icon"
-                android:layout_alignParentRight="true"
                 android:layout_marginEnd="80dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
