@@ -48,7 +48,6 @@ val listPets = listOf(
         "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
         "Asdfasdf asdfasdf",
         "asdfasdf",
-        "asdfasdf",
         20.0,
         Sex.MALE,
         "01/01/2023",
@@ -59,7 +58,6 @@ val listPets = listOf(
         1L,
         "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
         "Asdfasdfff ffff",
-        "asdfasdf",
         "asdfasdf",
         20.0,
         Sex.MALE,
@@ -72,7 +70,6 @@ val listPets = listOf(
         "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
         "fffddf fdfds",
         "asdfasdf",
-        "asdfasdf",
         20.0,
         Sex.MALE,
         "01/01/2023",
@@ -84,7 +81,6 @@ val listPets = listOf(
         "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
         "Asdfasdf",
         "asdfasdf",
-        "asdfasdf",
         20.0,
         Sex.MALE,
         "01/01/2023",
@@ -95,7 +91,6 @@ val listPets = listOf(
         4L,
         "https://i.pinimg.com/236x/a6/b8/3c/a6b83c77cd06e23e2d956ce241776e24.jpg",
         "Asdfasdf",
-        "asdfasdf",
         "asdfasdf",
         20.0,
         Sex.MALE,
@@ -194,7 +189,7 @@ fun StepThreeScreen() {
                             text = "Tus Mascotas",
                             style = caprasimoTitleStyle.copy(color = colorPrimary)
                         )
-                        ViewPagerPets(listPets)
+                        //ViewPagerPets(listPets)
                     }
                 }
                 Column {
@@ -216,7 +211,8 @@ fun StepThreeScreen() {
                         colors = ButtonDefaults.buttonColors(
                             Color.Transparent
                         ),
-                        onClick = { /*TODO*/ }) {
+                        onClick = {  }
+                    ) {
                         Text(text = "volver", style = buttonTitleStyle, color = colorPrimary)
                     }
                 }
