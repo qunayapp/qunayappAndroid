@@ -30,6 +30,8 @@ import android.view.WindowManager
 import com.pe.mascotapp.utils.Constantes
 import android.graphics.Bitmap.CompressFormat
 import android.content.ContextWrapper
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -48,7 +50,8 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     var viewPStep: ViewPager2? = null
     var btnVolver: TextView? = null
     var btnSiguiente: MaterialButton? = null
-    var usuario:Usuario ?= null
+    var bottomButtons: LinearLayout? = null
+    var usuario: Usuario? = null
     var edtNombreOne = ""
     var edtFechaOne = ""
     var radioGroupOne = ""
@@ -57,8 +60,8 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     var edtNombreTwo = ""
     var edtRazaTwo = ""
     var radioGroupTwo = ""
-    var imgTwo =""
-    var imgTwoSelected:Uri ?= null
+    var imgTwo = ""
+    var imgTwoSelected: Uri? = null
 
     var edtPesoThree = ""
     var radioGroupThree = ""
@@ -68,11 +71,13 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     var pass = ""
     var pass2 = ""
     var numCel = ""
+
     //var tabLayout: TabLayout? = null
     //var vista = 0
-    private lateinit var stepFmList : List<Fragment>
+    private lateinit var stepFmList: List<Fragment>
     private lateinit var presentador: PrincipalPresentador.VistaStart
-    private var isFromMainPets : Boolean = false
+    private var isFromMainPets: Boolean = false
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,13 +92,21 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
         //tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         btnVolver = findViewById<TextView>(R.id.btnVolver)
         btnSiguiente = findViewById<MaterialButton>(R.id.btnSiguiente)
-        isFromMainPets =  intent.extras?.getBoolean("isFromMainPets", false)?:false
-        stepFmList = if(isFromMainPets) listOf(StepTwo.newInstance("Paso 1"),StepThree.newInstance("Paso 2"))  else listOf(StepOne.newInstance("Paso 1"),StepTwo.newInstance("Paso 2"),StepThree.newInstance("Paso 3"))
-        viewPStep!!.adapter =CarosuelFragmentRegisterState(stepFmList, this)
+        bottomButtons = findViewById<LinearLayout>(R.id.bottomButtons)
+        isFromMainPets = intent.extras?.getBoolean("isFromMainPets", false) ?: false
+        stepFmList = if (isFromMainPets) listOf(
+            StepTwo.newInstance("Paso 1"),
+            StepThree.newInstance("Paso 2")
+        ) else listOf(
+            StepOne.newInstance("Paso 1"),
+            StepTwo.newInstance("Paso 2"),
+            StepThree.newInstance("Paso 3")
+        )
+        viewPStep!!.adapter = CarosuelFragmentRegisterState(stepFmList, this)
         //tabLayout!!.setupWithViewPager(viewPStep, true);
 
 
-        btnVolver!!.setOnClickListener{
+        btnVolver!!.setOnClickListener {
             onBackStep()
         }
 
@@ -117,7 +130,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
             override fun onPageSelected(position: Int) {
                 Utils.dump("posicion por scrolear onPageSelected " + position)
 
-                if(position == viewPStep!!.adapter?.itemCount?.minus(1)){
+                if (position == viewPStep!!.adapter?.itemCount?.minus(1)) {
 
                     btnSiguiente!!.setOnClickListener {
                         /*val str1 = "INSERT INTO usuario(name, birthdate, email,pass, numPhone, img, sex ) VALUES\n"+
@@ -147,7 +160,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
                     btnVolver!!.setOnClickListener {
                         backStep()
                     }
-                }else{
+                } else {
                     btnSiguiente!!.setOnClickListener {
                         nextStep()
                     }
@@ -163,30 +176,34 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     }
 
 
-
-    private fun nextStep(){
+    private fun nextStep() {
         viewPStep!!.setCurrentItem(getItem(+1), true)
+        if (viewPStep!!.currentItem == 1) {
+            bottomButtons!!.visibility = View.GONE
+            return
+        }
+        bottomButtons!!.visibility = View.VISIBLE
     }
 
-    private fun backStep(){
+    private fun backStep() {
         viewPStep!!.setCurrentItem(getItem(-1), true)
     }
 
-    private fun finishStep(){
+    private fun finishStep() {
         if (isFromMainPets) onBackStep()
         else finishActivity()
     }
 
-    private fun onBackStep(){
+    private fun onBackStep() {
         val resultIntent = Intent()
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
-/*        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)*/
+        /*        val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)*/
     }
 
-    private fun finishActivity(){
+    private fun finishActivity() {
 
         val intent = Intent(this, LoadingActivity::class.java)
         startActivity(intent)
@@ -207,13 +224,13 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     }
 
 
-    private fun getItem(i:Int):Int{
+    private fun getItem(i: Int): Int {
         Utils.dump("posicion" + viewPStep?.currentItem)
-        if(viewPStep?.currentItem == 2) {
+        if (viewPStep?.currentItem == 2) {
             btnSiguiente!!.setOnClickListener {
-              finishStep()
+                finishStep()
             }
-        }else if(viewPStep?.currentItem == 0) {
+        } else if (viewPStep?.currentItem == 0) {
 
             btnVolver!!.setOnClickListener {
                 onBackStep()
@@ -221,7 +238,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
             btnSiguiente!!.setOnClickListener {
                 nextStep()
             }
-        }else{
+        } else {
             btnSiguiente!!.setOnClickListener {
                 nextStep()
             }
@@ -232,44 +249,45 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
         return viewPStep!!.currentItem + i
     }
 
-    override fun onTextChanged(txt: String,step: Int, input:String) {
+    override fun onTextChanged(txt: String, step: Int, input: String) {
         Utils.dump("Llegó " + txt)
 
-        when(step){
-            1->{
-                if (input.equals("edtNombre")){
+        when (step) {
+            1 -> {
+                if (input.equals("edtNombre")) {
                     edtNombreOne = txt
                 }
-                if (input.equals("edtFecha")){
+                if (input.equals("edtFecha")) {
                     edtFechaOne = txt
                 }
 
-                if(input.equals("radioGroup")){
+                if (input.equals("radioGroup")) {
                     radioGroupOne = txt
                 }
             }
-            2->{
-                if (input.equals("edtNombre")){
+
+            2 -> {
+                if (input.equals("edtNombre")) {
                     edtNombreTwo = txt
                 }
-                if (input.equals("autoRaza")){
+                if (input.equals("autoRaza")) {
                     edtRazaTwo = txt
                 }
 
-                if(input.equals("radioGroup")){
+                if (input.equals("radioGroup")) {
                     radioGroupTwo = txt
                 }
             }
 
-            3->{
-                if (input.equals("edtFecha")){
+            3 -> {
+                if (input.equals("edtFecha")) {
                     edtFechaThree = txt
                 }
-                if (input.equals("edtPeso")){
+                if (input.equals("edtPeso")) {
                     edtPesoThree = txt
                 }
 
-                if(input.equals("radioGroup")){
+                if (input.equals("radioGroup")) {
                     radioGroupThree = txt
                 }
 
@@ -279,9 +297,9 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
     }
 
-    override fun onImageChange(step:Int, img: Uri) {
+    override fun onImageChange(step: Int, img: Uri) {
 
-        when(step){
+        when (step) {
             1 -> {
                 val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, img)
                 imgOne = saveToInternalStorage(bitmap)
@@ -294,6 +312,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
                 imgOne = buffer*/
 
             }
+
             2 -> {
                 imgTwoSelected = img
                 viewPStep!!.adapter!!.notifyDataSetChanged()
@@ -332,7 +351,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
                 e.printStackTrace()
             }
         }
-        return directory.absolutePath +"/" +"image_user_" + currentTimestamp + ".jpg"
+        return directory.absolutePath + "/" + "image_user_" + currentTimestamp + ".jpg"
     }
 
     private fun showDialog() {

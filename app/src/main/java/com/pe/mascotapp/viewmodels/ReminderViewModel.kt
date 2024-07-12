@@ -181,7 +181,6 @@ constructor(
                         "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg",
                         "Paul Pugba1",
                         "Perro",
-                        "Especial",
                         100.00,
                         Sex.MALE,
                         birthdate = "12/02/2010",
@@ -192,7 +191,6 @@ constructor(
                         "https://static01.nyt.com/images/2024/01/16/multimedia/16xp-dog-01-lchw/16xp-dog-01-lchw-videoSixteenByNineJumbo1600.jpg",
                         "Paul",
                         "Perro",
-                        "Especial",
                         101.00,
                         Sex.MALE,
                         birthdate = "12/02/2010",
@@ -203,7 +201,6 @@ constructor(
                         "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg",
                         "Paul Pugba3",
                         "Perro",
-                        "Especial",
                         102.00,
                         Sex.MALE,
                         birthdate = "12/02/2010",
@@ -216,9 +213,8 @@ constructor(
                         image = it.image,
                         name = it.name,
                         specie = it.specie,
-                        weight = it.weight,
+                        weight = it.weight ?: 0.0,
                         sex = it.sex,
-                        raza = it.raza,
                         birthdate = it.birthdate,
                     ),
                 )
@@ -266,7 +262,7 @@ constructor(
     fun getStartDateSelected(): String? {
         (_optionStartDate.value?.firstOrNull() as CalendarSimple?)?.date?.let {
             reminderEntity.startDate = CalendarUtils.getFormatDate4(it)
-             return CalendarUtils.getFormatDate(it)
+            return CalendarUtils.getFormatDate(it)
         }
         reminderEntity.startDate = CalendarUtils.getFormatDate4(Calendar.getInstance().time)
         return CalendarUtils.getFormatDate(Calendar.getInstance().time)
@@ -326,19 +322,22 @@ constructor(
         var tempString = ""
         options.forEach {
             val temp = (it as CounterOption)
-            when(temp.category){
+            when (temp.category) {
                 ValueTextOption.MINUTES -> {
                     reminderEntity.alarmInMinutes = temp.counter
                     tempString += reminderEntity.alarmInMinutes.toString() + " minutos "
                 }
+
                 ValueTextOption.DAYS -> {
                     reminderEntity.alarmInDays = temp.counter
                     tempString += reminderEntity.alarmInDays.toString() + " dias "
                 }
+
                 ValueTextOption.HOUR -> {
                     reminderEntity.alarmInHours = temp.counter
                     tempString += reminderEntity.alarmInHours.toString() + " horas "
                 }
+
                 else -> {}
             }
         }
@@ -467,15 +466,30 @@ constructor(
         return options
     }
 
-    private fun getTemporalAlarmOptions() : List<OptionViewInterface>{
+    private fun getTemporalAlarmOptions(): List<OptionViewInterface> {
         return listOf(
-            CounterOption("minutos", isSelected = true, category = ValueTextOption.MINUTES, counter = reminderEntity.alarmInMinutes),
-            CounterOption("horas", isSelected = true, category = ValueTextOption.HOUR, counter = reminderEntity.alarmInHours),
-            CounterOption("dias", isSelected = true, category = ValueTextOption.DAYS, counter = reminderEntity.alarmInDays),
+            CounterOption(
+                "minutos",
+                isSelected = true,
+                category = ValueTextOption.MINUTES,
+                counter = reminderEntity.alarmInMinutes
+            ),
+            CounterOption(
+                "horas",
+                isSelected = true,
+                category = ValueTextOption.HOUR,
+                counter = reminderEntity.alarmInHours
+            ),
+            CounterOption(
+                "dias",
+                isSelected = true,
+                category = ValueTextOption.DAYS,
+                counter = reminderEntity.alarmInDays
+            ),
         )
     }
 
-    private fun getTemporalDuration():List<OptionViewInterface> {
+    private fun getTemporalDuration(): List<OptionViewInterface> {
         val options = listOf(
             TextOption("Para siempre", ValueTextOption.FOR_EVER),
             CounterOption("Numero de veces"),
@@ -487,11 +501,14 @@ constructor(
             }
             if (it is CounterOption && reminderEntity.durationTypeRepeat == TypeOption.COUNTER) {
                 it.isSelected = true
-                it.counter = reminderEntity.durationRepeat?.toInt()?: 0
+                it.counter = reminderEntity.durationRepeat?.toInt() ?: 0
             }
             if (it is CalendarOptionNormal && reminderEntity.durationTypeRepeat == TypeOption.DATE) {
                 it.isSelected = true
-                it.date = CalendarUtils.stringToDate(reminderEntity.durationRepeat?:"","dd 'de' MMM 'de' yyyy")
+                it.date = CalendarUtils.stringToDate(
+                    reminderEntity.durationRepeat ?: "",
+                    "dd 'de' MMM 'de' yyyy"
+                )
             }
         }
         return options
