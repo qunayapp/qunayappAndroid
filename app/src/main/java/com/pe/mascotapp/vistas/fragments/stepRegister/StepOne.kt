@@ -27,6 +27,7 @@ import java.util.*
 import android.widget.RadioButton
 
 import android.widget.RadioGroup
+import androidx.compose.ui.platform.ComposeView
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.pe.mascotapp.databinding.FragmentRegisterOneBinding
 
@@ -58,7 +59,9 @@ class StepOne():Fragment() {
     ): View? {
         //return super.onCreateView(inflater, container, savedInstanceState)
         val binding = FragmentRegisterOneBinding.inflate(inflater, container, false)
-        var view: View = inflater.inflate(R.layout.fragment_register_one, container,false)
+        binding.composeViewStepOne.setContent {
+            StepOneScreen()
+        }
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Selecciona tu fecha de nacimiento")
@@ -103,7 +106,7 @@ class StepOne():Fragment() {
 
 
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId -> // checkedId is the RadioButton selected
-            val rb = view.findViewById(checkedId) as RadioButton
+            val rb = binding.radioGroup.findViewById<RadioButton>(checkedId)
             onEditTextChanged.onTextChanged(rb.text.toString(),1,"radioGroup")
         }
 

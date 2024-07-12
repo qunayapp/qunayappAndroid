@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pe.mascotapp.R
-import com.pe.mascotapp.vistas.fragments.stepRegister.StepOne
 import com.pe.mascotapp.vistas.fragments.stepRegister.StepTwo
 
 class StepTwo : Fragment() {

@@ -8,11 +8,11 @@
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/composeView"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="match_parent">
 
     </androidx.compose.ui.platform.ComposeView>
     <ScrollView
+        android:visibility="gone"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

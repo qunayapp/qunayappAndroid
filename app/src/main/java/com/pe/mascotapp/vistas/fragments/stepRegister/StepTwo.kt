@@ -61,9 +61,7 @@ class StepTwo : Fragment() {
         var view: View = inflater.inflate(R.layout.fragment_register_two, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.composeView)
         composeView.setContent {
-            Column {
-                Text(text = "Hola")
-            }
+            StepTwoScreen()
         }
         imgPet = view.findViewById<ImageView>(R.id.imgPet)
         txtAgregarFoto = view.findViewById<TextView>(R.id.txtAgregarFoto)

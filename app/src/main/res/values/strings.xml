@@ -4,13 +4,17 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
+    <string name="next">siguiente</string>
     <string name="previous">Previous</string>
+    <string name="label_email">Email</string>
+    <string name="label_phone">Teléfono</string>
+    <string name="label_password">Contraseña</string>
+    <string name="label_confirm_password">Repetir contraseña</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_market_place_categoria">MarketPlaceCategoriaActivity</string>
-
+    <string name="label_register_with">También puedes registrarte con</string>
 
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Closed</string>
@@ -52,4 +56,5 @@
     <string name="label_has_illness">Tiene alguna enfermedad:</string>
     <string name="label_additional_details">Detalles adicionales:</string>
     <string name="pictures_gallery">Galería de fotos</string>
+    <string name="title_activity_animation_loading">AnimationLoading</string>
 </resources>

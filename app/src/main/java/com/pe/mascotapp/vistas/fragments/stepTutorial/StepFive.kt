@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.pe.mascotapp.R
-import com.pe.mascotapp.vistas.fragments.stepRegister.StepOne
+
 
 class StepFive : Fragment() {
 

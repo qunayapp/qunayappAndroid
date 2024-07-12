@@ -11,14 +11,17 @@
         <item name="colorSecondaryVariant">@color/verdepastelq</item>
         <item name="colorOnSecondary">@color/negroq</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/verdepastelq</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="Theme.Mascotapp.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Theme.Mascotapp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.Mascotapp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

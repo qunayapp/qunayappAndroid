@@ -34,6 +34,8 @@
                 android:layout_height="200dp"/>
             <pl.droidsonroids.gif.GifImageView
                 app:loopCount="1"
+                android:background="@color/blue_primary"
+                android:backgroundTint="@color/blue_primary"
                 android:src="@drawable/logo_qunay_gif"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

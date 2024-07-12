@@ -17,7 +17,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:src="@drawable/logo_verde"
+                android:src="@drawable/logo_qunay"
                 android:layout_width="250dp"
                 android:layout_height="250dp"/>
 
