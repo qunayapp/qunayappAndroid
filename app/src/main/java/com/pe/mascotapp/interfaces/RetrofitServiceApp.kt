@@ -26,19 +26,18 @@ class RetrofitServiceApp {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    fun getLoginUser(correo:String, encriptado:String, callback: (String?) -> Unit) {
+    fun getLoginUser(correo:String, encriptado:String, callback: (SesionUsuario?) -> Unit) {
         retrofit.create(Servicios::class.java).getLoginUser(correo,encriptado).enqueue(object :
             Callback<SesionUsuario> {
             override fun onResponse(call: Call<SesionUsuario>, response: Response<SesionUsuario>) {
                 // Procesar respuesta exitosa
                 Utils.dump(response.body().toString())
-                callback(response.body().toString())
+                callback(response.body())
             }
 
             override fun onFailure(call: Call<SesionUsuario>, t: Throwable) {
                 // Procesar error en la petición
                 Utils.dump(t.message.toString())
-                callback(t.message.toString())
             }
         })
     }

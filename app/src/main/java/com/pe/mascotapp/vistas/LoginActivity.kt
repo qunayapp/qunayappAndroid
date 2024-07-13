@@ -18,6 +18,9 @@ import com.pe.mascotapp.utils.Utils
 import okhttp3.internal.Util
 import retrofit2.Call
 import retrofit2.Response
+import java.math.BigInteger
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import javax.security.auth.callback.Callback
 
 class LoginActivity : AppCompatActivity() {
@@ -89,10 +92,30 @@ class LoginActivity : AppCompatActivity() {
     @SuppressLint("SuspiciousIndentation")
     fun getUser() {
 
-        RetrofitServiceApp().getLoginUser("'prueba@prueba.com'",
-            "'6948e242200a25a5ea5c2fbbadc61f623436ea41f8a37138e4a103a438e10121'"){
+        val correo = edtEmail!!.editText!!.text.trim()
+        val pass = edtPassword!!.editText!!.text.trim()
+
+        Utils.dump(getSHA(pass.toString()))
+        /*6948e242200a25a5ea5c2fbbadc61f623436ea41f8a37138e4a103a438e10121*/
+        RetrofitServiceApp().getLoginUser("'" + correo.toString() + "'",
+            "'" + getSHA(pass.toString()) +"'" ){
             Toast.makeText(this, "Ingreso", Toast.LENGTH_LONG).show()
             Utils.dump("INGRESO CON EL SIGUIENTE JSON: " + it)
+
+            if (it!!.idUsuario != 0){
+                val preferences = getSharedPreferences(Constantes.SHARED_PREF, Context.MODE_PRIVATE)
+                with (preferences.edit()) {
+                    putBoolean(Constantes.SHARED_PREF_SUCCESS, true)
+                    putString(Constantes.SHARED_PREF_MESSAGE, "logeado")
+                    putInt(Constantes.SHARED_ID_USUARIO, it!!.idUsuario)
+                    commit()
+                }
+
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "Contraseña o usuario invalido", Toast.LENGTH_LONG).show()
+            }
 
         }
 
@@ -136,6 +159,22 @@ class LoginActivity : AppCompatActivity() {
 
         })
     }*/
+
+    fun getSHA(input: String): String {
+        try {
+            val md = MessageDigest.getInstance("SHA-256")
+            val messageDigest = md.digest(input.toByteArray())
+            val num = BigInteger(1, messageDigest)
+            var hashText = num.toString(16)
+            while (hashText.length < 32) {
+                hashText = "0$hashText"
+            }
+            return hashText
+        } catch (ex: NoSuchAlgorithmException) {
+            Utils.dump("Exception Occured: ${ex.message}")
+            return ""
+        }
+    }
 
 
     fun validarInputs(): Boolean{
