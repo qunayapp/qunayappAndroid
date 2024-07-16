@@ -15,17 +15,21 @@ class SelectBreedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBreedBinding.inflate(layoutInflater)
         val listBreed =
-            intent.getParcelableArrayListExtra<BreedPetEntity>("BUNDLE_BREED") ?: arrayListOf()
+            intent.getParcelableArrayListExtra<BreedPetEntity>(BUNDLE_BREED) ?: arrayListOf()
+        val kindPet = intent.getStringExtra(BUNDLE_KIND_PET)
         binding.abComposeView.setContent {
-            SelectBreedPetsScreen(listBreed)
+            SelectBreedPetsScreen(listBreed, getKindPet(kindPet))
         }
         setContentView(binding.root)
     }
 
     companion object {
-        fun newInstance(activity: Activity, breeds: List<BreedPetEntity>): Intent {
+        const val BUNDLE_BREED = "BUNDLE_BREED"
+        const val BUNDLE_KIND_PET = "BUNDLE_KIND_PET"
+        fun newInstance(activity: Activity, breeds: List<BreedPetEntity>, kindPet: String): Intent {
             val intent = Intent(activity, SelectBreedActivity::class.java)
-            intent.putParcelableArrayListExtra("BUNDLE_BREED", ArrayList(breeds))
+            intent.putParcelableArrayListExtra(BUNDLE_BREED, ArrayList(breeds))
+            intent.putExtra(BUNDLE_KIND_PET, kindPet)
             return intent
         }
     }

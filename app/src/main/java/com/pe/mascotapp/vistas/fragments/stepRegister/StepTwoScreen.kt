@@ -101,6 +101,7 @@ import com.pe.mascotapp.textFieldTextStyle
 import com.pe.mascotapp.titleStyle
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
+import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Companion.BUNDLE_BREED
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -647,7 +648,12 @@ fun CustomChip(name: String, delete: (name: String) -> Unit) {
             contentDescription = "",
             tint = Color.White,
         )
-        Text(text = name, maxLines = 1, overflow = TextOverflow.Ellipsis, style = chipTextStyle.copy(Color.White))
+        Text(
+            text = name,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = chipTextStyle.copy(Color.White)
+        )
     }
 }
 
@@ -664,7 +670,7 @@ fun ChipGroup(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState
             listPets[pagerState.currentPage] = listPets[pagerState.currentPage].copy(
                 breeds = (
                         result.data
-                            ?.getParcelableArrayExtra("BUNDLE_BREED")
+                            ?.getParcelableArrayExtra(BUNDLE_BREED)
                             ?.filterIsInstance<BreedPetEntity>()
                             ?: emptyList()
                         )
@@ -686,7 +692,8 @@ fun ChipGroup(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState
                     breedLauncher.launch(
                         SelectBreedActivity.newInstance(
                             context as Activity,
-                            listPets[pagerState.currentPage].breeds
+                            listPets[pagerState.currentPage].breeds,
+                            listPets[pagerState.currentPage].pet.specie
                         )
                     )
                 }
@@ -728,6 +735,15 @@ fun KindPet.value(): String {
         KindPet.Cat -> "Gato"
         KindPet.Other -> "Otro"
         KindPet.None -> "Ninguno"
+    }
+}
+
+fun getKindPet(value: String?): KindPet {
+    return when (value) {
+        "Perro" -> KindPet.Dog
+        "Gato" -> KindPet.Cat
+        "Otro" -> KindPet.Other
+        else -> KindPet.None
     }
 }
 

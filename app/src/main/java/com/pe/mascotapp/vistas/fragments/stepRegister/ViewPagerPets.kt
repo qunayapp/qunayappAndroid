@@ -158,7 +158,7 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                 contentPadding = PaddingValues(),
                 onClick = {
                     scope.launch {
-                        listPets.add(0, PetWithBreedsEntity(PetEntity(), mutableListOf()))
+                        listPets.add(0, PetWithBreedsEntity(PetEntity(color = getColorIndex(pagerState.pageCount)), mutableListOf()))
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -218,4 +218,15 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
             }
         }
     }
+}
+
+fun getColorIndex(position: Int): Long {
+    val indexPosition = when {
+        (position + 1) % 3 == 0 -> 2
+
+        (position + 2) % 3 == 0 -> 1
+        else -> 0
+    }
+    val colors = listOf(0xFF48A7D3, 0xFF2A6BAF, 0xFF203E6C)
+    return colors[indexPosition]
 }
