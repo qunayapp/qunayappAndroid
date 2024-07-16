@@ -1,6 +1,7 @@
 package com.pe.mascotapp.vistas.fragments.stepRegister
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,6 +32,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) {
+    val ctx = LocalContext.current
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
@@ -158,7 +161,17 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                 contentPadding = PaddingValues(),
                 onClick = {
                     scope.launch {
-                        listPets.add(0, PetWithBreedsEntity(PetEntity(color = getColorIndex(pagerState.pageCount)), mutableListOf()))
+                        if (!listPets[pagerState.currentPage].pet.isValid()) {
+                            Toast.makeText(ctx, "Llena el nombre y selecciona la especie de tu mascota", Toast.LENGTH_SHORT).show()
+                            return@launch
+                        }
+                        listPets.add(
+                            0,
+                            PetWithBreedsEntity(
+                                PetEntity(color = getColorIndex(pagerState.pageCount)),
+                                mutableListOf()
+                            )
+                        )
                     }
                 },
                 colors = ButtonDefaults.buttonColors(

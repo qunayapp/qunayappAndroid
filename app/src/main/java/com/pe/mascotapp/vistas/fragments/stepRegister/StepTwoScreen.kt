@@ -2,7 +2,9 @@ package com.pe.mascotapp.vistas.fragments.stepRegister
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.app.DatePickerDialog
 import android.util.Log
+import android.widget.DatePicker
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -102,6 +104,7 @@ import com.pe.mascotapp.titleStyle
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Companion.BUNDLE_BREED
+import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -219,6 +222,7 @@ fun StepTwoScreen() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) {
+    val ctx = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -385,7 +389,23 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                 },
                 label = "Edad",
                 keyBoarType = KeyboardType.Number,
-                visualTransformation = DateTransformation()
+                visualTransformation = DateTransformation(),
+                leadingIconOnClick = {
+                    val calendar = Calendar.getInstance()
+                    val year = calendar.get(Calendar.YEAR)
+                    val month = calendar.get(Calendar.MONTH)
+                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+                    val datePickerDialog = DatePickerDialog(
+                        ctx,
+                        R.style.Base_ThemeOverlay_AppCompat_Dialog,
+                        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                            val pet = listPets[pagerState.currentPage].pet
+                            listPets[pagerState.currentPage] =
+                                listPets[pagerState.currentPage].copy(pet = pet.copy(birthdate = "${dayOfMonth.toString().padStart(2, '0')}${month.toString().padStart(2, '0')}${year.toString().padStart(4, '0')}"))
+                        }, year, month, day
+                    )
+                    datePickerDialog.show()
+                }
             )
         }
     }
@@ -548,6 +568,7 @@ fun CustomTextField(
     textAlign: TextAlign = TextAlign.Start,
     keyBoarType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    leadingIconOnClick : ()-> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -562,7 +583,9 @@ fun CustomTextField(
         leadingIcon = {
             if (leadingIcon != null)
                 Icon(
-                    painter = leadingIcon, contentDescription = null
+                    painter = leadingIcon, contentDescription = null, modifier = Modifier.clickable {
+                        leadingIconOnClick()
+                    }
                 )
         },
         colors = OutlinedTextFieldDefaults.colors(
@@ -623,7 +646,7 @@ fun IconTextButton(
 ) {
     OutlinedButton(
         onClick = { onClick.invoke() }, modifier = modifier,
-        shape = RoundedCornerShape(9.dp),
+        shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.81.dp, if (isEnabled) colorPrimary else colorDisabled)
     ) {
         IconWithText(name, icon, isEnabled)
@@ -637,7 +660,7 @@ fun CustomChip(name: String, delete: (name: String) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .height(20.dp)
-            .background(skyBlue, shape = RoundedCornerShape(10.dp))
+            .background(skyBlue, shape = RoundedCornerShape(6.dp))
             .padding(4.dp)
             .clickable {
                 delete.invoke(name)

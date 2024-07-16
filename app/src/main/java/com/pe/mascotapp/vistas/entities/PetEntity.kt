@@ -33,6 +33,10 @@ data class PetEntity(
         )
     }
 
+    fun isValid(): Boolean {
+        return name != "" && (specie != "" || specie != KindPet.None.value())
+    }
+
 
 }
 
