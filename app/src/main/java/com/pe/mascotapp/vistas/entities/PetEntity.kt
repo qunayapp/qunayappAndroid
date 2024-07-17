@@ -1,6 +1,7 @@
 package com.pe.mascotapp.vistas.entities
 
 import android.os.Parcelable
+import android.util.Log
 import com.pe.mascotapp.domain.models.Pet
 import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.vistas.fragments.stepRegister.BreedPetEntity
@@ -34,7 +35,7 @@ data class PetEntity(
     }
 
     fun isValid(): Boolean {
-        return name != "" && (specie != "" || specie != KindPet.None.value())
+        return name != "" && specie != "" && specie != KindPet.None.value()
     }
 
 

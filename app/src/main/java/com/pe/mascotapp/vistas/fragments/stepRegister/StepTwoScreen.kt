@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -28,6 +29,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -37,12 +39,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -59,12 +63,19 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
@@ -74,8 +85,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -98,42 +111,36 @@ import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.colorYellow
 import com.pe.mascotapp.domain.models.Breed
+import com.pe.mascotapp.mediumTitleStyle
 import com.pe.mascotapp.skyBlue
 import com.pe.mascotapp.textFieldTextStyle
 import com.pe.mascotapp.titleStyle
+import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Companion.BUNDLE_BREED
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun StepTwoScreen() {
+fun StepTwoScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableStateListOf()) {
     val currentStep = remember { mutableIntStateOf(1) }
-
+    val ctx = LocalContext.current
     val listPets = remember {
-        mutableStateListOf(
-            PetWithBreedsEntity(
-                PetEntity(
-                    null,
-                    "",
-                    "",
-                    KindPet.None.value(),
-                    -1.0,
-                    Sex.NONE,
-                    "",
-                    false,
-                    0xFF48A7D3
-                ),
-                listOf()
-            )
-        )
+        listPetsBreed
     }
 
     val pagerState = rememberPagerState(pageCount = {
         listPets.size
     })
+
+    LaunchedEffect(1) {
+        pagerState.scrollToPage((ctx as? CarosuelRegisterActivity)?.indexEdit?: 0)
+    }
 
     Box(
         Modifier
@@ -158,7 +165,20 @@ fun StepTwoScreen() {
                             .padding(top = 10.dp)
                             .height(58.dp)
                             .padding(horizontal = 77.dp),
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            listPets.mapNotNull { if (it.pet.isValid()) it else null }.apply {
+                                if (this.isEmpty() || this.size != listPets.size) {
+                                    Toast.makeText(
+                                        ctx,
+                                        "Revisa que tus mascotas tengan un nombre y una especie",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return@PrimaryButton
+                                }
+                                (ctx as? CarosuelRegisterActivity)?.listPets = this
+                                (ctx as? CarosuelRegisterActivity)?.nextStep()
+                            }
+                        },
                         content = {
                             Text(
                                 text = "siguiente",
@@ -174,7 +194,10 @@ fun StepTwoScreen() {
                         colors = ButtonDefaults.buttonColors(
                             Color.Transparent
                         ),
-                        onClick = { }) {
+                        onClick = {
+                            (ctx as? CarosuelRegisterActivity)?.onBackPressed()
+
+                        }) {
                         Text(text = "volver", style = buttonTitleStyle, color = colorPrimary)
                     }
                 }
@@ -401,7 +424,15 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
                             val pet = listPets[pagerState.currentPage].pet
                             listPets[pagerState.currentPage] =
-                                listPets[pagerState.currentPage].copy(pet = pet.copy(birthdate = "${dayOfMonth.toString().padStart(2, '0')}${month.toString().padStart(2, '0')}${year.toString().padStart(4, '0')}"))
+                                listPets[pagerState.currentPage].copy(
+                                    pet = pet.copy(
+                                        birthdate = "${
+                                            dayOfMonth.toString().padStart(2, '0')
+                                        }${month.toString().padStart(2, '0')}${
+                                            year.toString().padStart(4, '0')
+                                        }"
+                                    )
+                                )
                         }, year, month, day
                     )
                     datePickerDialog.show()
@@ -414,11 +445,13 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
 @Composable
 fun PrimaryButton(
     modifier: Modifier,
+    contentPadding : PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable () -> Unit,
     shape: Shape = RoundedCornerShape(60.dp),
     onClick: () -> Unit
 ) {
     Button(
+        contentPadding = contentPadding,
         modifier = modifier,
         onClick = { onClick.invoke() },
         shape = shape,
@@ -483,7 +516,8 @@ fun CircularName(
     totalItems: Int = 0,
     show: Boolean,
     size: Dp = 154.dp,
-    delete: () -> Unit = {}
+    canEdit: (() -> Unit)? = null,
+    delete: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -501,48 +535,62 @@ fun CircularName(
             exit = slideOutHorizontally(animationSpec = spring(stiffness = Spring.StiffnessHigh)) {
                 200
             } + fadeOut()) {
-            Box(
-                modifier = Modifier
-                    .size(size)
-                    .clip(CircleShape)
-                    .background(Color(pet.color)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = pet.name.getInitials(),
-                    style = bigTitleStyle,
-                    color = colorCyan
-                )
-            }
-            if (totalItems > 1) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    IconButton(
-                        onClick = { delete.invoke() },
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = Color.Red
-                        ),
+            Column {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Box(
                         modifier = Modifier
+                            .size(size)
                             .clip(CircleShape)
-                            .width(40.dp)
-                            .height(40.dp)
-                            .background(colorYellow)
+                            .background(Color(pet.color)),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_trash),
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(7.dp),
-                            contentDescription = "Button Image"
+                        Text(
+                            text = pet.name.getInitials(),
+                            style = bigTitleStyle,
+                            color = colorCyan
                         )
+                    }
+                    if (totalItems > 1) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            IconButton(
+                                onClick = { delete.invoke() },
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = Color.Red
+                                ),
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .width(40.dp)
+                                    .height(40.dp)
+                                    .background(colorYellow)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_trash),
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(7.dp),
+                                    contentDescription = "Button Image"
+                                )
+                            }
+                        }
+                    }
+                }
+                canEdit?.let {
+                    BasicEditTextField(
+                        110.dp,
+                        Modifier.fillMaxWidth(),
+                        mediumTitleStyle.copy(color = colorDisabled, fontSize = 17.sp),
+                        iconSize = 20.dp,
+                        value = pet.name
+                    ){
+                        canEdit()
                     }
                 }
             }
+
         }
-
-
     }
 }
 
@@ -568,7 +616,7 @@ fun CustomTextField(
     textAlign: TextAlign = TextAlign.Start,
     keyBoarType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    leadingIconOnClick : ()-> Unit = {}
+    leadingIconOnClick: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -583,7 +631,9 @@ fun CustomTextField(
         leadingIcon = {
             if (leadingIcon != null)
                 Icon(
-                    painter = leadingIcon, contentDescription = null, modifier = Modifier.clickable {
+                    painter = leadingIcon,
+                    contentDescription = null,
+                    modifier = Modifier.clickable {
                         leadingIconOnClick()
                     }
                 )
@@ -803,4 +853,45 @@ fun dateFilter(text: AnnotatedString): TransformedText {
     }
 
     return TransformedText(AnnotatedString(out), numberOffsetTranslator)
+}
+
+
+@Composable
+fun BasicEditTextField(
+    maxWidth: Dp, modifier: Modifier,
+    textStyle: TextStyle = mediumTitleStyle.copy(
+        color = colorMediumBlue,
+        fontSize = 30.sp,
+    ),
+    iconSize: Dp = 27.dp,
+    value: String,
+    edit: () -> Unit = {}
+) {
+    var textState by remember { mutableStateOf(TextFieldValue(value)) }
+
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        BasicTextField(
+            value = textState,
+            {
+                textState = it
+            },
+            textStyle = textStyle,
+            modifier = Modifier
+                .widthIn(max = maxWidth),
+            singleLine = true,
+            readOnly = true
+        )
+        Image(
+            painter = painterResource(id = R.drawable.ic_edit_new),
+            contentDescription = "",
+            modifier = Modifier
+                .width(iconSize)
+                .clickable {
+                    edit()
+                })
+    }
 }

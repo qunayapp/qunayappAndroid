@@ -2,7 +2,6 @@ package com.pe.mascotapp.vistas.fragments.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +19,7 @@ import com.pe.mascotapp.vistas.ReminderActivity
 import com.pe.mascotapp.vistas.adapters.CalendarReminderAdapter
 import com.pe.mascotapp.vistas.adapters.DayCalendarEntity
 import com.pe.mascotapp.vistas.adapters.DaysAdapter
-import com.pe.mascotapp.vistas.adapters.ReminderAdapter
-import com.pe.mascotapp.vistas.adapters.ReminderPetsJoinEntity
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.internal.Util
 import java.time.LocalDate
 import java.util.Locale
 

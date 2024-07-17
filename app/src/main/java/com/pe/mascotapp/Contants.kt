@@ -10,7 +10,9 @@ import androidx.compose.ui.unit.sp
 val workSansFontFamily = FontFamily(
     Font(R.font.worksans_bold, FontWeight.Bold),
     Font(R.font.worksans_regular, FontWeight.Normal),
-    Font(R.font.worksans_light, FontWeight.Light)
+    Font(R.font.worksans_light, FontWeight.Light),
+    Font(R.font.worksans_semibold, FontWeight.SemiBold),
+    Font(R.font.worksans_medium, FontWeight.Medium),
 )
 
 val caprasimoFontFamily = FontFamily(
@@ -45,6 +47,19 @@ val boldTitleStyle = TextStyle(
     fontFamily = workSansFontFamily,
     fontSize = 20.sp,
     fontWeight = FontWeight.Bold
+)
+
+val semiBoldTitleStyle = TextStyle(
+    fontFamily = workSansFontFamily,
+    fontSize = 20.sp,
+    fontWeight = FontWeight.SemiBold
+)
+
+
+val mediumTitleStyle = TextStyle(
+    fontFamily = workSansFontFamily,
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Medium
 )
 
 val descriptionTextStyle = TextStyle(

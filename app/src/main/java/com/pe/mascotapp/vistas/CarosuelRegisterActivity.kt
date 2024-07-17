@@ -36,6 +36,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.pe.mascotapp.vistas.entities.PetEntity
+import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import com.pe.mascotapp.vistas.fragments.stepRegister.StepOne
 import com.pe.mascotapp.vistas.fragments.stepRegister.StepThree
 import com.pe.mascotapp.vistas.fragments.stepRegister.StepTwo
@@ -45,8 +47,13 @@ import java.io.IOException
 import java.lang.Exception
 
 
-class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
-
+class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged, RegisterPets {
+    override var listPets: List<PetWithBreedsEntity> = listOf(
+        PetWithBreedsEntity(
+            PetEntity(),
+            listOf()
+        )
+    )
     var viewPStep: ViewPager2? = null
     var btnVolver: TextView? = null
     var btnSiguiente: MaterialButton? = null
@@ -77,7 +84,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     private lateinit var stepFmList: List<Fragment>
     private lateinit var presentador: PrincipalPresentador.VistaStart
     private var isFromMainPets: Boolean = false
-
+    var indexEdit:Int? = null
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,8 +110,8 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
             StepThree.newInstance("Paso 3")
         )
         viewPStep!!.adapter = CarosuelFragmentRegisterState(stepFmList, this)
+        viewPStep!!.isUserInputEnabled = false
         //tabLayout!!.setupWithViewPager(viewPStep, true);
-
 
         btnVolver!!.setOnClickListener {
             onBackStep()
@@ -176,9 +183,9 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
     }
 
 
-    private fun nextStep() {
+    fun nextStep() {
         viewPStep!!.setCurrentItem(getItem(+1), true)
-        if (viewPStep!!.currentItem == 1) {
+        if (viewPStep!!.currentItem != 0) {
             bottomButtons!!.visibility = View.GONE
             return
         }
@@ -187,6 +194,11 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
     private fun backStep() {
         viewPStep!!.setCurrentItem(getItem(-1), true)
+        if (viewPStep!!.currentItem != 0) {
+            bottomButtons!!.visibility = View.GONE
+            return
+        }
+        bottomButtons!!.visibility = View.VISIBLE
     }
 
     private fun finishStep() {
@@ -222,7 +234,15 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
 
     }
+    fun addPet(){
+        indexEdit = null
+        onBackPressed()
+    }
 
+    fun editPet(index:Int){
+        indexEdit = index
+        onBackPressed()
+    }
 
     private fun getItem(i: Int): Int {
         Utils.dump("posicion" + viewPStep?.currentItem)
@@ -376,4 +396,15 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged {
 
     }
 
+    override fun onBackPressed() {
+        if (viewPStep!!.currentItem == 0) {
+            super.onBackPressed()
+        }
+        else backStep()
+    }
+
+}
+
+interface RegisterPets {
+    var listPets: List<PetWithBreedsEntity>
 }

@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.pe.mascotapp.R
+import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 
 
 class StepTwo : Fragment() {
@@ -17,7 +19,10 @@ class StepTwo : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_register_two, container, false)
         val composeView = view.findViewById<ComposeView>(R.id.frtComposeView)
         composeView.setContent {
-            StepTwoScreen()
+            StepTwoScreen(
+                (activity as? CarosuelRegisterActivity)?.listPets?.toMutableStateList()
+                    ?: mutableListOf()
+            )
         }
         return view;
     }

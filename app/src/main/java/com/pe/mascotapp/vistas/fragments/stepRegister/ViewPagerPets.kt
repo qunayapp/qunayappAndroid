@@ -18,12 +18,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +38,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -42,6 +46,7 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.boldTitleStyle
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
+import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import kotlinx.coroutines.launch
@@ -162,7 +167,11 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                 onClick = {
                     scope.launch {
                         if (!listPets[pagerState.currentPage].pet.isValid()) {
-                            Toast.makeText(ctx, "Llena el nombre y selecciona la especie de tu mascota", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                ctx,
+                                "Llena el nombre y selecciona la especie de tu mascota",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@launch
                         }
                         listPets.add(
@@ -242,4 +251,147 @@ fun getColorIndex(position: Int): Long {
     }
     val colors = listOf(0xFF48A7D3, 0xFF2A6BAF, 0xFF203E6C)
     return colors[indexPosition]
+}
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) {
+
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+    val ctx = LocalContext.current
+
+    val itemWidth = screenWidth / 3
+
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier
+            .padding(top = 38.dp)
+    )
+    {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (listPets.size > 1) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .zIndex(100F),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            }
+                        },
+                        modifier = Modifier
+                            .width(66.dp)
+                            .height(99.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_arrow),
+                            modifier = Modifier
+                                .padding(end = 11.13.dp)
+                                .fillMaxSize()
+                                .rotate(180F),
+                            contentDescription = "Button Image"
+                        )
+                    }
+                }
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .zIndex(100F),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                            }
+                        },
+                        modifier = Modifier
+                            .width(66.dp)
+                            .height(99.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_arrow),
+                            modifier = Modifier
+                                .padding(start = 11.13.dp)
+                                .fillMaxSize(),
+                            contentDescription = "Button Image"
+                        )
+                    }
+                }
+            }
+            val paddingValues = if (listPets.size > 1) PaddingValues(
+                start = itemWidth * 2 - (itemWidth / 2) + 5.dp,
+                end = (itemWidth / 2) - 20.dp,
+            ) else PaddingValues(0.dp)
+            HorizontalPager(
+                pageSpacing = 0.dp,
+                contentPadding = paddingValues,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                state = pagerState,
+                beyondBoundsPageCount = 2,
+                reverseLayout = true,
+            ) { page ->
+                val show =
+                    pagerState.currentPage == page || pagerState.currentPage + 1 == page
+                val normalSize = 137.dp
+                CircularName(
+                    pet = listPets[page].pet,
+                    pagerState.currentPage,
+                    page,
+                    listPets.size,
+                    show,
+                    normalSize,
+                    canEdit = {
+                        (ctx as? CarosuelRegisterActivity)?.listPets = listPets
+                        (ctx as? CarosuelRegisterActivity)?.editPet(page)
+                    }
+                ) {
+                    scope.launch {
+                        if (page >= 1) {
+                            pagerState.scrollToPage(pagerState.currentPage - 1)
+                        }
+                        listPets.removeAt(page)
+                    }
+                }
+            }
+
+        }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .height(25.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (listPets.size > 1) {
+                repeat(listPets.size) { iteration ->
+                    val color =
+                        if (listPets.size - pagerState.currentPage - 1 == iteration)
+                            colorMediumBlue
+                        else Color(0xFFCECECE).copy(
+                            alpha = 0.5f
+                        )
+                    Box(
+                        modifier = Modifier
+                            .padding(6.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .size(9.dp)
+                    )
+                }
+            }
+        }
+
+    }
 }
