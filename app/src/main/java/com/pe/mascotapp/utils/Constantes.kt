@@ -3,7 +3,7 @@ package com.pe.mascotapp.utils
 class Constantes {
 
     companion object {
-        var BASE_URL = "http://170.239.101.13:5000/api/"
+        var BASE_URL = "http://18.116.236.9/api/"
         var URL_IMAGE = BASE_URL + "Formatos/imagenes/"
 
         var SHARED_PREF = "PREF"
