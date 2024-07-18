@@ -4,10 +4,13 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Parcelable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +26,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,10 +51,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ContentAlpha
+import com.pe.mascotapp.R
 import com.pe.mascotapp.boldTitleStyle
 import com.pe.mascotapp.buttonTitleStyle
 import com.pe.mascotapp.caprasimoTitleStyle
@@ -57,7 +66,10 @@ import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.colorYellow
 import com.pe.mascotapp.skyBlue
 import com.pe.mascotapp.titleStyle
+import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Companion.BUNDLE_BREED
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -73,27 +85,64 @@ enum class BreedCategory {
 }
 
 @Composable
-fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>) {
-    val breedPets by remember {
-        mutableStateOf((dogBreed.value.plus(catsBreed.value)).sorted())
+fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>, kindPet: KindPet) {
+    val kindListBreed = when (kindPet) {
+        KindPet.Dog -> dogBreed.value
+        KindPet.Cat -> catsBreed.value
+        else -> emptyList()
     }
+    val breedPets by remember {
+        mutableStateOf(kindListBreed.sorted())
+    }
+    val context = LocalContext.current
 
     val totalItems = remember { mutableStateListOf<BreedPetEntity>() }
 
-    val index = mutableListOf<String>()
+    val indexItems = remember { mutableStateListOf<BreedPetEntity>() }
+
+    val interactionSource = remember { MutableInteractionSource() }
 
     breedPets.groupBy { it.first() }.forEach { (initial, words) ->
         totalItems.add(BreedPetEntity(BreedCategory.INDEX, initial.uppercaseChar().toString()))
-        index.add(initial.uppercaseChar().toString())
+        indexItems.add(BreedPetEntity(BreedCategory.INDEX, initial.uppercaseChar().toString()))
         totalItems.addAll(words.map { item ->
-            BreedPetEntity(BreedCategory.TYPE, item,  listBreed.find { it.name == item } != null)
+            BreedPetEntity(BreedCategory.TYPE, item, listBreed.find { it.name == item } != null)
         })
     }
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
+    val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
+    var indexRecent = 0
     fun getCountItemSelected(): Int {
         return totalItems.count { it.category == BreedCategory.TYPE && it.isSelected }
+    }
+
+    fun searchBreed(query: String) {
+        coroutineScope.launch {
+            if (query.isEmpty()) return@launch
+            var indexFirst =
+                totalItems.indexOfFirst {
+                    it.name.contains(query, true) && it.name.first().equals(
+                        query.first(),
+                        ignoreCase = true
+                    )
+                }
+            if (indexFirst == -1) {
+                indexFirst = totalItems.indexOfFirst {
+                    it.name.contains(query, true)
+                }
+            }
+            if (indexFirst != -1) {
+                val letter = totalItems[indexFirst].name.first().uppercaseChar()
+                val indexLetter = indexItems.indexOfFirst { it.name == letter.toString() }
+
+                withContext(Dispatchers.Main){
+                    listState.animateScrollToItem(indexFirst)
+                    indexItems[indexRecent] = indexItems[indexRecent].copy(isSelected = false)
+                    indexItems[indexLetter] = indexItems[indexLetter].copy(isSelected = true)
+                    indexRecent = indexLetter
+                }
+            }
+        }
     }
 
     Scaffold(
@@ -102,12 +151,27 @@ fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>) {
                 modifier = Modifier
                     .background(colorHeader)
                     .fillMaxWidth()
-                    .padding(start = 29.dp, end = 9.dp, top = 24.dp, bottom = 11.dp)
+                    .padding(start = 29.dp, end = 21.dp, top = 24.dp, bottom = 11.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Selecciona su raza",
                     style = caprasimoTitleStyle.copy(color = colorPrimary)
                 )
+                ElevatedButton(
+                    contentPadding = PaddingValues(),
+                    elevation = ButtonDefaults.buttonElevation(0.dp),
+                    onClick = {
+                        (context as? Activity)?.finish()
+                    },
+                    colors = ButtonDefaults.buttonColors(colorHeader)
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_return),
+                        contentDescription = "",
+                    )
+                }
             }
         }
     ) { paddingValues ->
@@ -124,24 +188,7 @@ fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>) {
                         .clip(RoundedCornerShape(24.dp))
                         .background(Color(0XFFF2F2F2)),
                     changeState = { query ->
-                        coroutineScope.launch {
-                            if (query.isEmpty()) return@launch
-                            var indexFirst =
-                                totalItems.indexOfFirst {
-                                    it.name.contains(query, true) && it.name[0].equals(
-                                        query[0],
-                                        ignoreCase = true
-                                    )
-                                }
-                            if (indexFirst == -1) {
-                                indexFirst = totalItems.indexOfFirst {
-                                    it.name.contains(query, true)
-                                }
-                            }
-                            if (indexFirst != -1) {
-                                listState.animateScrollToItem(indexFirst)
-                            }
-                        }
+                        searchBreed(query)
                     }
                 )
             }
@@ -172,11 +219,25 @@ fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    items(index) {
+                    itemsIndexed(indexItems) { index, item ->
+                        val fontSize = if (item.isSelected) {
+                            30.sp
+                        } else 20.sp
                         Text(
-                            text = it,
-                            style = boldTitleStyle.copy(color = colorYellow),
-                            modifier = Modifier.fillMaxWidth(),
+                            text = item.name,
+                            style = boldTitleStyle.copy(
+                                color = colorYellow,
+                                fontSize = fontSize
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable(
+                                    interactionSource = interactionSource,
+                                    indication = null,
+                                    onClick =
+                                    {
+                                        searchBreed(indexItems[index].name)
+                                    }),
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -208,7 +269,7 @@ fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>) {
                 }
             }
 
-            val context = LocalContext.current
+            val ctx = LocalContext.current
 
             PrimaryButton(
                 modifier = Modifier
@@ -216,10 +277,10 @@ fun SelectBreedPetsScreen(listBreed: ArrayList<BreedPetEntity>) {
                     .height(57.69.dp),
                 onClick = {
                     val resultIntent = Intent().apply {
-                        putExtra("BUNDLE_BREED", totalItems.filter { it.isSelected }.toTypedArray())
+                        putExtra(BUNDLE_BREED, totalItems.filter { it.isSelected }.toTypedArray())
                     }
-                    (context as? Activity)?.setResult(RESULT_OK, resultIntent)
-                    (context as? Activity)?.finish()
+                    (ctx as? Activity)?.setResult(RESULT_OK, resultIntent)
+                    (ctx as? Activity)?.finish()
                 },
                 content = {
                     Text(text = "Continuar", style = buttonTitleStyle.copy(fontSize = 27.sp))

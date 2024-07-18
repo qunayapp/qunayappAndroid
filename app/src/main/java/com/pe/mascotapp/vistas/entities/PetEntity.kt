@@ -1,6 +1,7 @@
 package com.pe.mascotapp.vistas.entities
 
 import android.os.Parcelable
+import android.util.Log
 import com.pe.mascotapp.domain.models.Pet
 import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.vistas.fragments.stepRegister.BreedPetEntity
@@ -19,7 +20,7 @@ data class PetEntity(
     var sex: Sex = Sex.NONE,
     var birthdate: String = "",
     var isSelected: Boolean = false,
-    val color: Long = getRandomColor(listOf(0xFF48A7D3, 0xFF2A6BAF, 0xFF203E6C))
+    val color: Long = 0xFF48A7D3
 ) : Parcelable {
     fun toPet(): Pet {
         return Pet(
@@ -32,6 +33,12 @@ data class PetEntity(
             birthdate,
         )
     }
+
+    fun isValid(): Boolean {
+        return name != "" && specie != "" && specie != KindPet.None.value()
+    }
+
+
 }
 
 @Parcelize
@@ -39,8 +46,3 @@ data class PetWithBreedsEntity(
     val pet: PetEntity,
     var breeds: List<BreedPetEntity>
 ) : Parcelable
-
-fun getRandomColor(colors: List<Long>): Long {
-    val randomIndex = Random.nextInt(colors.size)
-    return colors[randomIndex]
-}
