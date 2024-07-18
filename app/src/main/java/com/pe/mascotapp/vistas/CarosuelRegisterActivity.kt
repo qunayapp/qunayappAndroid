@@ -185,20 +185,20 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged, Registe
 
     fun nextStep() {
         viewPStep!!.setCurrentItem(getItem(+1), true)
-        if (viewPStep!!.currentItem != 0) {
+/*        if (viewPStep!!.currentItem != 0) {
             bottomButtons!!.visibility = View.GONE
             return
         }
-        bottomButtons!!.visibility = View.VISIBLE
+        bottomButtons!!.visibility = View.VISIBLE*/
     }
 
     private fun backStep() {
         viewPStep!!.setCurrentItem(getItem(-1), true)
-        if (viewPStep!!.currentItem != 0) {
+/*        if (viewPStep!!.currentItem != 0) {
             bottomButtons!!.visibility = View.GONE
             return
         }
-        bottomButtons!!.visibility = View.VISIBLE
+        bottomButtons!!.visibility = View.VISIBLE*/
     }
 
     private fun finishStep() {

@@ -8,6 +8,7 @@
     <string name="previous">Previous</string>
     <string name="label_email">Email</string>
     <string name="label_phone">Teléfono</string>
+    <string name="label_born">Nacimiento</string>
     <string name="label_password">Contraseña</string>
     <string name="label_confirm_password">Repetir contraseña</string>
 
