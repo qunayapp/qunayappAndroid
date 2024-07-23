@@ -1,5 +1,6 @@
 package com.pe.mascotapp.vistas.fragments.stepRegister
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,7 +67,10 @@ import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.mediumTitleStyle
 import com.pe.mascotapp.semiBoldTitleStyle
 import com.pe.mascotapp.titleStyle
+import com.pe.mascotapp.vistas.AnimationLoading
 import com.pe.mascotapp.vistas.CarosuelRegisterActivity
+import com.pe.mascotapp.vistas.CarosuelTutorialActivity
+import com.pe.mascotapp.vistas.StartActivity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import kotlinx.coroutines.Dispatchers
@@ -167,7 +171,10 @@ fun StepThreeScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableSta
                             .fillMaxWidth()
                             .height(58.dp)
                             .padding(horizontal = 77.dp),
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            val intent = Intent(ctx, CarosuelTutorialActivity::class.java)
+                            ctx.startActivity(intent)
+                        },
                         content = {
                             Text(text = "Aceptar", style = buttonTitleStyle.copy(fontSize = 20.sp))
                         }
