@@ -15,7 +15,6 @@ import com.pe.mascotapp.interfaces.Servicios
 import com.pe.mascotapp.modelos.SesionUsuario
 import com.pe.mascotapp.utils.Constantes
 import com.pe.mascotapp.utils.Utils
-import okhttp3.internal.Util
 import retrofit2.Call
 import retrofit2.Response
 import javax.security.auth.callback.Callback
