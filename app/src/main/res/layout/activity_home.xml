@@ -113,7 +113,7 @@
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:background="@color/verdeMenu"
+        android:background="@color/cardview_dark_background"
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -122,7 +122,10 @@
 
         <!--app:menu="@menu/menu_navigation"
         app:headerLayout="@layout/nav_header"-->
-
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/background_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -153,7 +156,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:fontFamily="@font/worksans_black"
+                    android:fontFamily="@font/worksans_bold"
                     android:textSize="32sp"
                     android:textColor="@color/white"
                     android:text="Julian Alvarez"
@@ -181,9 +184,11 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:fontFamily="@font/worksans_black"
+                            android:fontFamily="@font/worksans_light"
                             android:textSize="18sp"
                             android:textColor="@color/white"
+                            app:drawableStartCompat="@drawable/ic_profile_user"
+                            android:drawablePadding="8dp"
                             android:text="Perfil"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -197,8 +202,11 @@
                             android:layout_height="2dp"/>
 
                         <TextView
-                            android:fontFamily="@font/worksans_black"
+                            android:fontFamily="@font/worksans_light"
                             android:textSize="18sp"
+                            app:drawableStartCompat="@drawable/ic_profile_message"
+                            android:drawablePadding="8dp"
+                            android:drawableTint="@color/white"
                             android:textColor="@color/white"
                             android:text="Mensajes"
                             android:layout_width="wrap_content"
@@ -214,9 +222,11 @@
 
 
                         <TextView
-                            android:fontFamily="@font/worksans_black"
+                            android:fontFamily="@font/worksans_light"
                             android:textSize="18sp"
                             android:textColor="@color/white"
+                            app:drawableStartCompat="@drawable/ic_profile_config"
+                            android:drawablePadding="8dp"
                             android:text="Ajustes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -229,9 +239,11 @@
                             android:layout_height="2dp"/>
 
                         <TextView
-                            android:fontFamily="@font/worksans_black"
+                            android:fontFamily="@font/worksans_light"
                             android:textSize="18sp"
                             android:textColor="@color/white"
+                            app:drawableStartCompat="@drawable/ic_profile_logout"
+                            android:drawablePadding="8dp"
                             android:text="Log Out"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -241,10 +253,27 @@
 
 
                 </ScrollView>
-
         </LinearLayout>
 
 
+
+        <ImageView
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            android:id="@+id/imgDogBanner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/backgrount_profile_dog"
+            android:scaleType="fitXY"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/guideline"
+            app:layout_constraintGuide_percent="0.60"
+            android:orientation="horizontal"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
