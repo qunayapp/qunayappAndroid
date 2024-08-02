@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -374,6 +375,7 @@ class HomeActivity : AppCompatActivity() {
         navigationView = findViewById<NavigationView>(R.id.navigationView)
         drawer_layout = findViewById<DrawerLayout>(R.id.drawer_layout)
         toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val imgDogBanner = findViewById<ShapeableImageView>(R.id.imgDogBanner)
         menuHome!!.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         startMenu(savedInstanceState)
 
@@ -383,6 +385,13 @@ class HomeActivity : AppCompatActivity() {
             .setBottomRightCorner(CornerFamily.ROUNDED, 528f)
             .build()
 
+
+        val shapeAppearanceModel = imgDogBanner.shapeAppearanceModel
+            .toBuilder()
+            .setBottomRightCorner(CornerFamily.ROUNDED, 528f) // Adjust corner size as needed
+            .build()
+
+        imgDogBanner.shapeAppearanceModel = shapeAppearanceModel
         navigationView!!.setNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         startMenu(savedInstanceState)

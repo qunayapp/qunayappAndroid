@@ -8,272 +8,279 @@
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
-        tools:openDrawer="start"
-        android:fitsSystemWindows="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".vistas.MainActivity">
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
-
-        <FrameLayout
-            android:id="@+id/fragmentContainer"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/imgBanner" />
+            tools:context=".vistas.MainActivity">
 
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="end"
-            android:background="@color/verdeclaroq"
-            android:elevation="4dp"
-            android:foregroundGravity="right"
-            android:gravity="center"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            android:touchscreenBlocksFocus="false"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            tools:ignore="MissingConstraints">
+            <FrameLayout
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/imgBanner" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginEnd="24dp">
 
-                <!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center_horizontal"
-                    app:cardCornerRadius="140dp"
-                    app:cardElevation="12dp">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="end"
+                android:background="@color/blue_primary"
+                android:elevation="4dp"
+                android:foregroundGravity="right"
+                android:gravity="center"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                android:touchscreenBlocksFocus="false"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginEnd="24dp">
+
+                    <!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center_horizontal"
+                        app:cardCornerRadius="140dp"
+                        app:cardElevation="12dp">
+
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/imgUser"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_baseline_account_circle_24" />
+
+                    </androidx.cardview.widget.CardView>-->
+
+
+                </LinearLayout>
+
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/logo_q_blanco" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginEnd="24dp">
 
                     <ImageView
-                        android:visibility="gone"
-                        android:id="@+id/imgUser"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_baseline_account_circle_24" />
+                        android:src="@drawable/ic_notification" />
 
-                </androidx.cardview.widget.CardView>-->
+                </LinearLayout>
 
-
-            </LinearLayout>
-
+            </androidx.appcompat.widget.Toolbar>
 
             <ImageView
-                android:layout_width="120dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:src="@drawable/logo_q_blanco" />
+                android:id="@+id/imgBanner"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_above="@+id/menuHome"
+                android:scaleType="centerCrop"
+                android:src="@drawable/banner_gato"
+                android:visibility="gone" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/menuHome"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginEnd="24dp">
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/white"
+                android:foregroundGravity="bottom"
+                app:itemBackground="@color/white"
+                app:menu="@menu/menu_footer" />
+        </RelativeLayout>
 
-                <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/notificaciones" />
-
-            </LinearLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/imgBanner"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_above="@+id/menuHome"
-            android:scaleType="centerCrop"
-            android:src="@drawable/banner_gato" />
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/menuHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="@color/white"
-            android:foregroundGravity="bottom"
-            app:itemBackground="@color/white"
-            app:menu="@menu/menu_footer" />
-    </RelativeLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:background="@color/cardview_dark_background"
-        android:id="@+id/navigationView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:layout_gravity="start" >
-
-        <!--app:menu="@menu/menu_navigation"
-        app:headerLayout="@layout/nav_header"-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@drawable/background_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigationView"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true">
 
-            <LinearLayout
-                android:layout_marginTop="16dp"
-                android:padding="16dp"
-                android:orientation="vertical"
+            <!--app:menu="@menu/menu_navigation"
+            app:headerLayout="@layout/nav_header"-->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:background="@drawable/background_profile">
 
-                <ImageView
-                    android:layout_gravity="start"
-                    android:id="@+id/imgUsuario"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:src="@drawable/ic_baseline_account_circle_24"
-                    android:gravity="center"
-                    app:tint="@color/white" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            </LinearLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_image"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:layout_marginTop="32dp"
+                        android:background="@drawable/border_user"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/iv_destiny_url"
+                            android:layout_width="130dp"
+                            android:layout_height="130dp"
+                            android:contentDescription="@string/app_name"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/comentario_user" />
 
-                <TextView
-                    android:fontFamily="@font/worksans_bold"
-                    android:textSize="32sp"
-                    android:textColor="@color/white"
-                    android:text="Julian Alvarez"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginBottom="16dp"
-                android:layout_gravity="start"
-                android:layout_marginTop="16dp"
-                android:background="@color/plomoRegular"
-                android:layout_width="120dp"
-                android:layout_height="2dp"/>
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:fontFamily="@font/worksans_light"
-                            android:textSize="18sp"
-                            android:textColor="@color/white"
-                            app:drawableStartCompat="@drawable/ic_profile_user"
-                            android:drawablePadding="8dp"
-                            android:text="Perfil"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <LinearLayout
-                            android:layout_marginBottom="16dp"
-                            android:layout_gravity="start"
-                            android:layout_marginTop="16dp"
-                            android:background="@color/plomoRegular"
-                            android:layout_width="120dp"
-                            android:layout_height="2dp"/>
-
-                        <TextView
-                            android:fontFamily="@font/worksans_light"
-                            android:textSize="18sp"
-                            app:drawableStartCompat="@drawable/ic_profile_message"
-                            android:drawablePadding="8dp"
-                            android:drawableTint="@color/white"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/worksans_bold"
+                            android:text="Julian Alvarez"
                             android:textColor="@color/white"
-                            android:text="Mensajes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <LinearLayout
-                            android:layout_marginBottom="16dp"
-                            android:layout_gravity="start"
-                            android:layout_marginTop="16dp"
-                            android:background="@color/plomoRegular"
-                            android:layout_width="120dp"
-                            android:layout_height="2dp"/>
-
-
-                        <TextView
-                            android:fontFamily="@font/worksans_light"
-                            android:textSize="18sp"
-                            android:textColor="@color/white"
-                            app:drawableStartCompat="@drawable/ic_profile_config"
-                            android:drawablePadding="8dp"
-                            android:text="Ajustes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <LinearLayout
-                            android:layout_marginBottom="16dp"
-                            android:layout_gravity="start"
-                            android:layout_marginTop="16dp"
-                            android:background="@color/plomoRegular"
-                            android:layout_width="120dp"
-                            android:layout_height="2dp"/>
-
-                        <TextView
-                            android:fontFamily="@font/worksans_light"
-                            android:textSize="18sp"
-                            android:textColor="@color/white"
-                            app:drawableStartCompat="@drawable/ic_profile_logout"
-                            android:drawablePadding="8dp"
-                            android:text="Log Out"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:textSize="32sp" />
 
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="120dp"
+                        android:layout_height="2dp"
+                        android:layout_gravity="start"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@color/plomoRegular" />
 
-                </ScrollView>
-        </LinearLayout>
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="8dp"
+                                android:fontFamily="@font/worksans_light"
+                                android:text="Perfil"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                app:drawableStartCompat="@drawable/ic_profile_user" />
+
+                            <LinearLayout
+                                android:layout_width="120dp"
+                                android:layout_height="2dp"
+                                android:layout_gravity="start"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginBottom="16dp"
+                                android:background="@color/plomoRegular" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="8dp"
+                                android:drawableTint="@color/white"
+                                android:fontFamily="@font/worksans_light"
+                                android:text="Mensajes"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                app:drawableStartCompat="@drawable/ic_profile_message" />
+
+                            <LinearLayout
+                                android:layout_width="120dp"
+                                android:layout_height="2dp"
+                                android:layout_gravity="start"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginBottom="16dp"
+                                android:background="@color/plomoRegular" />
 
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="8dp"
+                                android:fontFamily="@font/worksans_light"
+                                android:text="Ajustes"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                app:drawableStartCompat="@drawable/ic_profile_config" />
 
-        <ImageView
-            app:layout_constraintTop_toBottomOf="@+id/guideline"
-            android:id="@+id/imgDogBanner"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/backgrount_profile_dog"
-            android:scaleType="fitXY"/>
-        <androidx.constraintlayout.widget.Guideline
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/guideline"
-            app:layout_constraintGuide_percent="0.60"
-            android:orientation="horizontal"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.navigation.NavigationView>
+                            <LinearLayout
+                                android:layout_width="120dp"
+                                android:layout_height="2dp"
+                                android:layout_gravity="start"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginBottom="16dp"
+                                android:background="@color/plomoRegular" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="8dp"
+                                android:fontFamily="@font/worksans_light"
+                                android:text="Log Out"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                app:drawableStartCompat="@drawable/ic_profile_logout" />
+
+
+                        </LinearLayout>
+
+
+                    </ScrollView>
+                </LinearLayout>
+
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgDogBanner"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/backgrount_profile_dog"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/guideline"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.60" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
