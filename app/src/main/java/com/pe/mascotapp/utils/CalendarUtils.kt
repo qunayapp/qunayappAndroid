@@ -164,7 +164,10 @@ class CalendarUtils {
         fun convertLocalDateToCalendar(localDate: LocalDate): Calendar {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.YEAR, localDate.year)
-            calendar.set(Calendar.MONTH, localDate.monthValue - 1) // Note: Calendar.MONTH is zero-based
+            calendar.set(
+                Calendar.MONTH,
+                localDate.monthValue - 1
+            ) // Note: Calendar.MONTH is zero-based
             calendar.set(Calendar.DAY_OF_MONTH, localDate.dayOfMonth)
             return calendar
         }
@@ -196,6 +199,24 @@ fun Date.addDay(days: Int): Date? {
         e.printStackTrace()
         null
     }
+}
+
+fun LocalDate.inDates(
+    startDate: LocalDate?,
+    endDate: LocalDate?,
+): Boolean {
+    if (startDate == null) {
+        Log.e("Date", "fecha de inicio es null")
+        return false
+    }
+    if (endDate == null){
+        return true
+    }
+    Log.e("quack",(this.isAfter(startDate) || this.isEqual(startDate)).toString())
+    Log.e("quack",(this.isBefore(endDate) || this.isEqual(endDate)).toString())
+
+    return (this.isAfter(startDate) || this.isEqual(startDate)) &&
+            (this.isBefore(endDate) || this.isEqual(endDate))
 }
 
 fun Date.inDates(
@@ -269,6 +290,40 @@ fun Date.establecerHoraEnFechaActual(horaMinutos: String): Date? {
     return calendar.time
 }
 
+fun dateToLocalDate(date: Date): LocalDate {
+    // Convertir Date a Instant
+    val instant = date.toInstant()
+    // Convertir Instant a LocalDate usando la zona horaria del sistema
+    return instant.atZone(ZoneId.systemDefault()).toLocalDate()
+}
+private fun localDateToDate(localDate: LocalDate): Date {
+    // Convertir LocalDate a ZonedDateTime
+    val zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault())
+    // Convertir ZonedDateTime a Instant
+    val instant = zonedDateTime.toInstant()
+    // Convertir Instant a Date
+    return Date.from(instant)
+}
+fun LocalDate.establecerHoraEnFechaActual(horaMinutos: String): Date? {
+    val horaMinutosPartes = horaMinutos.trim().replace(" ", "").split(":")
+    if (horaMinutosPartes.size != 2) {
+        // Formato de hora incorrecto
+        return null
+    }
+    val hora = horaMinutosPartes[0].toIntOrNull() ?: return null
+    val minutos = horaMinutosPartes[1].toIntOrNull() ?: return null
+
+    val calendar = Calendar.getInstance()
+    calendar.time = localDateToDate(this)
+    calendar.set(Calendar.HOUR_OF_DAY, hora)
+    calendar.set(Calendar.MINUTE, minutos)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+    return calendar.time
+}
+
+
 fun Date.addMinutes(minutes: Int): Date? {
     val calendar = Calendar.getInstance()
     calendar.time = this
@@ -292,6 +347,7 @@ fun Date.addHours(hours: Int): Date? {
         null
     }
 }
+
 
 fun Date.getDayOfMonth(): Int {
     val localDate: LocalDate = this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
