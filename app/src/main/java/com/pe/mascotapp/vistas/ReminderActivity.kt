@@ -175,7 +175,7 @@ class ReminderActivity : AppCompatActivity() {
             binding.tvRepeat.text = "${it.reminder.repeatOption.mapValueTextOption()}  ${it.reminder?.countRepeatOption ?: ""}"
             binding.tvAddDuration.text =
                 when (it.reminder.durationTypeRepeat) {
-                    TypeOption.COUNTER -> " ${it.reminder.countRepeatOption} veces"
+                    TypeOption.COUNTER -> " ${it.reminder.durationRepeat} veces"
                     TypeOption.TEXT -> "Para siempre"
                     TypeOption.DATE -> it.reminder.durationRepeat
                     null -> "+ Anadir Duracion"
@@ -278,7 +278,7 @@ class ReminderActivity : AppCompatActivity() {
                 PetAdapter(it) {
                     viewModel.selectAnimalEntity()
                     viewModel.validateForm()
-                    binding.txtCounter.text = "(${it.filter {  it.isSelected }.size})"
+                    binding.txtCounter.text = "(${it.filter { it.isSelected }.size})"
                 }
         }
         viewModel.categoriesReminder.observe(this) {
