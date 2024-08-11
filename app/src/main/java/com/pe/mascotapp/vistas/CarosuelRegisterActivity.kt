@@ -54,6 +54,7 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged, Registe
             listOf()
         )
     )
+
     var viewPStep: ViewPager2? = null
     var btnVolver: TextView? = null
     var btnSiguiente: MaterialButton? = null

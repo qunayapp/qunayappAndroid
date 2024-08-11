@@ -4,41 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".vistas.DetailServiceActivity">
 
-    <include layout="@layout/toolbar_main" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/verdepastelq"
+        android:paddingTop="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/toolbar_main" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <LinearLayout
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:weightSum="100"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clToolbar">
 
         <ImageView
-            android:scaleType="centerCrop"
-            android:layout_weight="30"
-            android:src="@drawable/img_pet_house"
             android:layout_width="match_parent"
-            android:layout_height="0dp"/>
+            android:layout_height="0dp"
+            android:layout_weight="30"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_pet_house" />
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="70"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="70"
+            android:orientation="vertical">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
+                app:tabTextAppearance="@style/MyCustomTextAppearance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <androidx.viewpager.widget.ViewPager
-                android:adjustViewBounds="true"
+                android:id="@+id/viewPStep"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/viewPStep"
-                />
+                android:adjustViewBounds="true" />
 
         </LinearLayout>
 
@@ -47,21 +64,24 @@
 
 
     <RelativeLayout
-        android:padding="8dp"
-        android:gravity="center|bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center|bottom"
+        android:padding="8dp"
         tools:ignore="MissingConstraints">
 
         <Button
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
             android:id="@+id/btnContactar"
-            android:background="@drawable/border_linearlayout_precio"
-            android:textColor="@color/white"
-            android:text="Contactar"
             android:layout_width="220dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/border_linearlayout_precio"
+            android:gravity="center"
+            android:textAllCaps="false"
+            style="@style/WorkSans_Regular14"
+            android:textSize="20dp"
+            android:text="Contactar"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

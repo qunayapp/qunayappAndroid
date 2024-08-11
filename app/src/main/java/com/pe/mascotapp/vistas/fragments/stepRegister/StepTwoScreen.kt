@@ -3,7 +3,6 @@ package com.pe.mascotapp.vistas.fragments.stepRegister
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
-import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,6 +22,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,6 +57,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -69,17 +70,16 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -97,9 +97,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import com.pe.mascotapp.R
-import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.bigTitleStyle
 import com.pe.mascotapp.boldTitleStyle
 import com.pe.mascotapp.buttonTitleStyle
@@ -110,7 +111,7 @@ import com.pe.mascotapp.colorLightGray
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.colorYellow
-import com.pe.mascotapp.domain.models.Breed
+import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.mediumTitleStyle
 import com.pe.mascotapp.skyBlue
 import com.pe.mascotapp.textFieldTextStyle
@@ -119,9 +120,6 @@ import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Companion.BUNDLE_BREED
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -139,7 +137,7 @@ fun StepTwoScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableState
     })
 
     LaunchedEffect(1) {
-        pagerState.scrollToPage((ctx as? CarosuelRegisterActivity)?.indexEdit?: 0)
+        pagerState.scrollToPage((ctx as? CarosuelRegisterActivity)?.indexEdit ?: 0)
     }
 
     Box(
@@ -170,7 +168,7 @@ fun StepTwoScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableState
                                 if (this.isEmpty() || this.size != listPets.size) {
                                     Toast.makeText(
                                         ctx,
-                                        "Revisa que tus mascotas tengan un nombre y una especie",
+                                        "Revisa que tus mascotas tengan un nombre y especie",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     return@PrimaryButton
@@ -195,10 +193,10 @@ fun StepTwoScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableState
                             Color.Transparent
                         ),
                         onClick = {
+                            (ctx as? CarosuelRegisterActivity)?.listPets = listPets
                             (ctx as? CarosuelRegisterActivity)?.onBackPressed()
-
                         }) {
-                        Text(text = "volver", style = buttonTitleStyle, color = colorPrimary)
+                        Text(text = "Volver", style = buttonTitleStyle, color = colorPrimary)
                     }
                 }
 
@@ -269,7 +267,7 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
             modifier = Modifier
                 .fillMaxWidth()
                 .height(53.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             IconTextButton(
                 "Perro",
@@ -403,8 +401,7 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                 leadingIcon = painterResource(id = R.drawable.edad),
                 value = listPets[pagerState.currentPage].pet.birthdate.replace("/", ""),
                 onValueChange = {
-                    Log.e("quack", it)
-                    if (!it.contains(".") && !it.contains(",") && !it.contains(" ")) {
+                    if (!it.contains(".") && !it.contains(",") && !it.contains(" ") && it.length < 9) {
                         val pet = listPets[pagerState.currentPage].pet
                         listPets[pagerState.currentPage] =
                             listPets[pagerState.currentPage].copy(pet = pet.copy(birthdate = it))
@@ -445,7 +442,7 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
 @Composable
 fun PrimaryButton(
     modifier: Modifier,
-    contentPadding : PaddingValues = ButtonDefaults.ContentPadding,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable () -> Unit,
     shape: Shape = RoundedCornerShape(60.dp),
     onClick: () -> Unit
@@ -584,7 +581,7 @@ fun CircularName(
                         mediumTitleStyle.copy(color = colorDisabled, fontSize = 17.sp),
                         iconSize = 20.dp,
                         value = pet.name
-                    ){
+                    ) {
                         canEdit()
                     }
                 }
@@ -893,5 +890,35 @@ fun BasicEditTextField(
                 .clickable {
                     edit()
                 })
+    }
+}
+
+@Composable
+fun CustomDialog(
+    showDialog: Boolean,
+    onDismissRequest: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = onDismissRequest,
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    Modifier
+                        .width(300.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    content()
+                }
+
+            }
+        }
     }
 }

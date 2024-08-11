@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,34 +19,45 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import com.pe.mascotapp.R
 import com.pe.mascotapp.boldTitleStyle
+import com.pe.mascotapp.buttonTitleStyle
+import com.pe.mascotapp.colorDisabled
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
+import com.pe.mascotapp.semiBoldTitleStyle
+import com.pe.mascotapp.textColor
+import com.pe.mascotapp.titleStyle
 import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
@@ -61,6 +73,54 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
     val itemWidth = screenWidth / 3
 
     val scope = rememberCoroutineScope()
+    var actualItem = 0
+    var showDialog by remember { mutableStateOf(false) }
+
+    CustomDialog(
+        showDialog = showDialog,
+        onDismissRequest = { showDialog = false }
+    ) {
+        Column {
+            Box(
+                Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        MaterialTheme.colorScheme.surface,
+                    )
+                    .padding(22.dp)
+            ) {
+                Text(
+                    "¿Estás seguro de que quieres eliminar este perfil?",
+                    style = semiBoldTitleStyle,
+                    color = textColor
+                )
+            }
+            Row(
+                Modifier
+                    .padding(top = 73.dp, start = 20.dp, end = 20.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Button(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.buttonColors(Color.White)
+                ) {
+                    Text(text = "Volver", color = textColor, style = buttonTitleStyle.copy(fontSize = 20.sp))
+                }
+                Button(onClick = {
+                    scope.launch {
+                        showDialog = false
+                        if (actualItem >= 1) {
+                            pagerState.scrollToPage(pagerState.currentPage - 1)
+                        }
+                        listPets.removeAt(actualItem)
+                    }
+                }, colors = ButtonDefaults.buttonColors(colorMediumBlue)) {
+                    Text(text = "Eliminar", style = buttonTitleStyle.copy(fontSize = 20.sp))
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -82,6 +142,10 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                     IconButton(
                         onClick = {
                             scope.launch {
+                                if (pagerState.currentPage == pagerState.pageCount - 1) {
+                                    pagerState.animateScrollToPage(0)
+                                    return@launch
+                                }
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
                         },
@@ -108,6 +172,10 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                     IconButton(
                         onClick = {
                             scope.launch {
+                                if (pagerState.currentPage == 0) {
+                                    pagerState.animateScrollToPage(pagerState.pageCount - 1)
+                                    return@launch
+                                }
                                 pagerState.animateScrollToPage(pagerState.currentPage - 1)
                             }
                         },
@@ -138,6 +206,7 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                 beyondBoundsPageCount = 3,
                 reverseLayout = true,
             ) { page ->
+
                 val show =
                     pagerState.currentPage == page || pagerState.currentPage + 1 == page || pagerState.currentPage + 2 == page
                 var normalSize = 154.dp
@@ -154,12 +223,15 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                     show,
                     normalSize
                 ) {
-                    scope.launch {
-                        if (page >= 1) {
-                            pagerState.scrollToPage(pagerState.currentPage - 1)
-                        }
-                        listPets.removeAt(page)
-                    }
+                    actualItem = page
+                    showDialog = !showDialog
+                    //scope.launch {
+                    //    if (page >= 1) {
+                    //        pagerState.scrollToPage(pagerState.currentPage - 1)
+                    //   }
+
+                    //   listPets.removeAt(page)
+                    //}
                 }
             }
             ElevatedButton(
@@ -169,7 +241,7 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                         if (!listPets[pagerState.currentPage].pet.isValid()) {
                             Toast.makeText(
                                 ctx,
-                                "Llena el nombre y selecciona la especie de tu mascota",
+                                "Llena el nombre y la especie de tu mascota",
                                 Toast.LENGTH_SHORT
                             ).show()
                             return@launch
@@ -263,8 +335,55 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
     val ctx = LocalContext.current
 
     val itemWidth = screenWidth / 3
+    var actualItem = 0
+    var showDialog by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
+    CustomDialog(
+        showDialog = showDialog,
+        onDismissRequest = { showDialog = false }
+    ) {
+        Column {
+            Box(
+                Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(
+                        MaterialTheme.colorScheme.surface,
+                    )
+                    .padding(22.dp)
+            ) {
+                Text(
+                    "¿Estás seguro de que quieres eliminar este perfil?",
+                    style = semiBoldTitleStyle,
+                    color = textColor
+                )
+            }
+            Row(
+                Modifier
+                    .padding(top = 73.dp, start = 20.dp, end = 20.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Button(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.buttonColors(Color.White)
+                ) {
+                    Text(text = "Volver", color = textColor, style = buttonTitleStyle.copy(fontSize = 20.sp))
+                }
+                Button(onClick = {
+                    scope.launch {
+                        showDialog = false
+                        if (actualItem >= 1) {
+                            pagerState.scrollToPage(pagerState.currentPage - 1)
+                        }
+                        listPets.removeAt(actualItem)
+                    }
+                }, colors = ButtonDefaults.buttonColors(colorMediumBlue)) {
+                    Text(text = "Eliminar", style = buttonTitleStyle.copy(fontSize = 20.sp))
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -286,6 +405,13 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
                     IconButton(
                         onClick = {
                             scope.launch {
+                                if (pagerState.currentPage == pagerState.pageCount - 1) {
+                                    pagerState.animateScrollToPage(0)
+                                    return@launch
+                                }
+                                if (pagerState.currentPage == 1){
+                                    return@launch
+                                }
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
                             }
                         },
@@ -312,6 +438,10 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
                     IconButton(
                         onClick = {
                             scope.launch {
+                                if (pagerState.currentPage == 0) {
+                                    pagerState.animateScrollToPage(pagerState.pageCount - 2)
+                                    return@launch
+                                }
                                 pagerState.animateScrollToPage(pagerState.currentPage - 1)
                             }
                         },
@@ -357,12 +487,8 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
                         (ctx as? CarosuelRegisterActivity)?.editPet(page)
                     }
                 ) {
-                    scope.launch {
-                        if (page >= 1) {
-                            pagerState.scrollToPage(pagerState.currentPage - 1)
-                        }
-                        listPets.removeAt(page)
-                    }
+                    actualItem = page
+                    showDialog = !showDialog
                 }
             }
 

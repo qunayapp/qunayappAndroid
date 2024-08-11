@@ -220,6 +220,12 @@ class HomeFragment : Fragment() {
         rcvHomeService?.setItemAnimator(DefaultItemAnimator())
     }
 
+    override fun onDestroy() {
+        homeServiceAdapterType = null
+        homeListServiceAdapterType = null
+        super.onDestroy()
+    }
+
     companion object {
         fun newInstance() : Fragment{
             val homeFragment = HomeFragment()

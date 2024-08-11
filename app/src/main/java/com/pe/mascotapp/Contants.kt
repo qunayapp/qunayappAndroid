@@ -83,6 +83,7 @@ val chipTextStyle = TextStyle(
 
 
 val colorDisabled = Color(0xFFC7C7C7)
+val textColor = Color(0xFF4D4D4D)
 val colorPrimary = Color(0xFF203E6C)
 val colorMediumBlue = Color(0xFF2A6BAF)
 val skyBlue = Color(0xFF48A7D3)

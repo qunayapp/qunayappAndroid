@@ -9,6 +9,9 @@
     <color name="secondary">#999999</color>
     <color name="third">#7C7C7D</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="semi_transparent">#66000000</color>
+
     <color name="gray100">#F5F5F5</color>
     <color name="blue">#444cb4</color>
     <color name="gris">#F7FBFE</color>

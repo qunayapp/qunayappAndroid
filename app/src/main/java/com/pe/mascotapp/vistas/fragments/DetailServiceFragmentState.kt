@@ -10,8 +10,6 @@ import com.pe.mascotapp.vistas.fragments.tabsService.TabTwo
 class DetailServiceFragmentState (fragmentManager: FragmentManager, context: Context):
     FragmentStatePagerAdapter(fragmentManager)  {
 
-    var contexto = context
-
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> {
@@ -20,13 +18,16 @@ class DetailServiceFragmentState (fragmentManager: FragmentManager, context: Con
             1 -> {
                 return TabTwo()
             }
+            2 -> {
+                return TabOne()
+            }
 
         }
         return TabOne();
     }
 
     override fun getCount(): Int {
-        return 2
+        return 3
     }
 
     override fun getItemPosition(`object`: Any): Int {
@@ -41,16 +42,20 @@ class DetailServiceFragmentState (fragmentManager: FragmentManager, context: Con
 
     override fun getPageTitle(position: Int): CharSequence? {
         //return super.getPageTitle(position)
-        return when (position) {
+        val title = (when (position) {
             0 -> {
                 return "Info"
             }
             1 -> {
                 return "Reviews"
             }
-            else -> null
+            2 -> {
+                return "Detalles de servicio"
+            }
+            else -> ""
 
 
-        }
+        })
+        return title.lowercase()
     }
 }

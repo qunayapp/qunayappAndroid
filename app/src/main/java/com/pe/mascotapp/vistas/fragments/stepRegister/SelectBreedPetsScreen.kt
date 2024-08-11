@@ -319,7 +319,7 @@ fun BreedPetItem(breedPet: BreedPetEntity, onClick: () -> Unit) {
     }
 }
 
-val dogBreed = mutableStateOf(
+val catsBreed = mutableStateOf(
     listOf(
         "Abyssinian",
         "American Bobtail",
@@ -375,7 +375,7 @@ val dogBreed = mutableStateOf(
 )
 
 
-val catsBreed =
+val dogBreed =
     mutableStateOf(
         listOf(
             "Alaskan Klee Kai",

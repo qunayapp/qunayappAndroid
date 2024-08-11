@@ -192,7 +192,7 @@ fun StepThreeScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableSta
                             (ctx as? CarosuelRegisterActivity)?.onBackPressed()
                         }
                     ) {
-                        Text(text = "volver", style = buttonTitleStyle, color = colorPrimary)
+                        Text(text = "Volver", style = buttonTitleStyle, color = colorPrimary)
                     }
                 }
             }
