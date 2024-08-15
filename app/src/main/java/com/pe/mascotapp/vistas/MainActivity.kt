@@ -100,7 +100,7 @@ fun MainScreen() {
                 },
                 modifier = Modifier
                     .padding(18.dp)
-                    .width(240.dp),
+                    .width(240.dp).height(50.dp),
                 shape = RoundedCornerShape(60.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.blue_primary),
@@ -141,7 +141,7 @@ fun MainScreen() {
                 contentDescription = null,
                 modifier = Modifier
                     .width(220.dp)
-                    .height(60.dp)
+                    .height(50.dp)
             )
 
             Spacer(

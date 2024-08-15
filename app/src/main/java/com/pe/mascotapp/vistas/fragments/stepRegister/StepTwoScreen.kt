@@ -84,6 +84,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -179,7 +180,7 @@ fun StepTwoScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableState
                         },
                         content = {
                             Text(
-                                text = "siguiente",
+                                text = stringResource(R.string.next),
                                 style = buttonTitleStyle.copy(fontSize = 20.sp)
                             )
                         })

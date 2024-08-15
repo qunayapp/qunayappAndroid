@@ -48,7 +48,7 @@ import java.util.Calendar
 
 // Replace with your app's package name
 
-
+@Preview
 @Composable
 fun StepOneScreen() {
     val scrollState = rememberScrollState()
@@ -121,7 +121,7 @@ fun StepOneScreen() {
                         },
                         content = {
                             Text(
-                                text = "siguiente",
+                                text = stringResource(R.string.next),
                                 style = buttonTitleStyle.copy(fontSize = 20.sp)
                             )
                         })
@@ -209,7 +209,7 @@ fun StepOneScreen() {
                             value = phone,
                             onValueChange = { newValue->
                                 val filteredValue = newValue.filter { it.isDigit() }
-                                if (filteredValue.length <= 12) {
+                                if (filteredValue.length <= 9) {
                                     phone=filteredValue
                                 }
                             },
@@ -282,7 +282,7 @@ fun StepOneScreen() {
                             )
                         )
                         ClickableText(
-                            text = AnnotatedString("Términos de usoy Política"),
+                            text = AnnotatedString(stringResource(id = R.string.label_terms)),
                             onClick = {
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://intothewildescapes.com/pet-terms"))
                                 ctx.startActivity(intent)

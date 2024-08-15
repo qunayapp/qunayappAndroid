@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
@@ -16,6 +16,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
@@ -174,7 +177,11 @@ class HomeActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
-        println("yoelkilll")
+        ViewCompat.setOnApplyWindowInsetsListener(w.decorView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
         menuHome = findViewById<BottomNavigationView>(R.id.menuHome)
         rcvHome = findViewById<RecyclerView>(R.id.rcvHome)
         rcvHomeService = findViewById<RecyclerView>(R.id.rcvHomeService)
