@@ -47,6 +47,7 @@
     <string name="label_weight">Peso:</string>
     <string name="label_esteralized">Esterilizado:</string>
     <string name="label_trained">Entrenado:</string>
+    <string name="login">Ingresar</string>
     <string name="label_friendly_with_others_dogs">Amigable con otros perros:</string>
     <string name="label_friendly_with_kids">Amigable con niños:</string>
     <string name="care_information">Información de cuidado</string>

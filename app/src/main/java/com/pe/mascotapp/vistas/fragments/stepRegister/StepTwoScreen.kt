@@ -89,6 +89,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
@@ -169,7 +170,7 @@ fun StepTwoScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableState
                                 if (this.isEmpty() || this.size != listPets.size) {
                                     Toast.makeText(
                                         ctx,
-                                        "Revisa que tus mascotas tengan un nombre y especie",
+                                        "Asegúrate de que tus mascotas tengan nombre y especie.",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     return@PrimaryButton
@@ -614,10 +615,11 @@ fun CustomTextField(
     textAlign: TextAlign = TextAlign.Start,
     keyBoarType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    leadingIconOnClick: () -> Unit = {}
+    leadingIconOnClick: () -> Unit = {},
+    trailingIcon: @Composable (() -> Unit)? = null,
+    isVisibleText: Boolean = true
 ) {
     val focusManager = LocalFocusManager.current
-
     OutlinedTextField(
         modifier = modifier,
         value = value,
@@ -636,14 +638,16 @@ fun CustomTextField(
                     }
                 )
         },
+
+        trailingIcon = trailingIcon,
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.Black,
             disabledTextColor = colorDisabled,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            disabledContainerColor = Color.Transparent,
-            errorContainerColor = Color.Transparent,
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+            errorContainerColor = Color.White,
             cursorColor = colorPrimary,
             focusedBorderColor = colorPrimary,
             unfocusedBorderColor = colorDisabled,
@@ -655,7 +659,7 @@ fun CustomTextField(
         keyboardOptions = KeyboardOptions(
             keyboardType = keyBoarType
         ),
-        visualTransformation = visualTransformation
+        visualTransformation = if (isVisibleText) VisualTransformation.None else PasswordVisualTransformation(),
     )
 }
 

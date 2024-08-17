@@ -10,6 +10,7 @@ import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -18,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -62,6 +64,8 @@ fun StepOneScreen() {
     var confirmPassword by remember { mutableStateOf("") }
     var termsAccepted by remember { mutableStateOf(false) }
     var validationMessage by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
     fun validateInputs() :Boolean {
         return (name.isNotBlank() && phone.isNotBlank()
                 && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -74,12 +78,12 @@ fun StepOneScreen() {
                      validationMessage = when {
                          name.isBlank() -> "Ingresa tu nombre"
                          email.isBlank() -> "Ingresa tu email"
-                         !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> "Ingresa un email valido"
-                         phone.isBlank() -> "Ingresa tu telefono"
+                         !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> "Ingresa un email válido"
+                         phone.isBlank() -> "Ingresa tu teléfono"
                          birthday.isBlank() -> "Ingresa tu fecha de nacimiento"
                          password.isBlank() -> "Ingresa tu contraseña"
                          password != confirmPassword -> "Las contraseñas no coinciden"
-                         !termsAccepted -> "Acepta los terminos y condiciones"
+                         !termsAccepted -> "Acepta los términos y condiciones"
                          else -> "" // All valid
                      }
                  }
@@ -261,7 +265,15 @@ fun StepOneScreen() {
                         onValueChange = {
                             password = it
                         },
-                        label = stringResource(id = R.string.label_password)
+                        label = stringResource(id = R.string.label_password),
+                        trailingIcon = {
+                            Icon(
+                                painter = if (passwordVisible) painterResource(id = R.drawable.password_hide) else painterResource(id = R.drawable.password_hide),
+                                contentDescription = null,
+                                modifier = Modifier.clickable { passwordVisible = !passwordVisible }
+                            )
+                        },
+                        isVisibleText = passwordVisible
                     )
                     CustomTextField(
                         Modifier.fillMaxWidth(),
@@ -271,7 +283,15 @@ fun StepOneScreen() {
                         onValueChange = {
                             confirmPassword = it
                         },
-                        label = stringResource(id = R.string.label_confirm_password)
+                        label = stringResource(id = R.string.label_confirm_password),
+                        trailingIcon = {
+                            Icon(
+                                painter = if (confirmPasswordVisible) painterResource(id = R.drawable.password_hide) else painterResource(id = R.drawable.password_hide),
+                                contentDescription = null,
+                                modifier = Modifier.clickable { confirmPasswordVisible = !confirmPasswordVisible }
+                            )
+                        },
+                                isVisibleText = confirmPasswordVisible
                     )
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 10.dp)) {
                         Checkbox(
