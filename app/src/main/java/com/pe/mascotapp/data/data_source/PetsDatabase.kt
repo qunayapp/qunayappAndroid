@@ -10,7 +10,7 @@ import com.pe.mascotapp.domain.models.ReminderPetJoin
 
 @Database(
     entities = [Pet::class, Reminder::class, ReminderPetJoin::class],
-    version = 17,
+    version = 18,
 )
 @TypeConverters(Converters::class)
 abstract class PetsDatabase : RoomDatabase() {

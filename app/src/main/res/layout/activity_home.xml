@@ -22,13 +22,15 @@
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/imgBanner" />
+                android:layout_height="0dp"
+                android:layout_above="@+id/imgBanner"
+                android:layout_below="@+id/appBarLayout"/>
 
             <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
-                android:paddingTop="?attr/actionBarSize"
                 android:layout_height="wrap_content"
+                android:paddingTop="?attr/actionBarSize"
                 android:theme="@style/Theme.Mascotapp.AppBarOverlay"
                 app:elevation="0dp">
 
@@ -36,8 +38,8 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
                     android:layout_gravity="end"
+                    android:background="?attr/colorPrimary"
                     android:elevation="4dp"
                     android:foregroundGravity="right"
                     android:gravity="center"
