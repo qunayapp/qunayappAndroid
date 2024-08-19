@@ -617,7 +617,6 @@ fun CustomTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     leadingIconOnClick: () -> Unit = {},
     trailingIcon: @Composable (() -> Unit)? = null,
-    isVisibleText: Boolean = true
 ) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
@@ -659,7 +658,7 @@ fun CustomTextField(
         keyboardOptions = KeyboardOptions(
             keyboardType = keyBoarType
         ),
-        visualTransformation = if (isVisibleText) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = visualTransformation,
     )
 }
 

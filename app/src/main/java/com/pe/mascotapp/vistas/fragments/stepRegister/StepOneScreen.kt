@@ -34,6 +34,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -261,7 +262,7 @@ fun StepOneScreen() {
                         Modifier.fillMaxWidth(),
                         leadingIcon = painterResource(id = R.drawable.candado),
                         value = password,
-                        visualTransformation = PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         onValueChange = {
                             password = it
                         },
@@ -273,13 +274,12 @@ fun StepOneScreen() {
                                 modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                             )
                         },
-                        isVisibleText = passwordVisible
                     )
                     CustomTextField(
                         Modifier.fillMaxWidth(),
                         leadingIcon = painterResource(id = R.drawable.candado),
                         value = confirmPassword,
-                        visualTransformation = PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         onValueChange = {
                             confirmPassword = it
                         },
@@ -290,8 +290,7 @@ fun StepOneScreen() {
                                 contentDescription = null,
                                 modifier = Modifier.clickable { confirmPasswordVisible = !confirmPasswordVisible }
                             )
-                        },
-                                isVisibleText = confirmPasswordVisible
+                        }
                     )
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 10.dp)) {
                         Checkbox(

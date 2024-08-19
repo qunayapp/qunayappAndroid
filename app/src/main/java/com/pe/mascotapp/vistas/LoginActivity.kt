@@ -45,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,17 +54,12 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.interfaces.PrincipalPresentador
 import com.pe.mascotapp.interfaces.RetrofitServiceApp
-import com.pe.mascotapp.interfaces.Servicios
-import com.pe.mascotapp.modelos.SesionUsuario
 import com.pe.mascotapp.utils.Constantes
 import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.fragments.stepRegister.CustomTextField
-import retrofit2.Call
-import retrofit2.Response
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import javax.security.auth.callback.Callback
 
 class LoginActivity : AppCompatActivity() {
 
@@ -277,7 +273,7 @@ fun LoginScreen() {
                     Modifier.fillMaxWidth(),
                     leadingIcon = painterResource(id = R.drawable.candado),
                     value = password,
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     onValueChange = {
                         password = it
                     },
@@ -289,7 +285,6 @@ fun LoginScreen() {
                             modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                         )
                     },
-                    isVisibleText = passwordVisible
                 )
             }
             Spacer(
