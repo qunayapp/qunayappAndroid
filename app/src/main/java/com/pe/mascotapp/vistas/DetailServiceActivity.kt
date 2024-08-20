@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.pe.mascotapp.R
@@ -26,6 +28,11 @@ class DetailServiceActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
+        ViewCompat.setOnApplyWindowInsetsListener(w.decorView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
         tabLayout = findViewById<TabLayout>(R.id.tab_layout)
         viewPager = findViewById<ViewPager>(R.id.viewPStep)
         btnContactar = findViewById<Button>(R.id.btnContactar)
