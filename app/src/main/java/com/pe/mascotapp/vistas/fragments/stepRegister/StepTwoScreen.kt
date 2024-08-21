@@ -384,7 +384,12 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                 value = listPets[pagerState.currentPage].pet.weight,
                 onValueChange = {
                     if (it.isNotEmpty() && !weightRegex.matches(it)) return@CustomTextField
-                    val amount = if (it.startsWith("0")) { "" } else { it }
+                    if (it.length > 9) return@CustomTextField
+                    val amount = if (it.startsWith("0")) {
+                        ""
+                    } else {
+                        it
+                    }
                     val pet = listPets[pagerState.currentPage].pet
                     listPets[pagerState.currentPage] =
                         listPets[pagerState.currentPage].copy(pet = pet.copy(weight = amount))
