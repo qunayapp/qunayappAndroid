@@ -22,7 +22,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,7 +56,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -74,7 +72,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
@@ -89,7 +86,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
@@ -122,7 +118,9 @@ import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
 import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Companion.BUNDLE_BREED
+import java.text.DecimalFormat
 import java.util.Calendar
+import kotlin.math.max
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -383,18 +381,18 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                     .weight(1F)
                     .fillMaxHeight(),
                 leadingIcon = painterResource(id = R.drawable.peso),
-                value = if (listPets[pagerState.currentPage].pet.weight >= 0.0) listPets[pagerState.currentPage].pet.weight.toString() else "",
+                value = listPets[pagerState.currentPage].pet.weight,
                 onValueChange = {
-                    if (weightRegex.matches(it)) {
-                        val pet = listPets[pagerState.currentPage].pet
-                        listPets[pagerState.currentPage] =
-                            listPets[pagerState.currentPage].copy(pet = pet.copy(weight = it.toDouble()))
-                    }
+                    if (it.isNotEmpty() && !weightRegex.matches(it)) return@CustomTextField
+                    val amount = if (it.startsWith("0")) { "" } else { it }
+                    val pet = listPets[pagerState.currentPage].pet
+                    listPets[pagerState.currentPage] =
+                        listPets[pagerState.currentPage].copy(pet = pet.copy(weight = amount))
                 },
-                suffix = "kg",
                 label = "Peso",
                 textAlign = TextAlign.End,
-                keyBoarType = KeyboardType.Decimal
+                keyBoarType = KeyboardType.Decimal,
+                suffix = "kg"
             )
             CustomTextField(
                 modifier = Modifier
@@ -825,6 +823,114 @@ fun getKindPet(value: String?): KindPet {
 class DateTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         return dateFilter(text)
+    }
+}
+
+class CurrencyAmountInputVisualTransformation(
+    private val fixedCursorAtTheEnd: Boolean = true,
+    private val numberOfDecimals: Int = 2
+) : VisualTransformation {
+
+    private val symbols = DecimalFormat().decimalFormatSymbols
+
+    override fun filter(text: AnnotatedString): TransformedText {
+        val thousandsSeparator = symbols.groupingSeparator
+        val decimalSeparator = symbols.decimalSeparator
+        val zero = symbols.zeroDigit
+
+        val inputText = text.text
+
+        val intPart = inputText
+            .dropLast(numberOfDecimals)
+            .reversed()
+            .chunked(3)
+            .joinToString(thousandsSeparator.toString())
+            .reversed()
+            .ifEmpty {
+                zero.toString()
+            }
+
+        val fractionPart = inputText.takeLast(numberOfDecimals).let {
+            if (it.length != numberOfDecimals) {
+                List(numberOfDecimals - it.length) {
+                    zero
+                }.joinToString("") + it
+            } else {
+                it
+            }
+        }
+
+        val formattedNumber = intPart + decimalSeparator + fractionPart
+
+        val newText = AnnotatedString(
+            text = formattedNumber,
+            spanStyles = text.spanStyles,
+            paragraphStyles = text.paragraphStyles
+        )
+
+        val offsetMapping = if (fixedCursorAtTheEnd) {
+            FixedCursorOffsetMapping(
+                contentLength = inputText.length,
+                formattedContentLength = formattedNumber.length
+            )
+        } else {
+            MovableCursorOffsetMapping(
+                unmaskedText = text.toString(),
+                maskedText = newText.toString(),
+                decimalDigits = numberOfDecimals
+            )
+        }
+
+        return TransformedText(newText, offsetMapping)
+    }
+
+    private class FixedCursorOffsetMapping(
+        private val contentLength: Int,
+        private val formattedContentLength: Int,
+    ) : OffsetMapping {
+        override fun originalToTransformed(offset: Int): Int = formattedContentLength
+        override fun transformedToOriginal(offset: Int): Int = contentLength
+    }
+
+    private class MovableCursorOffsetMapping(
+        private val unmaskedText: String,
+        private val maskedText: String,
+        private val decimalDigits: Int
+    ) : OffsetMapping {
+        override fun originalToTransformed(offset: Int): Int =
+            when {
+                unmaskedText.length <= decimalDigits -> {
+                    maskedText.length - (unmaskedText.length - offset)
+                }
+
+                else -> {
+                    offset + offsetMaskCount(offset, maskedText)
+                }
+            }
+
+        override fun transformedToOriginal(offset: Int): Int =
+            when {
+                unmaskedText.length <= decimalDigits -> {
+                    max(unmaskedText.length - (maskedText.length - offset), 0)
+                }
+
+                else -> {
+                    offset - maskedText.take(offset).count { !it.isDigit() }
+                }
+            }
+
+        private fun offsetMaskCount(offset: Int, maskedText: String): Int {
+            var maskOffsetCount = 0
+            var dataCount = 0
+            for (maskChar in maskedText) {
+                if (!maskChar.isDigit()) {
+                    maskOffsetCount++
+                } else if (++dataCount > offset) {
+                    break
+                }
+            }
+            return maskOffsetCount
+        }
     }
 }
 

@@ -25,7 +25,7 @@ data class Pet(
             image,
             name,
             specie,
-            weight,
+            weight.toString(),
             sex,
             birthdate,
             false

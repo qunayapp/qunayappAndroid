@@ -16,7 +16,7 @@ data class PetEntity(
     val image: String = "",
     var name: String = "",
     var specie: String = KindPet.None.value(),
-    var weight: Double = -1.0,
+    var weight: String = "",
     var sex: Sex = Sex.NONE,
     var birthdate: String = "",
     var isSelected: Boolean = false,
@@ -28,7 +28,7 @@ data class PetEntity(
             image,
             name,
             specie,
-            weight,
+            weight.toDouble(),
             sex,
             birthdate,
         )
