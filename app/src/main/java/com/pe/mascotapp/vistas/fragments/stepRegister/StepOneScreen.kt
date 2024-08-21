@@ -114,7 +114,7 @@ fun StepOneScreen() {
                             .height(58.dp)
                             .padding(horizontal = 77.dp),
                         onClick = {
-                            if (validateInputs()) {
+                            if (!validateInputs()) {
                                 Toast.makeText(
                                     ctx,
                                     validationMessage,Toast.LENGTH_SHORT
