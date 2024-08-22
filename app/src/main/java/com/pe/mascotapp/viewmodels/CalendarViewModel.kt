@@ -20,10 +20,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,16 +57,18 @@ class CalendarViewModel @Inject constructor(
     }
 
     fun getFilterReminders(filterDate: LocalDate) {
-        val filteredReminders =  filterReminders(originalReminders, filterDate)
+        val filteredReminders = filterReminders(originalReminders, filterDate)
             .sortedBy { CalendarUtils.parseDate("${it.reminder.startHour} ${it.reminder.startDate}") }
-
         _listFilteredReminders.postValue(filteredReminders)
 
     }
 
-    private fun filterReminders(reminders: List<ReminderPetsJoinEntity>, filterDate: LocalDate): List<ReminderPetsJoinEntity> {
+    private fun filterReminders(
+        reminders: List<ReminderPetsJoinEntity>,
+        filterDate: LocalDate
+    ): List<ReminderPetsJoinEntity> {
         return reminders.filter { reminder ->
-            Log.d("MyWorker", "reminder id " + reminder.reminder.reminderId)
+
             val dateTempReminder =
                 when (reminder.reminder.repeatOption) {
                     ValueTextOption.DONT_REPEAT -> {
@@ -74,7 +79,11 @@ class CalendarViewModel @Inject constructor(
                         var dateAlarm = dateTemp.addMinutes(-reminder.reminder.alarmInMinutes)
                         dateAlarm = dateAlarm?.addHours(-reminder.reminder.alarmInHours)
                         dateAlarm = dateAlarm?.addDay(-reminder.reminder.alarmInDays)
-                        if (dateAlarm != null && CalendarUtils.fechaCumplidaHoy(dateTemp)) dateAlarm else null
+                        val formato = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+
+                        val fechaStringHoy = formato.format(dateTemp)
+                        val fechaString = filterDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                        if (dateAlarm != null && fechaString == fechaStringHoy) true else null
                     }
 
                     ValueTextOption.ALL_DAYS -> {
@@ -92,8 +101,6 @@ class CalendarViewModel @Inject constructor(
                         // ver si hoy toca una alarma segun el intervalo de repeticion
                         val isAlarmToday = startReminder?.let {
                             val diffInDays = ChronoUnit.DAYS.between(dateToLocalDate(it), today).toInt()
-                            Log.e("diffInDays", diffInDays.toString())
-                            Log.e("count repeat", reminder.reminder.countRepeatOption.toString())
                             diffInDays % (reminder.reminder.countRepeatOption ?: 1) == 0
                         } ?: false
 
@@ -104,7 +111,6 @@ class CalendarViewModel @Inject constructor(
                                 TypeOption.DATE -> reminder.reminder.durationRepeat?.let { date ->
                                     endReminder =
                                         CalendarUtils.stringToDate(date, "dd 'de' MMM 'de' yyyy")
-                                    Log.e("quack",endReminder.toString())
                                 }
 
                                 TypeOption.COUNTER -> reminder.reminder.durationRepeat?.let { counter ->
@@ -150,8 +156,6 @@ class CalendarViewModel @Inject constructor(
                         // ver si hoy toca una alarma segun el intervalo de repeticion
                         val isAlarmToday = startReminder?.let {
                             val diffInDays = ChronoUnit.DAYS.between(dateToLocalDate(it), today).toInt()
-                            Log.e("week diffInDays", diffInDays.toString())
-                            Log.e("week count repeat", reminder.reminder.countRepeatOption.toString())
                             (diffInDays % ((reminder.reminder.countRepeatOption ?: 1) * 7)) == 0
                         } ?: false
 

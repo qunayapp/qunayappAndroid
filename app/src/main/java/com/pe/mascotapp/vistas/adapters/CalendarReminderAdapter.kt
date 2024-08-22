@@ -31,7 +31,7 @@ class CalendarReminderAdapter(val reminders: List<ReminderPetsJoinEntity>): Recy
             }
         }
         private fun handleState(isActivated: Boolean) {
-            var backgroundColor = R.color.verdeclaroq
+            var backgroundColor = R.color.blue_primary
             var primaryTextColor = R.color.white
             var iconColor = R.color.white
             if (!isActivated){

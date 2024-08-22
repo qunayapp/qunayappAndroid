@@ -51,7 +51,7 @@
                 android:id="@+id/clParent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/verdeclaroq"
+                android:background="@color/blue_primary"
                 android:paddingVertical="12dp">
 
                 <!-- Movie Image -->
