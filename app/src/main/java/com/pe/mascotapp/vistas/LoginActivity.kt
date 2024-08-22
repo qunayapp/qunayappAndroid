@@ -75,15 +75,17 @@ class LoginActivity : AppCompatActivity() {
         setContent {
             LoginScreen()
         }
-/*        presentador = PrincipalPresentador.VistaStart(this)
-        edtEmail = findViewById<TextInputLayout>(R.id.edtEmail)
-        edtPassword = findViewById<TextInputLayout>(R.id.edtPassword)
-        btnIngresar = findViewById<Button>(R.id.btnIngresar)
+        ; // (for Android Built In Theme)
 
-        btnIngresar!!.setOnClickListener {
-            if (validarInputs()){
+        /*        presentador = PrincipalPresentador.VistaStart(this)
+                edtEmail = findViewById<TextInputLayout>(R.id.edtEmail)
+                edtPassword = findViewById<TextInputLayout>(R.id.edtPassword)
+                btnIngresar = findViewById<Button>(R.id.btnIngresar)
 
-            }*/
+                btnIngresar!!.setOnClickListener {
+                    if (validarInputs()){
+
+                    }*/
         }
 
 /*    @SuppressLint("SuspiciousIndentation")
