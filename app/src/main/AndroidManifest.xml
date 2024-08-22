@@ -44,15 +44,18 @@
         </activity>
         <activity
             android:name=".vistas.PetDetailActivity"
+            android:theme="@style/Theme.Mascotapp.SkyTheme"
             android:exported="false" />
         <activity
             android:name=".vistas.ReminderActivity"
+            android:theme="@style/Theme.Mascotapp.SkyTheme"
             android:exported="false" />
         <activity
             android:name=".vistas.reminder.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".vistas.fragments.stepRegister.SelectBreedActivity"
+            android:theme="@style/Theme.Mascotapp.SkyTheme"
             android:exported="false" />
         <activity
             android:name=".vistas.DetailServiceActivity"
