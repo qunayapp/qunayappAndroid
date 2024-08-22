@@ -121,6 +121,7 @@ import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Compan
 import java.text.DecimalFormat
 import java.util.Calendar
 import kotlin.math.max
+import kotlin.reflect.jvm.internal.impl.types.checker.TypeRefinementSupport.Enabled
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -244,6 +245,31 @@ fun StepTwoScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableState
 @Composable
 fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) {
     val ctx = LocalContext.current
+
+    fun setCalendar() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val datePickerDialog = DatePickerDialog(
+            ctx,
+            R.style.Base_ThemeOverlay_AppCompat_Dialog,
+            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                val pet = listPets[pagerState.currentPage].pet
+                listPets[pagerState.currentPage] =
+                    listPets[pagerState.currentPage].copy(
+                        pet = pet.copy(
+                            birthdate = "${
+                                dayOfMonth.toString().padStart(2, '0')
+                            }${month.toString().padStart(2, '0')}${
+                                year.toString().padStart(4, '0')
+                            }"
+                        )
+                    )
+            }, year, month, day
+        )
+        datePickerDialog.show()
+    }
 
     Column(
         modifier = Modifier
@@ -402,7 +428,9 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
             CustomTextField(
                 modifier = Modifier
                     .weight(1F)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .clickable { setCalendar() },
+                enabled = false,
                 leadingIcon = painterResource(id = R.drawable.edad),
                 value = listPets[pagerState.currentPage].pet.birthdate.replace("/", ""),
                 onValueChange = {
@@ -416,28 +444,7 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                 keyBoarType = KeyboardType.Number,
                 visualTransformation = DateTransformation(),
                 leadingIconOnClick = {
-                    val calendar = Calendar.getInstance()
-                    val year = calendar.get(Calendar.YEAR)
-                    val month = calendar.get(Calendar.MONTH)
-                    val day = calendar.get(Calendar.DAY_OF_MONTH)
-                    val datePickerDialog = DatePickerDialog(
-                        ctx,
-                        R.style.Base_ThemeOverlay_AppCompat_Dialog,
-                        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-                            val pet = listPets[pagerState.currentPage].pet
-                            listPets[pagerState.currentPage] =
-                                listPets[pagerState.currentPage].copy(
-                                    pet = pet.copy(
-                                        birthdate = "${
-                                            dayOfMonth.toString().padStart(2, '0')
-                                        }${month.toString().padStart(2, '0')}${
-                                            year.toString().padStart(4, '0')
-                                        }"
-                                    )
-                                )
-                        }, year, month, day
-                    )
-                    datePickerDialog.show()
+                    setCalendar()
                 }
             )
         }
@@ -619,10 +626,12 @@ fun CustomTextField(
     keyBoarType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     leadingIconOnClick: () -> Unit = {},
+    enabled: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
+        enabled = enabled,
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
@@ -645,7 +654,7 @@ fun CustomTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.Black,
-            disabledTextColor = colorDisabled,
+            disabledTextColor = Color.Black,
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
             disabledContainerColor = Color.White,

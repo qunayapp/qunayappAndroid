@@ -90,6 +90,25 @@ fun StepOneScreen() {
                  }
         }
     }
+    fun setCalendar(){
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val datePickerDialog = DatePickerDialog(
+            ctx,
+            R.style.Base_ThemeOverlay_AppCompat_Dialog,
+            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                birthday = "${
+                    dayOfMonth.toString().padStart(2, '0')
+                }${month.toString().padStart(2, '0')}${
+                    year.toString().padStart(4, '0')
+                }"
+
+            }, year, month, day
+        )
+        datePickerDialog.show()
+    }
     Box(
         Modifier
             .background(Color.White)
@@ -225,7 +244,10 @@ fun StepOneScreen() {
                         CustomTextField(
                             Modifier
                                 .weight(1F)
-                                .fillMaxHeight(),
+                                .fillMaxHeight()
+                                .clickable {
+                                    setCalendar()
+                                },
                             leadingIcon = painterResource(id = R.drawable.edad),
                             value = birthday,
                             keyBoarType = KeyboardType.Number,
@@ -237,24 +259,9 @@ fun StepOneScreen() {
                                 }
                             },
                             label = stringResource(id = R.string.label_born),
+                            enabled = false,
                             leadingIconOnClick = {
-                                val calendar = Calendar.getInstance()
-                                val year = calendar.get(Calendar.YEAR)
-                                val month = calendar.get(Calendar.MONTH)
-                                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                                val datePickerDialog = DatePickerDialog(
-                                    ctx,
-                                    R.style.Base_ThemeOverlay_AppCompat_Dialog,
-                                    { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-                                        birthday = "${
-                                            dayOfMonth.toString().padStart(2, '0')
-                                        }${month.toString().padStart(2, '0')}${
-                                            year.toString().padStart(4, '0')
-                                        }"
-
-                                    }, year, month, day
-                                )
-                                datePickerDialog.show()
+                                setCalendar()
                             }
                         )
                     }
@@ -316,6 +323,8 @@ fun StepOneScreen() {
             }
         }
     }
+
+
 }
 
 @Preview
