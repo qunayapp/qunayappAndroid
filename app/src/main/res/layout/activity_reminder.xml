@@ -66,7 +66,7 @@
 						   android:text="(0)"
 						   app:layout_constraintStart_toEndOf="@+id/tvTittle"
 						   app:layout_constraintTop_toTopOf="parent"
-						   android:textColor="@color/verdeclaroq"
+						   android:textColor="@color/primaryColor"
 						   app:layout_constraintBottom_toBottomOf="parent"/>
 				   </androidx.constraintlayout.widget.ConstraintLayout>
 					<androidx.recyclerview.widget.RecyclerView
@@ -93,7 +93,7 @@
 						android:layout_gravity="center"
 						android:layout_marginTop="18dp"
 						android:text="Selecciona tu categoría"
-						android:textColor="@color/tituloCategoria" />
+						android:textColor="@color/plomoq" />
 
 					<androidx.recyclerview.widget.RecyclerView
 						android:id="@+id/rvCategories"
@@ -154,7 +154,7 @@
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
 						android:text="Fecha de Inicio"
-						android:textColor="@color/verdeclaroq" />
+						android:textColor="@color/blue_primary" />
 
 					<TextView
 						android:id="@+id/tvHourStart"
@@ -164,7 +164,7 @@
 						android:layout_weight="1"
 						android:text="agregar hora"
 						android:textAlignment="textEnd"
-						android:textColor="@color/verdeq"
+						android:textColor="@color/primaryColor"
 						android:textStyle="bold" />
 
 
@@ -214,7 +214,7 @@
 							android:layout_height="wrap_content"
 							android:layout_weight="1"
 							android:text="@string/no_repeat"
-							android:textColor="@color/verdeclaroq" />
+							android:textColor="@color/blue_primary" />
 
 						<TextView
 							android:id="@+id/tvAddDuration"
@@ -255,7 +255,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/plus_add_alarm"
-						android:textColor="@color/verdeclaroq" />
+						android:textColor="@color/blue_primary" />
 
 				</LinearLayout>
 

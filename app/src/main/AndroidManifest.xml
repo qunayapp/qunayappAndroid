@@ -48,7 +48,7 @@
             android:name=".vistas.AnimationLoading"
             android:exported="true"
             android:label="@string/title_activity_animation_loading"
-            android:theme="@style/Theme.Mascotapp" >
+            android:theme="@style/Theme.Mascotapp.WhiteTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,18 +57,22 @@
         </activity>
         <activity
             android:name=".vistas.PetDetailActivity"
+            android:theme="@style/Theme.Mascotapp.SkyTheme"
             android:exported="false" />
         <activity
             android:name=".vistas.ReminderActivity"
+            android:theme="@style/Theme.Mascotapp.SkyTheme"
             android:exported="false" />
         <activity
             android:name=".vistas.reminder.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".vistas.fragments.stepRegister.SelectBreedActivity"
+            android:theme="@style/Theme.Mascotapp.SkyTheme"
             android:exported="false" />
         <activity
             android:name=".vistas.DetailServiceActivity"
+            android:theme="@style/Theme.Mascotapp.SkyTheme"
             android:exported="false" />
         <activity
             android:name=".vistas.CarosuelTutorialActivity"
@@ -124,6 +128,7 @@
             android:name=".vistas.CarosuelRegisterActivity"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.Mascotapp.WhiteTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".vistas.RegistroActivity"
@@ -132,6 +137,7 @@
         <activity
             android:name=".vistas.MainActivity"
             android:exported="true"
+            android:theme="@style/Theme.Mascotapp.WhiteTheme"
             android:screenOrientation="portrait" />
 
         <receiver

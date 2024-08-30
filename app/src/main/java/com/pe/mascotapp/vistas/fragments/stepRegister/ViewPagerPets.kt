@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,25 +38,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import com.pe.mascotapp.R
 import com.pe.mascotapp.boldTitleStyle
 import com.pe.mascotapp.buttonTitleStyle
-import com.pe.mascotapp.colorDisabled
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.semiBoldTitleStyle
 import com.pe.mascotapp.textColor
-import com.pe.mascotapp.titleStyle
 import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 import com.pe.mascotapp.vistas.entities.PetEntity
 import com.pe.mascotapp.vistas.entities.PetWithBreedsEntity
@@ -105,7 +99,11 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                     onClick = { showDialog = false },
                     colors = ButtonDefaults.buttonColors(Color.White)
                 ) {
-                    Text(text = "Volver", color = textColor, style = buttonTitleStyle.copy(fontSize = 20.sp))
+                    Text(
+                        text = "Volver",
+                        color = textColor,
+                        style = buttonTitleStyle.copy(fontSize = 20.sp)
+                    )
                 }
                 Button(onClick = {
                     scope.launch {
@@ -368,7 +366,11 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
                     onClick = { showDialog = false },
                     colors = ButtonDefaults.buttonColors(Color.White)
                 ) {
-                    Text(text = "Volver", color = textColor, style = buttonTitleStyle.copy(fontSize = 20.sp))
+                    Text(
+                        text = "Volver",
+                        color = textColor,
+                        style = buttonTitleStyle.copy(fontSize = 20.sp)
+                    )
                 }
                 Button(onClick = {
                     scope.launch {
@@ -405,11 +407,8 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
                     IconButton(
                         onClick = {
                             scope.launch {
-                                if (pagerState.currentPage == pagerState.pageCount - 1) {
+                                if (pagerState.currentPage >= pagerState.pageCount - 2) {
                                     pagerState.animateScrollToPage(0)
-                                    return@launch
-                                }
-                                if (pagerState.currentPage == 1){
                                     return@launch
                                 }
                                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -465,6 +464,7 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
             ) else PaddingValues(0.dp)
             HorizontalPager(
                 pageSpacing = 0.dp,
+                userScrollEnabled = false,
                 contentPadding = paddingValues,
                 modifier = Modifier
                     .fillMaxWidth(),

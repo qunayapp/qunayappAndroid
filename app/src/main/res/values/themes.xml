@@ -13,10 +13,18 @@
         <!-- Status bar color. -->
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/blue_primary</item>
 
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.Mascotapp.WhiteTheme" parent="Theme.Mascotapp">
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+
+    <style name="Theme.Mascotapp.SkyTheme" parent="Theme.Mascotapp">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/verdeclaroq</item>
     </style>
 
     <style name="Theme.Mascotapp.NoActionBar">

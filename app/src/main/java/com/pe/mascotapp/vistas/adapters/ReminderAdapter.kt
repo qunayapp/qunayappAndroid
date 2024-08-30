@@ -54,11 +54,11 @@ class ReminderAdapter(
         }
 
         private fun handleState(isActivated: Boolean) {
-            var backgroundColor = R.color.green100
+            var backgroundColor = R.color.backgroundCard
             var titleTextColor = R.color.black
             var itemTextColor = R.color.secondary
             var iconColor = R.color.white
-            var backgroundIconColor = R.color.verdeclaroq
+            var backgroundIconColor = R.color.blue_primary
             if (!isActivated) {
                 backgroundColor = R.color.plomoRegular
                 titleTextColor = R.color.plomoDark

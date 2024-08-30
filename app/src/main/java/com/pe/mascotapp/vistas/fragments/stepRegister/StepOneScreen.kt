@@ -34,6 +34,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,6 +89,25 @@ fun StepOneScreen() {
                      }
                  }
         }
+    }
+    fun setCalendar(){
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val datePickerDialog = DatePickerDialog(
+            ctx,
+            R.style.Base_ThemeOverlay_AppCompat_Dialog,
+            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+                birthday = "${
+                    dayOfMonth.toString().padStart(2, '0')
+                }${month.toString().padStart(2, '0')}${
+                    year.toString().padStart(4, '0')
+                }"
+
+            }, year, month, day
+        )
+        datePickerDialog.show()
     }
     Box(
         Modifier
@@ -224,7 +244,10 @@ fun StepOneScreen() {
                         CustomTextField(
                             Modifier
                                 .weight(1F)
-                                .fillMaxHeight(),
+                                .fillMaxHeight()
+                                .clickable {
+                                    setCalendar()
+                                },
                             leadingIcon = painterResource(id = R.drawable.edad),
                             value = birthday,
                             keyBoarType = KeyboardType.Number,
@@ -236,24 +259,9 @@ fun StepOneScreen() {
                                 }
                             },
                             label = stringResource(id = R.string.label_born),
+                            enabled = false,
                             leadingIconOnClick = {
-                                val calendar = Calendar.getInstance()
-                                val year = calendar.get(Calendar.YEAR)
-                                val month = calendar.get(Calendar.MONTH)
-                                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                                val datePickerDialog = DatePickerDialog(
-                                    ctx,
-                                    R.style.Base_ThemeOverlay_AppCompat_Dialog,
-                                    { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-                                        birthday = "${
-                                            dayOfMonth.toString().padStart(2, '0')
-                                        }${month.toString().padStart(2, '0')}${
-                                            year.toString().padStart(4, '0')
-                                        }"
-
-                                    }, year, month, day
-                                )
-                                datePickerDialog.show()
+                                setCalendar()
                             }
                         )
                     }
@@ -261,7 +269,7 @@ fun StepOneScreen() {
                         Modifier.fillMaxWidth(),
                         leadingIcon = painterResource(id = R.drawable.candado),
                         value = password,
-                        visualTransformation = PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         onValueChange = {
                             password = it
                         },
@@ -273,13 +281,12 @@ fun StepOneScreen() {
                                 modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                             )
                         },
-                        isVisibleText = passwordVisible
                     )
                     CustomTextField(
                         Modifier.fillMaxWidth(),
                         leadingIcon = painterResource(id = R.drawable.candado),
                         value = confirmPassword,
-                        visualTransformation = PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         onValueChange = {
                             confirmPassword = it
                         },
@@ -290,8 +297,7 @@ fun StepOneScreen() {
                                 contentDescription = null,
                                 modifier = Modifier.clickable { confirmPasswordVisible = !confirmPasswordVisible }
                             )
-                        },
-                                isVisibleText = confirmPasswordVisible
+                        }
                     )
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 10.dp)) {
                         Checkbox(
@@ -317,6 +323,8 @@ fun StepOneScreen() {
             }
         }
     }
+
+
 }
 
 @Preview

@@ -15,7 +15,7 @@
             <size android:width="24dp"
                 android:height="24dp"/>
             <stroke android:width="2dp"
-                android:color="#CCD886"/>
+                android:color="#2A6BAF"/>
         </shape>
     </item>
 </selector>

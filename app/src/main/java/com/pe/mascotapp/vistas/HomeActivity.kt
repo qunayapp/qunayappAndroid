@@ -180,16 +180,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        val w = window
-        w.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
-        ViewCompat.setOnApplyWindowInsetsListener(w.decorView) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, insets.bottom)
-            WindowInsetsCompat.CONSUMED
-        }
+
         menuHome = findViewById<BottomNavigationView>(R.id.menuHome)
         //imgUser = findViewById<ImageView>(R.id.imgUser)
         imgBanner = findViewById<ImageView>(R.id.imgBanner)
