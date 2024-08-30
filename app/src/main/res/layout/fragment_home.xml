@@ -80,12 +80,14 @@
                 android:gravity="end">
 
                 <ImageView
+                    android:id="@+id/ivFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/filtros" />
 
                 <TextView
+                    android:id="@+id/tvFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

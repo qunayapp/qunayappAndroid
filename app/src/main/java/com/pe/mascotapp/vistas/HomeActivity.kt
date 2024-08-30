@@ -11,6 +11,7 @@ import android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -42,10 +43,12 @@ import com.pe.mascotapp.utils.Utils
 import com.pe.mascotapp.vistas.adapters.HomeAdapter
 import com.pe.mascotapp.vistas.adapters.HomeListServiceAdapter
 import com.pe.mascotapp.vistas.adapters.HomeServiceAdapter
+import com.pe.mascotapp.vistas.alert.AlertActivity
 import com.pe.mascotapp.vistas.fragments.home.CalendarFragment
 import com.pe.mascotapp.vistas.fragments.home.HomeFragment
 import com.pe.mascotapp.vistas.fragments.home.PetsFragment
 import com.pe.mascotapp.vistas.fragments.home.ReminderFragment
+import com.pe.mascotapp.vistas.profile.MessageActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileInputStream
@@ -67,7 +70,7 @@ class HomeActivity : AppCompatActivity() {
     //var imgUser:ImageView ?= null
     var imgBanner: ImageView? = null
     var navigationView: NavigationView? = null
-
+    var iv_notification :   ImageView ? = null
     private val onNavigationItemSelectedListener =
         NavigationView.OnNavigationItemSelectedListener { item ->
             var selectedFragment: Fragment? = null
@@ -86,6 +89,11 @@ class HomeActivity : AppCompatActivity() {
                     //setTitle(getString(title));
                     drawer_layout!!.closeDrawer(GravityCompat.START)
 
+                }
+                R.id.nav_perfil -> {
+
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
                 }
 
                 /*R.id.nav_sobre_mimp -> {
@@ -183,13 +191,11 @@ class HomeActivity : AppCompatActivity() {
             WindowInsetsCompat.CONSUMED
         }
         menuHome = findViewById<BottomNavigationView>(R.id.menuHome)
-        rcvHome = findViewById<RecyclerView>(R.id.rcvHome)
-        rcvHomeService = findViewById<RecyclerView>(R.id.rcvHomeService)
         //imgUser = findViewById<ImageView>(R.id.imgUser)
         imgBanner = findViewById<ImageView>(R.id.imgBanner)
         presentador = PrincipalPresentador.VistaStart(this)
-
-        checkBattery(this)
+        iv_notification = findViewById<ImageView>(R.id.iv_notification)
+        //checkBattery(this)
         //obtenerData()
         //startRCVHome()
         iniciarvista(savedInstanceState)
@@ -405,10 +411,22 @@ class HomeActivity : AppCompatActivity() {
             .build()
 
         imgDogBanner.shapeAppearanceModel = shapeAppearanceModel
-        navigationView!!.setNavigationItemSelectedListener(onNavigationItemSelectedListener)
-
+        // navigationView!!.setNavigationItemSelectedListener(onNavigationItemSelectedListener)
         startMenu(savedInstanceState)
-
+        val nav_perfil = findViewById<TextView>(R.id.nav_perfil)
+        val nav_message = findViewById<TextView>(R.id.nav_message)
+        nav_perfil.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+        nav_message.setOnClickListener{
+            val intent = Intent(this, MessageActivity::class.java)
+            startActivity(intent)
+        }
+        iv_notification?.setOnClickListener {
+            val intent = Intent(this, AlertActivity::class.java)
+            startActivity(intent)
+        }
         val toggle =
             ActionBarDrawerToggle(
                 this,

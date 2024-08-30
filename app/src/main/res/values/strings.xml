@@ -60,4 +60,7 @@
     <string name="label_additional_details">Detalles adicionales:</string>
     <string name="pictures_gallery">Galería de fotos</string>
     <string name="title_activity_animation_loading">AnimationLoading</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_filter">FilterActivity</string>
 </resources>

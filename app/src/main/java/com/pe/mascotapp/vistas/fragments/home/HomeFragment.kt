@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.R
+import com.pe.mascotapp.databinding.FragmentHomeBinding
 import com.pe.mascotapp.modelos.Categorias
 import com.pe.mascotapp.modelos.PromocionBanner
 import com.pe.mascotapp.utils.Constantes
@@ -25,25 +26,35 @@ import java.io.FileInputStream
 
 class HomeFragment : Fragment() {
 
-    var rcvHomeService: RecyclerView?= null
+
     var categoriasArray: ArrayList<Categorias> = ArrayList()
     var promocionBanner: PromocionBanner = PromocionBanner()
-    var rcvHome: RecyclerView?= null
+
     var homeListServiceAdapterType: HomeListServiceAdapter?= null
     var homeServiceAdapterType:HomeServiceAdapter ?= null
-
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.fragment_home, container,false)
 
-        rcvHome = view.findViewById<RecyclerView>(R.id.rcvHome)
-        rcvHomeService = view.findViewById<RecyclerView>(R.id.rcvHomeService)
+        _binding =FragmentHomeBinding.inflate(inflater, container,false)
         obtenerData()
         startRCVHome()
-        return view;
+        setUpListener()
+        return binding.root
+    }
+
+    private val filterClickListener = View.OnClickListener {
+        val intent = Intent(context, FilterActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun setUpListener(){
+        binding.ivFilter.setOnClickListener(filterClickListener)
+        binding.tvFilter.setOnClickListener(filterClickListener)
     }
 
     fun obtenerData(){
@@ -150,8 +161,8 @@ class HomeFragment : Fragment() {
         /*val mLayoutManager = GridLayoutManager(this,2)
         rcvHome?.setLayoutManager(mLayoutManager)
         rcvHomeService?.setLayoutManager(mLayoutManager)*/
-        rcvHome?.setLayoutManager(LinearLayoutManager(context))
-        rcvHomeService?.setLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
+        binding.rcvHome.setLayoutManager(LinearLayoutManager(context))
+        binding.rcvHomeService.setLayoutManager(LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false))
 
         homeListServiceAdapterType = HomeListServiceAdapter(categoriasArray,promocionBanner){ categorias ->
 
@@ -213,11 +224,11 @@ class HomeFragment : Fragment() {
 
 
         }
-        rcvHome?.setAdapter(homeListServiceAdapterType)
-        rcvHome?.setItemAnimator(DefaultItemAnimator())
+        binding.rcvHome.setAdapter(homeListServiceAdapterType)
+       binding.rcvHome.setItemAnimator(DefaultItemAnimator())
 
-        rcvHomeService?.setAdapter(homeServiceAdapterType)
-        rcvHomeService?.setItemAnimator(DefaultItemAnimator())
+        binding.rcvHomeService.setAdapter(homeServiceAdapterType)
+        binding.rcvHomeService.setItemAnimator(DefaultItemAnimator())
     }
 
     override fun onDestroy() {

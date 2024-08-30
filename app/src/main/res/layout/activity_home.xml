@@ -89,6 +89,7 @@
                         android:layout_marginEnd="24dp">
 
                         <ImageView
+                            android:id="@+id/iv_notification"
                             android:layout_width="28dp"
                             android:layout_height="33dp"
                             android:layout_gravity="center"
@@ -200,6 +201,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/nav_perfil"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:drawablePadding="8dp"
@@ -218,6 +220,7 @@
                                 android:background="@color/plomoRegular" />
 
                             <TextView
+                                android:id="@+id/nav_message"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:drawablePadding="8dp"

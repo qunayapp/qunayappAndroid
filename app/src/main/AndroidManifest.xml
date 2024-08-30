@@ -23,14 +23,27 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:name=".components.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_foreground"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher_app"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Mascotapp">
+        android:theme="@style/Theme.Mascotapp"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".vistas.alert.AlertActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vistas.fragments.home.FilterActivity"
+            android:exported="false"
+            android:label="@string/title_activity_filter" />
+        <activity
+            android:name=".vistas.profile.MessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".vistas.ProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".vistas.AnimationLoading"
             android:exported="true"
