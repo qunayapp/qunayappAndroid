@@ -85,7 +85,6 @@ fun AlertScreen() {
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .verticalScroll(scrollState)
                 .fillMaxSize()
                 .background(Color.White)
         ) {

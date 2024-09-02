@@ -32,6 +32,9 @@
         android:theme="@style/Theme.Mascotapp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".vistas.profile.ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".vistas.alert.AlertActivity"
             android:exported="false" />
         <activity
@@ -48,7 +51,7 @@
             android:name=".vistas.AnimationLoading"
             android:exported="true"
             android:label="@string/title_activity_animation_loading"
-            android:theme="@style/Theme.Mascotapp.WhiteTheme" >
+            android:theme="@style/Theme.Mascotapp.WhiteTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,23 +60,23 @@
         </activity>
         <activity
             android:name=".vistas.PetDetailActivity"
-            android:theme="@style/Theme.Mascotapp.SkyTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Mascotapp.SkyTheme" />
         <activity
             android:name=".vistas.ReminderActivity"
-            android:theme="@style/Theme.Mascotapp.SkyTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Mascotapp.SkyTheme" />
         <activity
             android:name=".vistas.reminder.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".vistas.fragments.stepRegister.SelectBreedActivity"
-            android:theme="@style/Theme.Mascotapp.SkyTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Mascotapp.SkyTheme" />
         <activity
             android:name=".vistas.DetailServiceActivity"
-            android:theme="@style/Theme.Mascotapp.SkyTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Mascotapp.SkyTheme" />
         <activity
             android:name=".vistas.CarosuelTutorialActivity"
             android:exported="false" />
@@ -113,8 +116,7 @@
         <activity
             android:name=".vistas.StartActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".vistas.LoginActivity"
             android:exported="false"
@@ -137,8 +139,8 @@
         <activity
             android:name=".vistas.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Mascotapp.WhiteTheme"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Mascotapp.WhiteTheme" />
 
         <receiver
             android:name=".notifications.AlarmReceiver"

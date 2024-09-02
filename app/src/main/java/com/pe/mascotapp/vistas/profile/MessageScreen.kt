@@ -1,6 +1,8 @@
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -52,8 +54,9 @@ import com.pe.mascotapp.colorHeader
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.vistas.HorizontalLine
+import com.pe.mascotapp.vistas.profile.ChatActivity
 
-
+@Preview
 @Composable
 fun MessagesScreen() {
     val scrollState = rememberScrollState()
@@ -171,10 +174,15 @@ fun MessagesList() {
 
 @Composable
 fun MessageItem(title: String, message: String, time: String) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable {
+                val intent = Intent(context, ChatActivity::class.java)
+                context.startActivity(intent)
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(

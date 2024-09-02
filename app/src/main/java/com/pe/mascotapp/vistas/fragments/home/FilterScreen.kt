@@ -22,7 +22,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -40,10 +39,10 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -57,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,30 +67,16 @@ import com.pe.mascotapp.caprasimoTitleStyle
 import com.pe.mascotapp.colorDisabled
 import com.pe.mascotapp.colorGrisTittle
 import com.pe.mascotapp.colorHeader
+import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
+import com.pe.mascotapp.descriptionTextStyle
 import com.pe.mascotapp.semiBoldTitleStyle
 import com.pe.mascotapp.titleStyle
 
 
 @Composable
-fun FilterScreen() {
-
-
-    val items = listOf(
-        Pair(Icons.Filled.Home, "Home"),
-        Pair(Icons.Filled.Settings, "Settings"),
-        Pair(Icons.Filled.Person, "Profile"),
-        Pair(Icons.Filled.Favorite, "Favorites"),
-        Pair(Icons.Filled.Search, "Search"),
-        Pair(Icons.Filled.Email, "Email")
-    )
-    ItemGrid(items = items, itemsPerRow = 2) // 3 items per row
-
-}
-
-@Composable
 fun BoxWithText(
-    icon: ImageVector,
+    icon: ImageVector?,
     text: String,
     borderColor: Color,
     onClick: () -> Unit
@@ -101,7 +87,7 @@ fun BoxWithText(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
-            .border(2.dp, borderColor, RoundedCornerShape(16.dp))
+            .border(1.dp, borderColor, RoundedCornerShape(16.dp))
             .clickable { onClick() }
             .padding(4.dp),
         contentAlignment = Alignment.Center
@@ -110,11 +96,14 @@ fun BoxWithText(
             modifier = Modifier.padding(4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = icon, contentDescription = "Box Icon",
-                tint = iconColor,
-                modifier = Modifier.size(20.dp)
-            )
+            if (icon != null) { // Check if icon is not null
+                Icon(
+                    imageVector = icon,
+                    contentDescription = "Box Icon",
+                    tint = iconColor,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = text,
@@ -127,7 +116,7 @@ fun BoxWithText(
 
 @Composable
 fun ItemGrid(
-    items: List<Pair<ImageVector, String>>,
+    items: List<BoxItem>,
     itemsPerRow: Int = 3
 ) {
     val selectedItems = remember { mutableStateListOf<Int>() }
@@ -144,10 +133,10 @@ fun ItemGrid(
                     if (index < items.size) {
                         val item = items[index]
                         val isSelected = selectedItems.contains(index)
-                        val borderColor = if (isSelected) Color.Red else Color.Gray
+                        val borderColor = if (isSelected) colorMediumBlue else Color.Gray
                         BoxWithText(
-                            icon = item.first,
-                            text = item.second,
+                            icon = item.icon,
+                            text = item.text,
                             borderColor = borderColor,
                             onClick = {
                                 if (isSelected) {
@@ -170,7 +159,7 @@ fun ItemGrid(
 @OptIn(ExperimentalLayoutApi::class)
 @Preview
 @Composable
-fun FilterScreen2() {
+fun FilterScreen() {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val selectedDistricts = remember { mutableStateListOf<String>() }
@@ -215,9 +204,26 @@ fun FilterScreen2() {
                 ) {
                     Text(
                         text = "Limpiar",
-                        style = titleStyle.copy(fontSize = 14.sp,color = colorPrimary,)
+                        style = titleStyle.copy(fontSize = 14.sp, color = colorPrimary)
                     )
                 }
+            }
+        },
+        bottomBar = {
+            Button(
+                shape = RoundedCornerShape(0.dp),
+                onClick = { /* Handle accept */ },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    colorMediumBlue,// Set the desired blue color
+
+                ),
+            ) {
+                Text(
+                    text = "Aceptar",
+                    style = descriptionTextStyle.copy(fontSize = 23.sp, color = Color.White)
+                )
             }
         }) { paddingValues ->
         Column(
@@ -240,15 +246,14 @@ fun FilterScreen2() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    val items = listOf(
-                        Pair(Icons.Filled.Home, "Home"),
-                        Pair(Icons.Filled.Settings, "Settings"),
-                        Pair(Icons.Filled.Person, "Profile"),
-                        Pair(Icons.Filled.Favorite, "Favorites"),
-                        Pair(Icons.Filled.Search, "Search"),
-                        Pair(Icons.Filled.Email, "Email")
+                    val filterTtems = listOf(
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_24hr), "Atiende 24 Horas"),
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_start), "Más  de 4.5"),
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_promos), "Promociones"),
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_prices), "Menos Precio"),
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_car_pick_up), "Recojo a domicilio")
                     )
-                    ItemGrid(items = items, itemsPerRow = 2) // 3 items per row
+                    ItemGrid(items = filterTtems, itemsPerRow = 2) // 3 items per row
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -268,7 +273,13 @@ fun FilterScreen2() {
                         style = semiBoldTitleStyle.copy(fontSize = 16.sp, color = colorGrisTittle)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    ItemGrid(items = items, itemsPerRow = 2) // 3 items per row
+
+                    val typesPetsItems = listOf(
+                        BoxItem( ImageVector.vectorResource(id = R.drawable.perro), "Perros"),
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.gato), "Gatos"),
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.llama), "Otros"),
+                    )
+                    ItemGrid(items = typesPetsItems, itemsPerRow = 2) // 3 items per row
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -278,22 +289,18 @@ fun FilterScreen2() {
                         style = semiBoldTitleStyle.copy(fontSize = 16.sp, color = colorGrisTittle)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    ItemGrid(items = items, itemsPerRow = 2) // 3 items per row
+                    val takeCareItems = listOf(
+                        BoxItem( null , "Administran medicinas"),
+                        BoxItem(null, "Cuentan con cuidados medicos"),
+                        BoxItem(null, "Cuidado a mascotas mayores"),
+                    )
+                    ItemGrid(items = takeCareItems, itemsPerRow = 1) // 3 items per row
 
                 }
             }
 
-
-            // Accept button
-            Button(
-                onClick = { /* Handle accept */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-            ) {
-                Text(text = "Aceptar")
-            }
         }
+
     }
 }
 
@@ -318,23 +325,22 @@ fun FilterChip(text: String) {
 @Composable
 fun DistrictDropdown(districts: List<String>, selectedDistricts: MutableList<String>) {
     var expanded by remember { mutableStateOf(false) }
-
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = !expanded }
     ) {
-        TextField(
+        OutlinedTextField(
             value = if (selectedDistricts.isEmpty()) "Agregar distritos" else selectedDistricts.joinToString(),
             onValueChange = {},
             readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-            },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor()
         )
         ExposedDropdownMenu(
             expanded = expanded,
@@ -354,13 +360,16 @@ fun DistrictDropdown(districts: List<String>, selectedDistricts: MutableList<Str
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(
                                 checked = selectedDistricts.contains(district),
-                                onCheckedChange = null // Null as we handle clicks on the whole row
+                                onCheckedChange = null
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = district)
                         }
-                    })
+                    }
+                )
             }
         }
     }
 }
+
+data class BoxItem(val icon: ImageVector? = null, val text: String)
