@@ -97,11 +97,11 @@ fun StepOneScreen() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val datePickerDialog = DatePickerDialog(
             ctx,
-            R.style.Base_ThemeOverlay_AppCompat_Dialog,
+            androidx.appcompat.R.style.Base_ThemeOverlay_AppCompat_Dialog,
             { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
                 birthday = "${
                     dayOfMonth.toString().padStart(2, '0')
-                }${month.toString().padStart(2, '0')}${
+                }${(month + 1).toString().padStart(2, '0')}${
                     year.toString().padStart(4, '0')
                 }"
 
@@ -276,7 +276,7 @@ fun StepOneScreen() {
                         label = stringResource(id = R.string.label_password),
                         trailingIcon = {
                             Icon(
-                                painter = if (passwordVisible) painterResource(id = R.drawable.password_hide) else painterResource(id = R.drawable.password_hide),
+                                painter = if (passwordVisible) painterResource(id = R.drawable.password_show) else painterResource(id = R.drawable.password_hide),
                                 contentDescription = null,
                                 modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                             )
@@ -286,14 +286,14 @@ fun StepOneScreen() {
                         Modifier.fillMaxWidth(),
                         leadingIcon = painterResource(id = R.drawable.candado),
                         value = confirmPassword,
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         onValueChange = {
                             confirmPassword = it
                         },
                         label = stringResource(id = R.string.label_confirm_password),
                         trailingIcon = {
                             Icon(
-                                painter = if (confirmPasswordVisible) painterResource(id = R.drawable.password_hide) else painterResource(id = R.drawable.password_hide),
+                                painter = if (confirmPasswordVisible) painterResource(id = R.drawable.password_show) else painterResource(id = R.drawable.password_hide),
                                 contentDescription = null,
                                 modifier = Modifier.clickable { confirmPasswordVisible = !confirmPasswordVisible }
                             )

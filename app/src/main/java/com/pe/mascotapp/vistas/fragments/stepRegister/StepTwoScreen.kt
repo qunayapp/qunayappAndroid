@@ -253,7 +253,7 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val datePickerDialog = DatePickerDialog(
             ctx,
-            R.style.Base_ThemeOverlay_AppCompat_Dialog,
+            androidx.appcompat.R.style.Base_ThemeOverlay_AppCompat_Dialog,
             { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
                 val pet = listPets[pagerState.currentPage].pet
                 listPets[pagerState.currentPage] =
@@ -261,7 +261,7 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                         pet = pet.copy(
                             birthdate = "${
                                 dayOfMonth.toString().padStart(2, '0')
-                            }${month.toString().padStart(2, '0')}${
+                            }${(month + 1).toString().padStart(2, '0')}${
                                 year.toString().padStart(4, '0')
                             }"
                         )

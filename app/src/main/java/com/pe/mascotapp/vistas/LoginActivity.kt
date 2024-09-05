@@ -282,7 +282,7 @@ fun LoginScreen() {
                     label = stringResource(id = R.string.label_password),
                     trailingIcon = {
                         Icon(
-                            painter = if (passwordVisible) painterResource(id = R.drawable.password_hide) else painterResource(id = R.drawable.password_hide),
+                            painter = if (passwordVisible) painterResource(id = R.drawable.password_show) else painterResource(id = R.drawable.password_hide),
                             contentDescription = null,
                             modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                         )

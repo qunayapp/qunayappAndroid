@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,9 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -86,6 +89,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 }
 
+@Preview
 @Composable
 fun UserProfileScreen() {
     val scrollState = rememberScrollState()
@@ -131,7 +135,7 @@ fun UserProfileScreen() {
                 name = "Julian Alvarez"
             )
             Spacer(modifier = Modifier.height(32.dp))
-            UserInfo(
+/*            UserInfo(
                 id = "47717687",
                 email = "jalvarez@gmail.com",
                 phone = "+51 999 888 777",
@@ -174,7 +178,7 @@ fun UserProfileScreen() {
                     )
                 )
             )
-            HorizontalLine()
+            HorizontalLine()*/
             Spacer(modifier = Modifier.height(16.dp))
             PreferencesSection(
                 notificationsEnabled = false,
@@ -406,7 +410,7 @@ fun SwitchPreference(label: String, isEnabled: Boolean) {
             checked = isEnabled,
             onCheckedChange = { },
             borderColor = Color.White, // Example border color
-            thumbColor = Color.Blue // Example thumb color
+            thumbColor = Color.White // Example thumb color
         )
     }
 }
@@ -422,28 +426,18 @@ fun CustomSwitch(
     checkedTrackColor: Color = Color.Black,
     uncheckedTrackColor: Color = colorDisabled
 ) {
-    val thumbSize = 20.dp
+    val thumbSize = 15.dp
 
     Box(
         modifier = modifier
             .size(44.dp, 20.dp)
             .border(borderWidth, borderColor, RoundedCornerShape(10.dp))
-            .clickable { onCheckedChange(!checked) },
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = { onCheckedChange(!checked) })
+            },
         contentAlignment = Alignment.CenterStart
     ) {
-        // Animate thumb position based on checked state
-        val thumbOffset by animateDpAsState(
-            targetValue = if (checked) 24.dp else 0.dp,
-            animationSpec = tween(durationMillis = 200)
-        )
         // Draw thumb
-        Box(
-            modifier = Modifier
-                .size(thumbSize)
-                .offset(x = thumbOffset)
-                .background(thumbColor, CircleShape)
-        )
-
         // Draw track
         Box(
             modifier = Modifier
@@ -453,5 +447,17 @@ fun CustomSwitch(
                     RoundedCornerShape(10.dp)
                 )
         )
+        // Animate thumb position based on checked state
+        val thumbOffset by animateDpAsState(
+            targetValue = if (checked) 24.dp else 0.dp,
+            animationSpec = tween(durationMillis = 200)
+        )
+        Box(
+            modifier = Modifier
+                .size(thumbSize)
+                .offset(x = thumbOffset)
+                .background(thumbColor, CircleShape)
+        )
+
     }
 }

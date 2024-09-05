@@ -20,14 +20,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -40,9 +38,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -247,11 +248,26 @@ fun FilterScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     val filterTtems = listOf(
-                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_24hr), "Atiende 24 Horas"),
-                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_start), "Más  de 4.5"),
-                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_promos), "Promociones"),
-                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_prices), "Menos Precio"),
-                        BoxItem(ImageVector.vectorResource(id = R.drawable.ic_car_pick_up), "Recojo a domicilio")
+                        BoxItem(
+                            ImageVector.vectorResource(id = R.drawable.ic_24hr),
+                            "Atiende 24 Horas"
+                        ),
+                        BoxItem(
+                            ImageVector.vectorResource(id = R.drawable.ic_start),
+                            "Más  de 4.5"
+                        ),
+                        BoxItem(
+                            ImageVector.vectorResource(id = R.drawable.ic_promos),
+                            "Promociones"
+                        ),
+                        BoxItem(
+                            ImageVector.vectorResource(id = R.drawable.ic_prices),
+                            "Menos Precio"
+                        ),
+                        BoxItem(
+                            ImageVector.vectorResource(id = R.drawable.ic_car_pick_up),
+                            "Recojo a domicilio"
+                        )
                     )
                     ItemGrid(items = filterTtems, itemsPerRow = 2) // 3 items per row
 
@@ -275,7 +291,7 @@ fun FilterScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     val typesPetsItems = listOf(
-                        BoxItem( ImageVector.vectorResource(id = R.drawable.perro), "Perros"),
+                        BoxItem(ImageVector.vectorResource(id = R.drawable.perro), "Perros"),
                         BoxItem(ImageVector.vectorResource(id = R.drawable.gato), "Gatos"),
                         BoxItem(ImageVector.vectorResource(id = R.drawable.llama), "Otros"),
                     )
@@ -290,7 +306,7 @@ fun FilterScreen() {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     val takeCareItems = listOf(
-                        BoxItem( null , "Administran medicinas"),
+                        BoxItem(null, "Administran medicinas"),
                         BoxItem(null, "Cuentan con cuidados medicos"),
                         BoxItem(null, "Cuidado a mascotas mayores"),
                     )
@@ -327,9 +343,87 @@ fun DistrictDropdown(districts: List<String>, selectedDistricts: MutableList<Str
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        onExpandedChange = { expanded = !expanded },
+        modifier = Modifier.height(50.dp)
     ) {
+/*               Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .fillMaxWidth(0.85f)
+                .background(Color(0xFFF6F6F6))
+                .border(2.dp, colorDisabled, RoundedCornerShape(16.dp))
+                .padding(start = 8.dp),
+        ) {
+            Row(
+                modifier = Modifier.padding(4.dp).fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = if (selectedDistricts.isEmpty()) "Agregar distritos" else selectedDistricts.joinToString(),
+                    textAlign = TextAlign.Center,
+                    style = boldTitleStyle.copy(colorDisabled, fontSize = 14.sp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                IconButton(onClick = {
+                    ExposedDropdownMenuDefaults.(expanded)
+                }) {
+                    Icon(tint = colorDisabled, painter = painterResource(id = R.drawable.ic_arrow), contentDescription = "dropdownMenu")
+                }
+            }
+
+        }*/
         OutlinedTextField(
+            value = if (selectedDistricts.isEmpty()) "Agregar distritos" else selectedDistricts.joinToString(),onValueChange = {},
+            readOnly = true,
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = OutlinedTextFieldDefaults.colors(
+
+                focusedTextColor =colorDisabled,
+                unfocusedTextColor = colorDisabled,
+                disabledTextColor = colorDisabled,
+                focusedContainerColor = Color(0xFFF6F6F6),
+                unfocusedContainerColor = Color(0xFFF6F6F6),
+                disabledContainerColor = Color(0xFFF6F6F6),
+                errorContainerColor = Color(0xFFF6F6F6),
+                cursorColor = colorPrimary,
+                focusedBorderColor = colorPrimary,
+                unfocusedBorderColor = colorDisabled,
+                focusedLabelColor = colorPrimary,
+            ),textStyle = boldTitleStyle.copy(color = colorDisabled, fontSize = 14.sp), // Set text style
+            shape = RoundedCornerShape(16.dp), // Set rounded corners
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
+                .padding(start = 8.dp).menuAnchor()
+        )
+/*        BasicTextField(
+            value = if (selectedDistricts.isEmpty()) "Agregar distritos" else selectedDistricts.joinToString(),
+            onValueChange = {  },
+            modifier =  Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .fillMaxWidth(0.85f)
+                .background(Color(0xFFF6F6F6))
+                .border(2.dp, colorDisabled, RoundedCornerShape(16.dp))
+                .padding( 8.dp), // Add padding here if needed
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp) // Control padding here
+                ) {
+                    if (selectedDistricts.isEmpty()) {
+                        Text(
+                            text = "",
+                            color =Color.Gray
+                        )
+                    }
+                    innerTextField()
+                }
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+
+        )*/
+/*        OutlinedTextField(
             value = if (selectedDistricts.isEmpty()) "Agregar distritos" else selectedDistricts.joinToString(),
             onValueChange = {},
             readOnly = true,
@@ -341,7 +435,7 @@ fun DistrictDropdown(districts: List<String>, selectedDistricts: MutableList<Str
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor()
-        )
+        )*/
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
