@@ -34,6 +34,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,12 +66,10 @@ import com.pe.mascotapp.descriptionTextStyle
 import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.semiBoldTitleStyle
 import com.pe.mascotapp.vistas.entities.PetEntity
-import com.pe.mascotapp.vistas.fragments.stepRegister.KindPet
-import com.pe.mascotapp.vistas.fragments.stepRegister.value
 
 class ProfileActivity : AppCompatActivity() {
 
-    lateinit var binding:ActivityProfileBinding
+    lateinit var binding: ActivityProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
@@ -125,7 +126,8 @@ fun UserProfileScreen() {
         }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .background(Color.White)
@@ -135,7 +137,7 @@ fun UserProfileScreen() {
                 name = "Julian Alvarez"
             )
             Spacer(modifier = Modifier.height(32.dp))
-/*            UserInfo(
+            UserInfo(
                 id = "47717687",
                 email = "jalvarez@gmail.com",
                 phone = "+51 999 888 777",
@@ -150,7 +152,8 @@ fun UserProfileScreen() {
                 pets = listOf(
                     PetEntity(
                         null,
-                        "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg", "Paul Pugba1",
+                        "https://www.telegraph.co.uk/content/dam/news/2023/06/10/TELEMMGLPICT000296384999_16864028803870_trans_NvBQzQNjv4BqrCS9JVgwgb8GODK1xmD4xlHwtdpQwyNje2OyIL7x97s.jpeg",
+                        "Paul Pugba1",
                         "Perro",
                         "100.00",
                         Sex.MALE,
@@ -169,7 +172,8 @@ fun UserProfileScreen() {
                     ),
                     PetEntity(
                         null,
-                        "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg", "Paul Pugba3",
+                        "https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg",
+                        "Paul Pugba3",
                         "Perro",
                         "102.00",
                         Sex.MALE,
@@ -178,12 +182,9 @@ fun UserProfileScreen() {
                     )
                 )
             )
-            HorizontalLine()*/
+            HorizontalLine()
             Spacer(modifier = Modifier.height(16.dp))
             PreferencesSection(
-                notificationsEnabled = false,
-                soundEnabled = false,
-                vibrationEnabled = true
             )
         }
     }
@@ -371,11 +372,11 @@ fun PetItem(pet: PetEntity, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PreferencesSection(
-    notificationsEnabled: Boolean,
-    soundEnabled: Boolean,
-    vibrationEnabled: Boolean
-) {
+fun PreferencesSection() {
+    // Definir el estado usando remember para cada preferencia
+    var notificationsEnabled by remember { mutableStateOf(false) }
+    var soundEnabled by remember { mutableStateOf(false) }
+    var vibrationEnabled by remember { mutableStateOf(true) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -387,14 +388,29 @@ fun PreferencesSection(
             style = caprasimoTitleStyle.copy(fontSize = 18.sp, color = colorPrimary),
         )
         Spacer(modifier = Modifier.height(8.dp))
-        SwitchPreference(label = "Notificaciones", isEnabled = notificationsEnabled)
-        SwitchPreference(label = "Sound", isEnabled = soundEnabled)
-        SwitchPreference(label = "Vibración", isEnabled = vibrationEnabled)
+
+        // Pasa el estado y el callback para actualizar el estado al dar clic
+        SwitchPreference(
+            label = "Notificaciones",
+            isEnabled = notificationsEnabled,
+            onCheckedChange = { notificationsEnabled = it }
+        )
+        SwitchPreference(
+            label = "Sonido",
+            isEnabled = soundEnabled,
+            onCheckedChange = { soundEnabled = it }
+        )
+        SwitchPreference(
+            label = "Vibración",
+            isEnabled = vibrationEnabled,
+            onCheckedChange = { vibrationEnabled = it }
+        )
+
     }
 }
 
 @Composable
-fun SwitchPreference(label: String, isEnabled: Boolean) {
+fun SwitchPreference(label: String, isEnabled: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -408,9 +424,9 @@ fun SwitchPreference(label: String, isEnabled: Boolean) {
         )
         CustomSwitch(
             checked = isEnabled,
-            onCheckedChange = { },
-            borderColor = Color.White, // Example border color
-            thumbColor = Color.White // Example thumb color
+            onCheckedChange = onCheckedChange, // Pasa el callback para manejar cambios
+            borderColor = Color.White, // Ejemplo de color de borde
+            thumbColor = Color.White   // Ejemplo de color del thumb
         )
     }
 }
@@ -427,18 +443,25 @@ fun CustomSwitch(
     uncheckedTrackColor: Color = colorDisabled
 ) {
     val thumbSize = 15.dp
+    val trackHeight = 20.dp
+    val trackWidth = 44.dp
+
+    // Definir la animación para la posición del thumb
+    val thumbOffset by animateDpAsState(
+        targetValue = if (checked) trackWidth - thumbSize - 4.dp else 4.dp,
+        animationSpec = tween(durationMillis = 200)
+    )
 
     Box(
         modifier = modifier
-            .size(44.dp, 20.dp)
+            .size(trackWidth, trackHeight)
             .border(borderWidth, borderColor, RoundedCornerShape(10.dp))
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = { onCheckedChange(!checked) })
+            .clickable {
+                onCheckedChange(!checked) // Cambia el estado al dar clic
             },
         contentAlignment = Alignment.CenterStart
     ) {
-        // Draw thumb
-        // Draw track
+        // Dibuja el track
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -447,17 +470,13 @@ fun CustomSwitch(
                     RoundedCornerShape(10.dp)
                 )
         )
-        // Animate thumb position based on checked state
-        val thumbOffset by animateDpAsState(
-            targetValue = if (checked) 24.dp else 0.dp,
-            animationSpec = tween(durationMillis = 200)
-        )
+
+        // Dibuja y anima el thumb
         Box(
             modifier = Modifier
                 .size(thumbSize)
                 .offset(x = thumbOffset)
                 .background(thumbColor, CircleShape)
         )
-
     }
 }
