@@ -182,10 +182,9 @@ fun UserProfileScreen() {
                     )
                 )
             )
-            HorizontalLine()
-            Spacer(modifier = Modifier.height(16.dp))
-            PreferencesSection(
-            )
+            //HorizontalLine()
+            //Spacer(modifier = Modifier.height(16.dp))
+            //PreferencesSection( )
         }
     }
 

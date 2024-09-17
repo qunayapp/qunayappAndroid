@@ -50,7 +50,6 @@
         <activity
             android:name=".vistas.AnimationLoading"
             android:exported="true"
-            android:label="@string/title_activity_animation_loading"
             android:theme="@style/Theme.Mascotapp.WhiteTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
