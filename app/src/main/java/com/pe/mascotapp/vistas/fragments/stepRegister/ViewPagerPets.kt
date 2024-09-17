@@ -201,7 +201,7 @@ fun ViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerS
                     .fillMaxWidth()
                     .zIndex(0F),
                 state = pagerState,
-                beyondViewportPageCount = 3,
+                beyondBoundsPageCount = 3,
                 reverseLayout = true,
             ) { page ->
 
@@ -469,7 +469,7 @@ fun SimpleViewPagerPets(listPets: MutableList<PetWithBreedsEntity>, pagerState: 
                 modifier = Modifier
                     .fillMaxWidth(),
                 state = pagerState,
-                beyondViewportPageCount = 2,
+                beyondBoundsPageCount = 2,
                 reverseLayout = true,
             ) { page ->
                 val show =
