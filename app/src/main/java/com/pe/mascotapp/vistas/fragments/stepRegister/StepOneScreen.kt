@@ -46,6 +46,7 @@ import com.pe.mascotapp.boldTitleStyle
 import com.pe.mascotapp.buttonTitleStyle
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
+import com.pe.mascotapp.modelos.Usuario
 import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 import java.util.Calendar
 
@@ -53,17 +54,17 @@ import java.util.Calendar
 
 @Preview
 @Composable
-fun StepOneScreen() {
+fun StepOneScreen(   usuario: Usuario = Usuario(),  onSiguienteClick: (Usuario) -> Unit = {}) {
     val scrollState = rememberScrollState()
     val ctx = LocalContext.current
     val currentStep = remember { mutableIntStateOf(0) }
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var phone by remember { mutableStateOf("") }
-    var birthday by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var termsAccepted by remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf(usuario.name) }
+    var email by remember { mutableStateOf(usuario.email) }
+    var phone by remember { mutableStateOf(usuario.numPhone) }
+    var birthday by remember { mutableStateOf(usuario.birthdate) }
+    var password by remember { mutableStateOf(usuario.pass) }
+    var confirmPassword by remember { mutableStateOf(usuario.pass) }
+    var termsAccepted by remember { mutableStateOf(usuario.terms) }
     var validationMessage by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
@@ -107,6 +108,7 @@ fun StepOneScreen() {
 
             }, year, month, day
         )
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
         datePickerDialog.show()
     }
     Box(
@@ -141,6 +143,15 @@ fun StepOneScreen() {
                                 return@PrimaryButton
                                 Log.d("TAG", "validateInputs: " + validationMessage)
                             }
+                            val updatedUsuario = usuario.copy(
+                                name = name,
+                                email = email,
+                                numPhone = phone,
+                                birthdate = birthday,
+                                pass = password,
+                                terms = termsAccepted
+                            )
+                            (ctx as? CarosuelRegisterActivity)?.updateUsuario(updatedUsuario)
                             (ctx as? CarosuelRegisterActivity)?.nextStep()
                         },
                         content = {

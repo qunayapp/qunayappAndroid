@@ -30,6 +30,8 @@ import android.widget.RadioGroup
 import androidx.compose.ui.platform.ComposeView
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.pe.mascotapp.databinding.FragmentRegisterOneBinding
+import com.pe.mascotapp.modelos.Usuario
+import com.pe.mascotapp.vistas.CarosuelRegisterActivity
 
 
 class StepOne():Fragment() {
@@ -43,7 +45,9 @@ class StepOne():Fragment() {
         //return super.onCreateView(inflater, container, savedInstanceState)
         val binding = FragmentRegisterOneBinding.inflate(inflater, container, false)
         binding.composeViewStepOne.setContent {
-            StepOneScreen()
+            StepOneScreen(
+                usuario = (activity as? CarosuelRegisterActivity)?.usuario ?: Usuario() 
+            )
         }
         return binding.root;
     }

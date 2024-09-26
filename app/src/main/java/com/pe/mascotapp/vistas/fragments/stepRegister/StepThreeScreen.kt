@@ -65,6 +65,7 @@ import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.domain.models.Sex
 import com.pe.mascotapp.mediumTitleStyle
+import com.pe.mascotapp.modelos.Usuario
 import com.pe.mascotapp.semiBoldTitleStyle
 import com.pe.mascotapp.titleStyle
 import com.pe.mascotapp.vistas.AnimationLoading
@@ -151,6 +152,7 @@ fun StepThreeScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableSta
     val pagerState = rememberPagerState(pageCount = {
         listPets.size
     })
+    val  usuario = (ctx as? CarosuelRegisterActivity)?.usuario ?: Usuario()
     Box(
         Modifier
             .background(Color.White)
@@ -257,7 +259,7 @@ fun StepThreeScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableSta
                         modifier = Modifier
                             .padding(top = 10.dp, end = 32.dp, start = 32.dp)
                             .fillMaxWidth(),
-                        value = "Julian Alvarez"
+                        value = usuario.name
                     )
                 }
                 Column(
@@ -276,7 +278,7 @@ fun StepThreeScreen(listPetsBreed: MutableList<PetWithBreedsEntity> = mutableSta
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp),
+                            .padding(top = 10.dp, bottom = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {

@@ -80,7 +80,7 @@ fun BoxWithText(
     icon: ImageVector?,
     text: String,
     borderColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val iconColor = colorDisabled
     val colorText = colorDisabled
@@ -101,7 +101,7 @@ fun BoxWithText(
                 Icon(
                     imageVector = icon,
                     contentDescription = "Box Icon",
-                    tint = iconColor,
+                    tint = borderColor,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -109,7 +109,8 @@ fun BoxWithText(
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
-                style = styleText
+                style = styleText,
+                color = borderColor
             )
         }
     }
@@ -134,7 +135,7 @@ fun ItemGrid(
                     if (index < items.size) {
                         val item = items[index]
                         val isSelected = selectedItems.contains(index)
-                        val borderColor = if (isSelected) colorMediumBlue else Color.Gray
+                        val borderColor = if (isSelected) colorPrimary else colorDisabled
                         BoxWithText(
                             icon = item.icon,
                             text = item.text,

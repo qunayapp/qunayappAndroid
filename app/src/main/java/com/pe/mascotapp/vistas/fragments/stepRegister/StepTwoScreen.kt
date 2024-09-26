@@ -76,7 +76,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -121,7 +120,6 @@ import com.pe.mascotapp.vistas.fragments.stepRegister.SelectBreedActivity.Compan
 import java.text.DecimalFormat
 import java.util.Calendar
 import kotlin.math.max
-import kotlin.reflect.jvm.internal.impl.types.checker.TypeRefinementSupport.Enabled
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -268,6 +266,7 @@ fun FormPet(listPets: MutableList<PetWithBreedsEntity>, pagerState: PagerState) 
                     )
             }, year, month, day
         )
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
         datePickerDialog.show()
     }
 
@@ -590,7 +589,11 @@ fun CircularName(
                     BasicEditTextField(
                         110.dp,
                         Modifier.fillMaxWidth(),
-                        mediumTitleStyle.copy(color = colorDisabled, fontSize = 17.sp),
+                        mediumTitleStyle.copy(
+                            color = colorDisabled,
+                            fontSize = 17.sp,
+                            textAlign = TextAlign.Center
+                        ),
                         iconSize = 20.dp,
                         value = pet.name
                     ) {
@@ -710,7 +713,8 @@ fun IconTextButton(
     OutlinedButton(
         onClick = { onClick.invoke() }, modifier = modifier,
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.81.dp, if (isEnabled) colorPrimary else colorDisabled)
+        border = BorderStroke(1.81.dp, if (isEnabled) colorPrimary else colorDisabled),
+        contentPadding = PaddingValues(horizontal = 2.dp, vertical = 4.dp)
     ) {
         IconWithText(name, icon, isEnabled)
     }
@@ -983,6 +987,7 @@ fun BasicEditTextField(
     textStyle: TextStyle = mediumTitleStyle.copy(
         color = colorMediumBlue,
         fontSize = 30.sp,
+        textAlign = TextAlign.Center
     ),
     iconSize: Dp = 27.dp,
     value: String,

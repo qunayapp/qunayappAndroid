@@ -40,7 +40,6 @@ import com.pe.mascotapp.R
 import com.pe.mascotapp.colorMediumBlue
 import com.pe.mascotapp.colorPrimary
 import com.pe.mascotapp.databinding.FragmentTutorialOneBinding
-import com.pe.mascotapp.vistas.fragments.stepRegister.StepOneScreen
 
 
 class StepOne : Fragment() {

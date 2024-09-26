@@ -396,6 +396,9 @@ class CarosuelRegisterActivity : AppCompatActivity(), OnEditTextChanged, Registe
         dialog.show()
 
     }
+    fun updateUsuario(updatedUsuario: Usuario) {
+        usuario = updatedUsuario
+    }
 
     override fun onBackPressed() {
         if (viewPStep!!.currentItem == 0) {
