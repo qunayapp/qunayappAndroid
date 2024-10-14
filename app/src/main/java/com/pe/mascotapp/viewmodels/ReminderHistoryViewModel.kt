@@ -65,7 +65,7 @@ class ReminderHistoryViewModel
         fun getReminders(pageNumber: Int) {
             getRemindersJob?.cancel()
             getRemindersJob =
-                getRemindersWithPetsUseCase(pageNumber)
+                getRemindersWithPetsUseCase()
                     .onEach { reminders ->
                         if (pageNumber == 0) {
                             originalReminders = listOf()

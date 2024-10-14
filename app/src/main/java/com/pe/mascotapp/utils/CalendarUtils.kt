@@ -210,7 +210,7 @@ fun LocalDate.inDates(
         return false
     }
     if (endDate == null){
-        return true
+        return (this.isAfter(startDate) || this.isEqual(startDate))
     }
     Log.e("quack",(this.isAfter(startDate) || this.isEqual(startDate)).toString())
     Log.e("quack",(this.isBefore(endDate) || this.isEqual(endDate)).toString())
@@ -291,9 +291,7 @@ fun Date.establecerHoraEnFechaActual(horaMinutos: String): Date? {
 }
 
 fun dateToLocalDate(date: Date): LocalDate {
-    // Convertir Date a Instant
     val instant = date.toInstant()
-    // Convertir Instant a LocalDate usando la zona horaria del sistema
     return instant.atZone(ZoneId.systemDefault()).toLocalDate()
 }
 private fun localDateToDate(localDate: LocalDate): Date {

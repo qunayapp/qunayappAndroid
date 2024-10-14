@@ -6,24 +6,32 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetRemindersWithPetsUseCase
-    @Inject
-    constructor(
-        private val reminderPetJoinRepository: ReminderPetJoinRepository,
-    ) {
-        operator fun invoke(pageNumber: Int? = null): Flow<List<ReminderWithPets>> {
-            pageNumber?.let {
-                return reminderPetJoinRepository.getReminderPet()
-            }
-            return reminderPetJoinRepository.getAllReminders()
-        }
+@Inject
+constructor(
+    private val reminderPetJoinRepository: ReminderPetJoinRepository,
+) {
+    operator fun invoke(): Flow<List<ReminderWithPets>> {
+        return reminderPetJoinRepository.getReminderPet()
     }
+}
+
+class GetReminderActivatedUseCase
+@Inject
+constructor(
+    private val reminderPetJoinRepository: ReminderPetJoinRepository,
+) {
+    operator fun invoke(): Flow<List<ReminderWithPets>> {
+        return reminderPetJoinRepository.getAllReminders()
+    }
+}
 
 class DeleteReminderWithPets
-    @Inject
-    constructor(
-        private val reminderPetJoinRepository: ReminderPetJoinRepository,
-    ) {
-        operator fun invoke(reminderId: Long) {
-            reminderPetJoinRepository.deleteReminder(reminderId)
-        }
+@Inject
+constructor(
+    private val reminderPetJoinRepository: ReminderPetJoinRepository,
+) {
+    operator fun invoke(reminderId: Long) {
+        reminderPetJoinRepository.deleteReminder(reminderId)
     }
+}
+
