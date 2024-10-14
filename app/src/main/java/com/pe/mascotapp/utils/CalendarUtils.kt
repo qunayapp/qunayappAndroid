@@ -210,7 +210,7 @@ fun LocalDate.inDates(
         return false
     }
     if (endDate == null){
-        return true
+        return (this.isAfter(startDate) || this.isEqual(startDate))
     }
     Log.e("quack",(this.isAfter(startDate) || this.isEqual(startDate)).toString())
     Log.e("quack",(this.isBefore(endDate) || this.isEqual(endDate)).toString())
