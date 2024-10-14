@@ -17,8 +17,16 @@ import java.util.Locale
 import javax.inject.Inject
 
 class GetRemindersByDate @Inject constructor() {
-    operator fun invoke(reminders: List<ReminderPetsJoinEntity>, filterDate: LocalDate): List<ReminderPetsJoinEntity> {
+    operator fun invoke(
+        reminders: List<ReminderPetsJoinEntity>,
+        filterDate: LocalDate
+    ): List<ReminderPetsJoinEntity> {
         return reminders.filter { reminder ->
+            val startEvent = CalendarUtils.joinDateAndHour(
+                reminder.reminder.startDate,
+                reminder.reminder.startHour
+            )
+            val startLocalDate = dateToLocalDate(startEvent)
             val dateTempReminder =
                 when (reminder.reminder.repeatOption) {
                     ValueTextOption.DONT_REPEAT -> {
@@ -34,11 +42,6 @@ class GetRemindersByDate @Inject constructor() {
                     }
 
                     ValueTextOption.ALL_DAYS -> {
-                        val startEvent = CalendarUtils.joinDateAndHour(
-                            reminder.reminder.startDate,
-                            reminder.reminder.startHour
-                        )
-
                         // ver si hoy toca una alarma segun el intervalo de repeticion
                         val isAlarmToday = startEvent.let {
                             val diffInDays =
@@ -85,11 +88,6 @@ class GetRemindersByDate @Inject constructor() {
                     }
 
                     ValueTextOption.ALL_WEEKS -> {
-                        val startEvent = CalendarUtils.joinDateAndHour(
-                            reminder.reminder.startDate,
-                            reminder.reminder.startHour
-                        )
-
                         val isAlarmToday = startEvent.let {
                             val diffInDays =
                                 ChronoUnit.DAYS.between(dateToLocalDate(it), filterDate).toInt()
@@ -134,33 +132,37 @@ class GetRemindersByDate @Inject constructor() {
                     }
 
                     ValueTextOption.ALL_MONTHS -> {
-                        val startEvent = CalendarUtils.joinDateAndHour(
-                            reminder.reminder.startDate,
-                            reminder.reminder.startHour
-                        )
-
-                        // ver si hoy toca el evento
                         val isAlarmToday = startEvent.let {
-                            val diffInDays =
-                                ChronoUnit.DAYS.between(dateToLocalDate(it), filterDate).toInt()
-                            (diffInDays % ((reminder.reminder.countRepeatOption ?: 1) * 30)) == 0
+                            val isToday =
+                                ChronoUnit.DAYS.between(startLocalDate, filterDate).toInt() == 0
+                            val isThisMonth = ChronoUnit.MONTHS.between(
+                                startLocalDate.withDayOfMonth(1),
+                                filterDate.withDayOfMonth(1)
+                            ).toInt() % (reminder.reminder.countRepeatOption ?: 1) == 0
+                            val lastDayOfMonth = filterDate.lengthOfMonth()
+                            val effectiveDay =
+                                if (startLocalDate.dayOfMonth > lastDayOfMonth) lastDayOfMonth else startLocalDate.dayOfMonth
+
+                            val isThisDay = effectiveDay == filterDate.dayOfMonth
+                            (isToday || (isThisMonth && isThisDay))
                         }
 
-
-                        var endReminder: Date? = null
+                        var endReminder: LocalDate? = null
                         reminder.reminder.durationTypeRepeat?.let {
                             when (it) {
-                                TypeOption.DATE -> reminder.reminder.durationRepeat?.let { date ->
-                                    endReminder =
-                                        CalendarUtils.stringToDate(date, "dd 'de' MMM 'de' yyyy")
+                                TypeOption.DATE -> reminder.reminder.durationRepeat?.let { dateStr ->
+                                    val formatter = DateTimeFormatter.ofPattern(
+                                        "dd 'de' MMM 'de' yyyy",
+                                        Locale("es", "ES")
+                                    )
+                                    endReminder = LocalDate.parse(dateStr, formatter)
                                 }
 
                                 TypeOption.COUNTER -> reminder.reminder.durationRepeat?.let { counter ->
-                                    val totalDays =
-                                        (counter.toInt() * (reminder.reminder.countRepeatOption
-                                            ?: 1) * 30)
-
-                                    endReminder = startEvent.addDay(totalDays)
+                                    endReminder = startLocalDate.plusMonths(
+                                        counter.toLong() * (reminder.reminder.countRepeatOption
+                                            ?: 1)
+                                    )
                                 }
 
                                 else -> {
@@ -168,9 +170,7 @@ class GetRemindersByDate @Inject constructor() {
                                 }
                             }
                         }
-                        if (filterDate.inDates(dateToLocalDate(startEvent),
-                                endReminder?.let { dateToLocalDate(it) }) && isAlarmToday
-                        ) {
+                        if (filterDate.inDates(startLocalDate, endReminder) && isAlarmToday) {
                             Log.d(
                                 "MyWorker",
                                 "all_weeks " + startEvent.hours.toString() + " : " + startEvent.minutes.toString()
@@ -182,28 +182,39 @@ class GetRemindersByDate @Inject constructor() {
                     }
 
                     ValueTextOption.ALL_YEARS -> {
-                        val startEvent = CalendarUtils.joinDateAndHour(
-                            reminder.reminder.startDate,
-                            reminder.reminder.startHour
-                        )
-
                         // ver si hoy toca el evento
-                        val isAlarmToday = startEvent.let {
-                            val diffInDays =
-                                ChronoUnit.DAYS.between(dateToLocalDate(it), filterDate).toInt()
-                            (diffInDays % ((reminder.reminder.countRepeatOption ?: 1) * 365)) == 0
+                        val isAlarmToday = startLocalDate.let {
+                            val isToday =
+                                ChronoUnit.DAYS.between(startLocalDate, filterDate).toInt() == 0
+                            val isThisYear = ChronoUnit.YEARS.between(
+                                startLocalDate.withDayOfYear(1),
+                                filterDate.withDayOfYear(1)
+                            ).toInt() % (reminder.reminder.countRepeatOption ?: 1) == 0
+                            val isThisMonth = startLocalDate.month == filterDate.month
+                            val lastDayOfMonth = filterDate.lengthOfMonth()
+                            val effectiveDay =
+                                if (startLocalDate.dayOfMonth > lastDayOfMonth) lastDayOfMonth else startLocalDate.dayOfMonth
+
+                            val isThisDay = effectiveDay == filterDate.dayOfMonth
+                            (isToday || (isThisYear && isThisMonth && isThisDay))
                         }
 
-                        var endReminder: Date? = null
+                        var endReminder: LocalDate? = null
                         reminder.reminder.durationTypeRepeat?.let {
                             when (it) {
-                                TypeOption.DATE -> reminder.reminder.durationRepeat?.let { date ->
-                                    endReminder =
-                                        CalendarUtils.stringToDate(date, "dd 'de' MMM 'de' yyyy")
+                                TypeOption.DATE -> reminder.reminder.durationRepeat?.let { dateStr ->
+                                    val formatter = DateTimeFormatter.ofPattern(
+                                        "dd 'de' MMM 'de' yyyy",
+                                        Locale("es", "ES")
+                                    )
+                                    endReminder = LocalDate.parse(dateStr, formatter)
                                 }
 
                                 TypeOption.COUNTER -> reminder.reminder.durationRepeat?.let { counter ->
-                                    endReminder = startEvent.addDay(counter.toInt() * 365)
+                                    endReminder = startLocalDate.plusYears(
+                                        counter.toLong() * (reminder.reminder.countRepeatOption
+                                            ?: 1)
+                                    )
                                 }
 
                                 else -> {
@@ -211,9 +222,7 @@ class GetRemindersByDate @Inject constructor() {
                                 }
                             }
                         }
-                        if (filterDate.inDates(dateToLocalDate(startEvent),
-                                endReminder?.let { dateToLocalDate(it) }) && isAlarmToday
-                        ) {
+                        if (filterDate.inDates(startLocalDate, endReminder) && isAlarmToday) {
                             Log.d(
                                 "MyWorker",
                                 "all_weeks " + startEvent.hours.toString() + " : " + startEvent.minutes.toString()
@@ -223,9 +232,9 @@ class GetRemindersByDate @Inject constructor() {
                             null
                         }
                     }
+
                     else -> null
                 }
-            Log.d("MyWorker", "fecha es diferente de null:" + (dateTempReminder != null).toString())
             dateTempReminder == true
         }.sortedBy { CalendarUtils.parseDate("${it.reminder.startHour} ${it.reminder.startDate}") }
     }
