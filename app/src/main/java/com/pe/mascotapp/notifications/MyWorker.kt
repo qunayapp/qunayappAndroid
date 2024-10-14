@@ -11,7 +11,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.pe.mascotapp.domain.models.ReminderWithPets
-import com.pe.mascotapp.domain.usecases.GetRemindersWithPetsUseCase
+import com.pe.mascotapp.domain.usecases.GetReminderActivatedUseCase
 import com.pe.mascotapp.utils.CalendarUtils
 import com.pe.mascotapp.utils.addDay
 import com.pe.mascotapp.utils.addHours
@@ -30,8 +30,6 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
 @HiltWorker
 class MyWorker
@@ -39,7 +37,7 @@ class MyWorker
 constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val getRemindersWithPetsUseCase: GetRemindersWithPetsUseCase,
+    private val getReminderActivatedUseCase: GetReminderActivatedUseCase,
 ) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result =
         coroutineScope {
@@ -47,7 +45,7 @@ constructor(
                 Log.d("MyWorker", "Run work manager")
                 val alarmHelper = AlarmEventHelper(applicationContext)
                 alarmHelper.createChannel()
-                getRemindersWithPetsUseCase.invoke().onEach { reminders ->
+                getReminderActivatedUseCase.invoke().onEach { reminders ->
                     alarmHelper.setAlarmPeriod(reminders)
                 }
                 return@coroutineScope Result.success()

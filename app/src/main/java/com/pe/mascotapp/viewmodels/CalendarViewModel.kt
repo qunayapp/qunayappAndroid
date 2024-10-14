@@ -43,7 +43,7 @@ class CalendarViewModel @Inject constructor(
     fun getReminders(pageNumber: Int, filterDate: LocalDate) {
         if (pageNumber == 0) originalReminders = listOf()
         getRemindersJob?.cancel()
-        getRemindersJob = getRemindersWithPetsUseCase(pageNumber)
+        getRemindersJob = getRemindersWithPetsUseCase()
             .onEach { reminders ->
                 if (pageNumber != 0 && reminders.isEmpty()) return@onEach
                 originalReminders = reminders.map {

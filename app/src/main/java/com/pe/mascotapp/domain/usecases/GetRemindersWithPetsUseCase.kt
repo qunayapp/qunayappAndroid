@@ -10,10 +10,17 @@ class GetRemindersWithPetsUseCase
     constructor(
         private val reminderPetJoinRepository: ReminderPetJoinRepository,
     ) {
-        operator fun invoke(pageNumber: Int? = null): Flow<List<ReminderWithPets>> {
-            pageNumber?.let {
-                return reminderPetJoinRepository.getReminderPet()
-            }
+        operator fun invoke(): Flow<List<ReminderWithPets>> {
+            return reminderPetJoinRepository.getReminderPet()
+        }
+    }
+
+class GetReminderActivatedUseCase
+    @Inject
+    constructor(
+        private val reminderPetJoinRepository: ReminderPetJoinRepository,
+    ){
+        operator fun invoke(): Flow<List<ReminderWithPets>> {
             return reminderPetJoinRepository.getAllReminders()
         }
     }
