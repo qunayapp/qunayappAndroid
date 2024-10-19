@@ -27,4 +27,7 @@ interface ReminderPetJoinDao {
 
     @Query("DELETE FROM reminderpetjoin WHERE reminderId = :reminderId")
     fun deleteReminder(reminderId: Long)
+
+    @Query("SELECT * FROM reminder WHERE startDate BETWEEN :startDate AND :endDate")
+    fun getRemindersByDateRange(startDate: String, endDate: String): Flow<List<ReminderWithPets>>
 }

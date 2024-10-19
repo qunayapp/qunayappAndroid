@@ -3,7 +3,6 @@ package com.pe.mascotapp.vistas.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pe.mascotapp.R
@@ -13,12 +12,9 @@ import java.time.LocalDate
 import java.util.Locale
 
 class DaysAdapter(
-    val days: ArrayList<DayCalendarEntity>,
+    var days: List<DayCalendarEntity>,
     val itemOnClick: (day: LocalDate, position: Int) -> Unit = { _, _ -> }
 ) : RecyclerView.Adapter<DaysAdapter.DaysViewHolder>() {
-
-    private var selectedPosition: Int = RecyclerView.NO_POSITION
-    private var dateSelected: LocalDate = LocalDate.now()
 
     class DaysViewHolder(val binding: ItemDayBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -31,6 +27,7 @@ class DaysAdapter(
                     Locale("es", "ES")
                 ).first().toString().toUpperCase()
             val  finalCounter = minOf(date.counter, 3)
+            binding.llCounter.removeAllViews()
             repeat(finalCounter) {
                 val imageView = ImageView(binding.root.context).apply {
                     layoutParams = ViewGroup.LayoutParams(
@@ -106,11 +103,7 @@ class DaysAdapter(
         val currentDate = days[position]
         holder.bind(days[position])
         holder.itemView.setOnClickListener {
-            if (selectedPosition != position) {
-                dateSelected = currentDate.day
-                selectedPosition = position
-                itemOnClick(currentDate.day, position)
-            }
+            itemOnClick(currentDate.day, position)
         }
     }
 }

@@ -14,4 +14,6 @@ interface ReminderPetJoinRepository {
     fun getAllReminders(): Flow<List<ReminderWithPets>>
 
     fun deleteReminder(reminderId: Long)
+
+    fun getRemindersByDateRange(startDate: String, endDate: String): Flow<List<ReminderWithPets>>
 }
