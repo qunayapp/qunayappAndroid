@@ -45,7 +45,7 @@ constructor(
                 Log.d("MyWorker", "Run work manager")
                 val alarmHelper = AlarmEventHelper(applicationContext)
                 alarmHelper.createChannel()
-                getReminderActivatedUseCase.invoke().onEach { reminders ->
+                getReminderActivatedUseCase().onEach { reminders ->
                     alarmHelper.setAlarmPeriod(reminders)
                 }
                 return@coroutineScope Result.success()

@@ -8,27 +8,34 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ReminderPetJoinRepositoryImpl
-    @Inject
-    constructor(
-        private val reminderPetJoinDao: ReminderPetJoinDao,
-    ) : ReminderPetJoinRepository {
-        override fun getReminderPet(): Flow<List<ReminderWithPets>> {
-            return reminderPetJoinDao.getReminderPet()
-        }
-
-        override fun insertReminderPet(reminder: ReminderPetJoin) {
-            reminderPetJoinDao.insert(reminder)
-        }
-
-        override fun getReminders(pageNumber: Int): Flow<List<ReminderPetJoin>> {
-            return reminderPetJoinDao.getReminders(pageNumber)
-        }
-
-        override fun getAllReminders(): Flow<List<ReminderWithPets>> {
-            return reminderPetJoinDao.getAllReminderPet()
-        }
-
-        override fun deleteReminder(reminderId: Long) {
-            return reminderPetJoinDao.deleteReminder(reminderId)
-        }
+@Inject
+constructor(
+    private val reminderPetJoinDao: ReminderPetJoinDao,
+) : ReminderPetJoinRepository {
+    override fun getReminderPet(): Flow<List<ReminderWithPets>> {
+        return reminderPetJoinDao.getReminderPet()
     }
+
+    override fun insertReminderPet(reminder: ReminderPetJoin) {
+        reminderPetJoinDao.insert(reminder)
+    }
+
+    override fun getReminders(pageNumber: Int): Flow<List<ReminderPetJoin>> {
+        return reminderPetJoinDao.getReminders(pageNumber)
+    }
+
+    override fun getAllReminders(): Flow<List<ReminderWithPets>> {
+        return reminderPetJoinDao.getAllReminderPet()
+    }
+
+    override fun deleteReminder(reminderId: Long) {
+        return reminderPetJoinDao.deleteReminder(reminderId)
+    }
+
+    override fun getRemindersByDateRange(
+        startDate: String,
+        endDate: String
+    ): Flow<List<ReminderWithPets>> {
+        return reminderPetJoinDao.getRemindersByDateRange(startDate, endDate)
+    }
+}

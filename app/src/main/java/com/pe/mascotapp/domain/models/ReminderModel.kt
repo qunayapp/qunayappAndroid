@@ -35,10 +35,6 @@ data class Reminder(
     val durationRepeat: String?,
     val vaccines: List<String>,
 ) {
-    fun alarmsPassed(): Boolean {
-        return countRepeatOption == times
-    }
-
     fun toReminderEntity(): ReminderEntity {
         return ReminderEntity(
             reminderId = this.reminderId ?: 0,

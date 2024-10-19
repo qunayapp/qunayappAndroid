@@ -87,6 +87,11 @@ class CalendarUtils {
             return localDate.format(formatter)
         }
 
+        fun formatMonthYear(date: Date): String {
+            val formatter = SimpleDateFormat("MMMM yyyy",  Locale("es", "ES"))
+            return formatter.format(date)
+        }
+
         fun getAbbreviatedDayName(
             localDate: LocalDate,
             locale: Locale,
