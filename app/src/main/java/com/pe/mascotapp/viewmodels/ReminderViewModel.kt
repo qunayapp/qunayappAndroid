@@ -449,10 +449,10 @@ constructor(
     private fun getTemporalRepeat(): List<OptionViewInterface> {
         val options = listOf(
             TextOption("No Repetir", ValueTextOption.DONT_REPEAT),
-            CounterOption("Cada dia", category = ValueTextOption.ALL_DAYS),
-            CounterOption("Cada semana", category = ValueTextOption.ALL_WEEKS),
-            CounterOption("Cada mes", category = ValueTextOption.ALL_MONTHS),
-            CounterOption("Cada año", category = ValueTextOption.ALL_YEARS),
+            CounterOption("Cada", category = ValueTextOption.ALL_DAYS, name2 = "dias"),
+            CounterOption("Cada", category = ValueTextOption.ALL_WEEKS, name2 = "semanas"),
+            CounterOption("Cada", category = ValueTextOption.ALL_MONTHS, name2 = "meses"),
+            CounterOption("Cada", category = ValueTextOption.ALL_YEARS, name2 = "año"),
         )
         options.forEach {
             if (it is TextOption && it.value.name == reminderEntity.repeatOption.name) {

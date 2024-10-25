@@ -53,6 +53,7 @@ class OptionFieldAdapter(
             optionClick: (position: Int) -> Unit,
         ) {
             binding.tvNameOption.text = option.name
+            binding.tvNameOption2.text = option.name2
             binding.tvCounter.text = option.counter.toString()
             binding.tvCounter.text = if (option.isSelected) option.counter.toString() else "0"
             binding.reduce.setOnClickListener {
@@ -357,6 +358,7 @@ data class CounterOption(
     val category: ValueTextOption? = null,
     override var isSelected: Boolean = false,
     override val viewType: OptionViewType.CounterViewOption = OptionViewType.CounterViewOption,
+    val name2: String = "",
 ) : OptionViewInterface {
     override fun copyOption(): OptionViewInterface {
         return this.copy()

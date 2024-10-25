@@ -46,6 +46,14 @@
 			android:text="+"
 			android:textColor="@color/black"
 			android:textSize="20dp" />
+		<TextView
+			android:id="@+id/tvNameOption2"
+			style="@style/WorkSans_Regular20"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingVertical="11dp"
+			android:textAlignment="center"
+			tools:text="De lunes a viernes" />
 
 	</androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
