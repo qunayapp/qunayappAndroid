@@ -281,7 +281,7 @@ constructor(
                 optionSelected.category?.let {
                     reminderEntity.repeatOption = optionSelected.category
                     reminderEntity.countRepeatOption = optionSelected.counter
-                    return optionSelected.name + " " + optionSelected.counter
+                    return optionSelected.name + " " + optionSelected.counter+" "+ optionSelected.name2
                 }
             }
         }
